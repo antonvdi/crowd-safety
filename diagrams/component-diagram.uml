@@ -1,0 +1,14 @@
+@startuml
+() "Backend API" as backend_api
+
+[Backend] as backend 
+[Frontend] as frontend
+
+component backend {
+  port "Video feed" as video_feed
+  component [Preprocessor] as preprocessor
+}
+
+backend_api - backend
+
+@enduml
