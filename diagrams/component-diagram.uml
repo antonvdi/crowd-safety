@@ -1,14 +1,32 @@
 @startuml
+
+title Component Diagram: Crowd Safety Management System
+
 () "Backend API" as backend_api
 
-[Backend] as backend 
 [Frontend] as frontend
+[Backend] as backend
 
 component backend {
-  port "Video feed" as video_feed
   component [Preprocessor] as preprocessor
+  component [Classifier] as classifier
+  component [VisionManager] as visionmanager
+  visionmanager -- preprocessor
+  visionmanager - classifier
+  port "Video feed" as video_feed
+  video_feed --> visionmanager
+
 }
 
-backend_api - backend
+component frontend {
+  component [APIHandler]
+  component [DataDisplay]
+  component [MainUI]
+}
+
+visionmanager -d- backend_api
+APIHandler --( backend_api
+DataDisplay - MainUI
+DataDisplay - APIHandler
 
 @enduml
