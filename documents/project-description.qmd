@@ -1,0 +1,42 @@
+---
+title: "Final Project 2023"
+subtitle: "Project Outline"
+authors:
+  - name: Anton Irvold
+    id: ai
+    email: anirv20@student.sdu.dk
+    affiliation: 
+      - name: University of Southern Denmark
+        city: Odense
+  - name: Christoffer Krath
+    id: ck
+    email: chkra19@student.sdu.dk
+    affiliation: 
+      - name: University of Southern Denmark
+        city: Odense
+format: pdf
+bibliography: citations.bib
+---
+
+# Title Proposals
+
+* "Using computer vision and AI techniques to improve crowd safety management"
+* "Improval of crowd safety using computer vision and possibly various AI aspects"
+
+# Administrative Info
+
+**Collaborators from Event Safety**
+
+* Sofie Dahl, sofie@eventsafety.dk
+
+* Christian Sejlund, christian@eventsafety.dk
+
+**SDU supervisor**
+
+Sune Lundø Sørensen, slso@mmmi.sdu.dk
+
+# Context and Background
+
+![Fatalities in crowds graph [Figure from @FELICIANI2023106174]](../images/fatalities.jpg){height=50% #fig-fatalities}
+
+While festival injuries are not a new issue, it is on the rise. As seen from @fig-fatalities accidents, fatalities and injuries at festivals and concerts worldwide are on the rise, with just below 5,000 worldwide deaths in the decade of 2010-2019. This can be attributed to several causes, according to @inproceedings: First of all, an increase in popularity for outdoor music festivals resulting in more and larger festivals with large crowds. Also, high-risk behavior among crowd attendants and the performing artist’s music, behavior, and stage show affects the crowd's safety. Generally, it has become more dangerous to attend these festivals since the 70s.
