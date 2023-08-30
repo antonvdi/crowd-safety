@@ -1,29 +1,17 @@
 ---
-title: "Final Project 2023"
+title: "Using computer vision and AI techniques to improve crowd safety management"
 subtitle: "Project Outline"
-authors:
-  - name: Anton Irvold
-    id: ai
-    email: anirv20@student.sdu.dk
-    affiliation: 
-      - name: University of Southern Denmark
-        city: Odense
-  - name: Christoffer Krath
-    id: ck
-    email: chkra19@student.sdu.dk
-    affiliation: 
-      - name: University of Southern Denmark
-        city: Odense
 format: pdf
 bibliography: citations.bib
 ---
 
-# Title Proposals
-
-* "Using computer vision and AI techniques to improve crowd safety management"
-* "Improval of crowd safety using computer vision and possibly various AI aspects"
-
 # Administrative Info
+
+**Authors**
+
+* Anton Irvold, anirv20@student.sdu.dk
+
+* Christoffer Krath, chkra19@student.sdu.dk
 
 **Collaborators from Event Safety**
 
@@ -37,9 +25,11 @@ bibliography: citations.bib
 
 # Context and Background
 
-![Fatalities in crowds graph [Figure from @FELICIANI2023106174]](../images/fatalities.jpg){height=50% #fig-fatalities}
+![Fatalities in crowds graph [Figure from @FELICIANI2023106174]](../images/fatalities.jpg){#fig-fatalities}
 
-As seen from @fig-fatalities accidents, fatalities and injuries at festivals and concerts worldwide are on the rise, with just below 5,000 worldwide deaths in the decade of 2010-2019. This can be attributed to several causes, according to @inproceedings: First of all, an increase in popularity for outdoor music festivals resulting in more and larger festivals with large crowds. Also, high-risk behavior among crowd attendants and the performing artist’s music, behavior, and stage show affects the crowd's safety. Cultural influence has also played a large part in the safety of outdoor musical events. This can be behavior such as crowd surfing, moshing, stage diving and the like. Sudden panic at a crowded place can thus affect the safety of the crowd. Generally, it has become more dangerous to attend these festivals since the 70s.
+As seen from @fig-fatalities accidents, fatalities and injuries at festivals and concerts worldwide are on the rise, with just below 5,000 worldwide deaths in the decade of 2010-2019. This can be attributed to several causes, according to @inproceedings: First of all, an increase in popularity for outdoor music festivals resulting in more and larger festivals with large crowds. Also, high-risk behavior among crowd attendants and the performing artist’s music, behavior, and stage show affects the crowd's safety. Cultural influence has also played a large part in the safety of outdoor musical events. This can be behavior such as crowd surfing, moshing, stage diving and the like. Sudden panic at a crowded place can thus affect the safety of the crowd. 
+
+It is worth mentioning that these figures and descriptions of situations are from media outlets. As such, its not the full story. While these statistics might make it seem that general safety and incidents at festivals and the like has gotten worse, it is actually the oposite, it is generally incredibly safe to attend these events, but using newer technologies we will attempt to enhance it further.
 
 At the same time, festivals in Denmark and the rest of the world have had a focus on mitigating the safety risk in large crowds. This can be seen by the establishment of the [Event Safety Foundation](https://eventsafety.dk/historie) in 2015. This is a joint venture between the Skanderborg Festival Group (Smukfest) and Muskelsvindfonden (Grøn Koncert). This foundation has the purpose of securing the safety of the crowds at these two large Danish festivals, as well as many other events in Denmark. They do this through knowledge sharing, professionals and trained volunteers, courses and counseling. This is the company that this project will be done in collaboration with.
 
@@ -51,7 +41,7 @@ Can computer vision software and AI techniques be leveraged to improve crowd ove
 
 # Solution Proposal
 
-Using cameras mounted around a hotspot of a crowd or on a stationary drone, we aim to develop a platform where a machine learning model receives live footage from these cameras, uses the model to segment the crowd, and learns what a dangerous situation might look like. This could be one or more of the following [@inproceedings]: 
+Using cameras mounted around a hotspot of a crowd or on a stationary drone, we aim to develop a platform where an AI model receives live footage from these cameras, uses the model to segment the crowd, and learns what a dangerous situation might look like. This could be one or more of the following [@inproceedings]: 
 
 * Several people moving into the crowd from a specific direction create a dangerous pressure point
 * More than a specified amount of people in a marked area resulting in unsafe conditions (ie. >6 people per square meter)
@@ -75,16 +65,25 @@ An intial component diagram that maps this described system can be seen in @fig-
 
 | **Date** 	| **Activity** 	|
 |---	|---	|
-| July-August 	| Gathering data at attended festivals in collaboration with Event Safety 	|
+| July-August | Gathering data at attended festivals in collaboration with Event Safety |
+||
 | August 	| Drafting the project description 	|
+||
 | 31-08-2023 	| Delivering the project description 	|
+||
 | 09-09-2023 	| Final discussion with Event Safety regarding the proposed solutions, requirements and the project going forward 	|
 | September 	| In depth analysation of use-cases (with Event Safety) In depth analysation of required technologies and methods used in academic litterature.  Design of the system 	|
+||
 | 25-09-2023 	| Progress update with Event Safety regarding the design of the system 	|
+||
 | October 	| Implementation of proof of concept system (primarily backend) 	|
+||
 | 26-10-2023 	| Progress update with Event Safety and small scale user testing 	|
+||
 | 31-10-2023 	| Attending Crowd Safety Course hosted by Event Safety in Copenhagen 	|
+||
 | November 	| Implementation of proof of concept system 	|
+||
 | December 	| Final implementation of the system Documentation of the system User testing and evaluation 	|
 
 # References
