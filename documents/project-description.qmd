@@ -9,6 +9,8 @@ bibliography: citations.bib
 
 **Authors**
 
+BEng Software Technology
+
 * Anton Irvold, anirv20@student.sdu.dk
 
 * Christoffer Krath, chkra19@student.sdu.dk
