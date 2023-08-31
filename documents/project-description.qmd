@@ -1,6 +1,6 @@
 ---
 title: "Using computer vision and AI techniques to improve crowd safety management"
-subtitle: "Project Outline"
+subtitle: "Project Outline - August 31st, 2023"
 format: pdf
 bibliography: citations.bib
 ---
@@ -27,13 +27,13 @@ bibliography: citations.bib
 
 ![Fatalities in crowds graph [Figure from @FELICIANI2023106174]](../images/fatalities.jpg){#fig-fatalities}
 
-As seen from @fig-fatalities accidents, fatalities and injuries at festivals and concerts worldwide are on the rise, with just below 5,000 worldwide deaths in the decade of 2010-2019. This can be attributed to several causes, according to @inproceedings: First of all, an increase in popularity for outdoor music festivals resulting in more and larger festivals with large crowds. Also, high-risk behavior among crowd attendants and the performing artist’s music, behavior, and stage show affects the crowd's safety. Cultural influence has also played a large part in the safety of outdoor musical events. This can be behavior such as crowd surfing, moshing, stage diving and the like. Sudden panic at a crowded place can thus affect the safety of the crowd. 
+As seen from @fig-fatalities accidents, fatalities and injuries at festivals and concerts worldwide are on the rise, with just below 5,000 worldwide deaths in the decade of 2010-2019. This can be attributed to several causes, according to @inproceedings: First of all, an increase in the popularity of outdoor music festivals resulting in more and larger festivals with large crowds. Also, high-risk behavior among crowd attendants and the performing artist’s music, behavior, and stage show affects the crowd's safety. Cultural influence has also played a large part in the safety of outdoor musical events. This can be behavior such as crowd surfing, moshing, stage diving and the like. Sudden panic in a crowded place can thus affect the safety of the crowd. 
 
-It is worth mentioning that these figures and descriptions of situations are from media outlets. As such, its not the full story. While these statistics might make it seem that general safety and incidents at festivals and the like has gotten worse, it is actually the oposite, it is generally incredibly safe to attend these events, but using newer technologies we will attempt to enhance it further.
+It is worth mentioning that these figures and descriptions of situations are from media outlets. As such, it's not the full story. While these statistics might make it seem that general safety and incidents at festivals and the like have gotten worse, it is the opposite, It is generally incredibly safe to attend these events, but using newer technologies we will attempt to enhance it further.
 
 At the same time, festivals in Denmark and the rest of the world have had a focus on mitigating the safety risk in large crowds. This can be seen by the establishment of the [Event Safety Foundation](https://eventsafety.dk/historie) in 2015. This is a joint venture between the Skanderborg Festival Group (Smukfest) and Muskelsvindfonden (Grøn Koncert). This foundation has the purpose of securing the safety of the crowds at these two large Danish festivals, as well as many other events in Denmark. They do this through knowledge sharing, professionals and trained volunteers, courses and counseling. This is the company that this project will be done in collaboration with.
 
-In order to be able to have the best possible outcome for this project, Event Safety invited us to Grøn Koncert and Smukfest in July and August to see how they work and gather security video footage of real crowds at festivals to use as training data. We will also use Event Safety for their practical and theoretical knowledge of crowd safety to use in the system, user feedback and user testing. 
+To have the best possible outcome for this project, Event Safety invited us to Grøn Koncert and Smukfest in July and August to see how they work and gather security video footage of real crowds at festivals to use as training data. We will also use Event Safety for their practical and theoretical knowledge of crowd safety to use in the system, user feedback and user testing. 
 
 # Problem Statement
 
@@ -57,7 +57,7 @@ The system would consist of the following:
 
 ![Component diagram of the system](../images/component-diagram-1.png){height=50% #fig-component-diagram}
 
-An intial component diagram that maps this described system can be seen in @fig-component-diagram.
+An initial component diagram that maps this described system can be seen in @fig-component-diagram.
 
 
 
@@ -72,13 +72,13 @@ An intial component diagram that maps this described system can be seen in @fig-
 | 31-08-2023 	| Delivering the project description 	|
 ||
 | 09-09-2023 	| Final discussion with Event Safety regarding the proposed solutions, requirements and the project going forward 	|
-| September 	| In depth analysation of use-cases (with Event Safety) In depth analysation of required technologies and methods used in academic litterature.  Design of the system 	|
+| September 	| In-depth analysis of use cases (with Event Safety) In-depth analysis of required technologies and methods used in academic literature.  Design of the system 	|
 ||
 | 25-09-2023 	| Progress update with Event Safety regarding the design of the system 	|
 ||
 | October 	| Implementation of proof of concept system (primarily backend) 	|
 ||
-| 26-10-2023 	| Progress update with Event Safety and small scale user testing 	|
+| 26-10-2023 	| Progress update with Event Safety and small-scale user testing 	|
 ||
 | 31-10-2023 	| Attending Crowd Safety Course hosted by Event Safety in Copenhagen 	|
 ||
