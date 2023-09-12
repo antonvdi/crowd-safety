@@ -1,0 +1,9 @@
+# Ignore everything in the documents folder
+*
+
+# But include .qmd and .pdf files
+!*.qmd
+!*.pdf
+!*.bib
+!*.gitignore
+!title.tex
