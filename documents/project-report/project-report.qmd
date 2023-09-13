@@ -214,7 +214,10 @@ Unsupervised Learning, Crowd Counting, Deep Learning
 Possible to use a model not trained on relevant data but still able to produce meaningful results. Some are even better than other models. [@sam2020completely]
 
 ### Possible solution using google colab
- Setup an environment implemeneting SASNet. Eliminates use of anaconda but perhaps at the cost of a paid subscription
+ Setup an environment implemeneting SASNet. Eliminates use of anaconda but perhaps at the cost of a paid subscription.
+
+ It was consideret to use a CNN model called CRSNet. However, reasarch suggest that CRSnet might have problems with scale variations, which is a common problem in crowd counting.
+ Because of this, SASNet is quite possible a much better solution. 
 [@sasnetCrowd] 
 [@sasnet]
 
