@@ -138,27 +138,29 @@ An initial component diagram that maps this described system can be seen in @fig
 ## Functional Requirements
 | **ID**   | **MoSCoW**   | **Requirement**  |
 | --- | -------------- | ----------------------------------------------------- |
-| 1   | M        | The system **must** be able to count the amount of people in the crowd |
+| 1   | M        | The system **must** be able to count the amount of people in the crowd with a precision of|
 |     |          |                                                             |
-| 2   | M        | The system **must** be able to segment the crowd into virtual sections of equal physical size |
+| 2   | M        | The system **must** be able to segment the crowd into virtual sections for further processing |
 |     |          |                                                             |
 | 3   | M        | The system **must** be able to create a heatmap of the crowd density |
 |     |          |                                                             |
-| 4   | S        | The system **should** be able to detect the movement of the virtual crowd sections |
+| 4   | S        | The system **should** be able to calculate the "rea" density pr. area unit |
+|     |          | 
+| 5   | S        | The system **should** be able to detect the movement of crowd sections |
 |     |          |                                                             |
-| 5   | S        | The system **should** be able to distinguish different types of movement |
+| 6   | S        | The system **should** be able to correct for camera distortion, warp and perspective |
 |     |          |                                                             |
-| 6   | S        | The system **should** be able to detect choke points in the crowd movements |
+| 7   | S        | The system **should** be able to detect choke points in the crowd movements |
 |     |          |                                                             |
-| 7   | S        | The system **should** be able to generate a summarizing report of the concert with statistics of (crowd density, crowd count, risk factors, choke points, and other) relevant safety indicators after the event |
+| 8   | S        | The system **should** be able to generate a summarizing report of the concert with statistics of (crowd density, crowd count, risk factors, choke points, and other) relevant safety indicators after the event |
 |     |          |                                                             |
-| 8   | C        | The system **could** be able to estimate a numerical risk factor based on available factors |
+| 9   | C        | The system **could** be able to estimate a numerical risk factor based on available factors |
 |     |          |                                                             |
-| 9   | C        | The system **could** be able to generate a live, or delayed, video overlaid user interface |
+| 10   | C        | The system **could** be able to generate a live, or delayed, video overlaid user interface |
 |     |          |                                                             |
-| 10  | W        | The system **will not** be able to identify dangerous situations that might call for cautionary actions such as crowd surge, mosh pits, falls, blocked exits, etc. |
+| 11  | W        | The system **will not** be able to identify dangerous situations that might call for cautionary actions such as crowd surge, mosh pits, falls, blocked exits, etc. |
 |     |          |                                                             |
-| 11  | W        | The system **will not** be able to use data gathered elsewhere at a concert such as alcohol sales, average crowd age, sound, artists, etc. to give a more precise crowd profile and thus risk factor |
+| 12  | W        | The system **will not** be able to use data gathered elsewhere at a concert such as alcohol sales, average crowd age, sound, artists, etc. to give a more precise crowd profile and thus risk factor |
 
 {{< pagebreak >}}
 
@@ -166,7 +168,7 @@ An initial component diagram that maps this described system can be seen in @fig
 
 | **ID**   | **MoSCoW**   | **Requirement**  |
 | --- | -------------- | ----------------------------------------------------- |
-| 1   | M        | The system **must** protect the privacy of the CCTV video feed |
+| 1   | M        | The system **must** protect the privacy of the personal data |
 |     |          |                                                             |
 | 2   | S        | The system **should** have a user-friendly interface that is easy to manage for both technical and non-technical users |
 |     |          |                                                             |
@@ -174,7 +176,7 @@ An initial component diagram that maps this described system can be seen in @fig
 |     |          |                                                             |
 | 4   | S        | The system **should** have adequate user manuals for non-technical users |
 |     |          |                                                             |
-| 5   | C        | The system **could** have high reliability that is not based on the visual circumstances and environment (e.g. sunlight, stage light, audience flashlights, and other visual effects) |
+| 5   | C        | The system **could** have high reliability that is not based on the visual circumstances and environment (e.g. sunlight, stage light, audience flashlights, and other visual effects) or report confidence based on environment |
 |     |          |                                                             |
 | 6   | C        | The system **could** be scalable to simultaneous interoperability between multiple cameras |
 |     |          |                                                             |
