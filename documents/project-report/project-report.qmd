@@ -26,7 +26,14 @@ authors:
 bibliography: citations.bib
 format:
   hikmah-pdf: default
-  hikmah-manuscript-pdf: default
+  hikmah-manuscript-pdf: default 
+  pdf:
+    keep-tex: true
+    include-in-header: 
+       text: |
+         \usepackage{fvextra}
+         \DefineVerbatimEnvironment{Highlighting}{Verbatim}{breaklines,commandchars=\\\{\}}
+         \DefineVerbatimEnvironment{OutputCode}{Verbatim}{breaklines,commandchars=\\\{\}}
 ---
 
 # Administrative Info
@@ -221,20 +228,14 @@ Multi-scale fusion for SASNet.
 
 ### Regarding SAM model for crowd counting:  
 
+When starting this project, we originally focused on the usage of Metas SAM model to be the main driver. During our first research sessions, we discovered that SAM was not adequate in counting people but better suited for object detection. the following citation from an article we read highlights the problems well: 
+
 "Although the Segment Anything model (SAM) has shown impressive performance in many scenarios, it currently lags behind state-of-the-art few-shot counting methods, especially for small and congested objects. We believe that this is due to two main reasons. Firstly, SAM tends to segment congested objects of the same category with a single mask. Secondly, SAM is trained with masks that lack semantic class annota- tions, which could hinder its ability to differentiate between different objects. Nevertheless, further exploration of adapt- ing SAM to the object counting task is still worth studying." [@ma2023sam]
 
 ### Completely Self-Supervised Crowd Counting via Distribution Matching 
 Unsupervised Learning, Crowd Counting, Deep Learning
 
 Possible to use a model not trained on relevant data but still able to produce meaningful results. Some are even better than other models. [@sam2020completely]
-
-### Possible solution using google colab
- Setup an environment implemeneting SASNet. Eliminates use of anaconda but perhaps at the cost of a paid subscription.
-
- It was consideret to use a CNN model called CRSNet. However, reasarch suggest that CRSnet might have problems with scale variations, which is a common problem in crowd counting.
- Because of this, SASNet is quite possible a much better solution. 
-[@sasnetCrowd] 
-[@sasnet]
 
 
 
@@ -245,6 +246,121 @@ Possible to use a model not trained on relevant data but still able to produce m
 {{< pagebreak >}}
 
 # Implementation
+
+### Initial proof of concept
+ Setup an environment implemeneting SASNet. Eliminates use of anaconda but perhaps at the cost of a paid subscription.
+
+ It was consideret to use a CNN model called CRSNet. However, reasarch suggest that CRSnet might have problems with scale variations, which is a common problem in crowd counting.
+ Because of this, SASNet is quite possible a much better solution. 
+[@sasnetCrowd] 
+
+
+The first implementation was setup in Google [@Colab]. Colab provides free access to CUDA powered GPU power, which is needed for the implementation as it relies on [tensorflow](https://www.tensorflow.org) and [pyTorch](https://pytorch.org). specifically, pyTorch needs CUDA to function. Our implementation is based on an opensource implementation of [@sasnet] found [here](https://github.com/TencentYoutuResearch/CrowdCounting-SASNet). 
+
+The introductory parts of the implementation revolving cloning the directory and setting up google drive with the data will not be discussed, only the python code itself: 
+
+After installing the correct requirements, the pretrained model from SASnet is loaded into colab and the image to run the model on is loaded into the program: 
+
+```{python code-block-width="100px"}
+
+def predict(args):
+  img_path = args.image_path
+  transform = standard_transforms.Compose([
+      standard_transforms.ToTensor(), standard_transforms.Normalize(mean=[0.485, 0.456, 0.406],
+                                                                    std=[0.229, 0.224, 0.225]),
+  ])
+    # open the image
+  img = Image.open(img_path)
+  return perspective_correction(img).convert('RGB')
+  img = transform(img)
+  img = torch.Tensor(img)
+  img = img.unsqueeze(0)
+  img = img.cuda()
+
+  print(img.shape)
+
+  model = SASNet(args=args).cuda()
+  # load the trained model
+  model.load_state_dict(torch.load(args.model_path))
+  print('successfully load model from', args.model_path)
+
+```
+
+Following this, the predicted density map and color channels are extracted. The "jet" colorspace is then added to the density map to create a heatmap which in turn is layered onto the original image with a lowered opacity.
+
+```{python}
+#| eval: false
+#| 
+  with torch.no_grad():
+    model.eval()
+
+    # get the predicted density map
+    pred_map = model(img)
+    pred_map = pred_map.data.cpu().numpy()
+
+    for i_img in range(pred_map.shape[0]):
+
+        pred_cnt = np.sum(pred_map[i_img]) / args.log_para
+        print(f'Predicted Count: {pred_cnt}')
+
+        # Extract the first channel (grayscale) from the density map
+        grayscale_map = pred_map[i_img][0]
+
+        # Normalize the grayscale image to the 0-255 range
+        normalized_map = cv2.normalize(grayscale_map, None, 0, 255, cv2.NORM_MINMAX)
+
+        # Apply the 'jet' colormap
+        colormap = cv2.applyColorMap(np.uint8(normalized_map), cv2.COLORMAP_JET)
+
+        # Add text to the heatmap
+        cv2.putText(colormap, f'Predicted Count: {pred_cnt}', (50, 50),
+                    cv2.FONT_HERSHEY_SIMPLEX, 1,
+                    (0, 255, 0), 2)
+
+        # Read the original image
+        original_image = cv2.imread(img_path)  # Replace 'your_original_image.jpg' with your image file path
+
+        # Resize the heatmap to match the original image's size
+        colormap_resized = cv2.resize(colormap, (original_image.shape[1], original_image.shape[0]))
+
+        # Set the opacity (alpha) value
+        alpha = 0.75  # You can adjust the opacity as needed
+
+        # Blend the heatmap and original image
+        blended_image = cv2.addWeighted(original_image, 1 - alpha, colormap_resized, alpha, 0)
+
+        os.chdir("/content/gdrive/MyDrive/crowd-counting-data/output")
+
+        cv2.imwrite('overlayed_image3.jpg', blended_image)
+
+  print("Predict Over")
+```
+
+Finally, the model is run on our image:
+
+```{python}
+#| eval: false
+class Args:
+  model_path = "../../gdrive/MyDrive/crowd-counting-data/SASNet/models/SHHB.pth"
+  image_path = "../../gdrive/MyDrive/crowd-counting-data/images/green1.png"
+  batch_size = 4
+  log_para = 1000
+  block_size = 32
+
+args = Args()
+args.model_path
+predict(args)
+```
+
+
+**Original image:**
+
+![Original drone image](../images/green1.png){height=50% #green1}
+
+**SASNet image**
+
+![Overlayed image](../images/overlayed_image2.jpg){height=50% #Overleayed_image}
+
 
 {{< pagebreak >}}
 
