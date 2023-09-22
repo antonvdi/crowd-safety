@@ -96,7 +96,13 @@ Can computer vision software and AI techniques be leveraged to improve crowd ove
 |--- |--- |
 | CSM              | Crowd Safety Management System |
 ||
+| Crowd Counting              | The defintion of crowd counting in this report follows the definition from @chan2008: "[...] a privacy-preserving system for estimating the size of inhomogeneous crowds, [...] without using explicit object segmentation or tracking" |
+||
 | AI               | Artificial Intelligence |
+||
+| ANN               | Artificial Neural Network |
+||
+| CNN               | Convolutional Neural Network |
 ||
 | ML               | Machine Learning |
 ||
@@ -138,7 +144,7 @@ An initial component diagram that maps this described system can be seen in @fig
 ## Functional Requirements
 | **ID**   | **MoSCoW**   | **Requirement**  |
 | --- | -------------- | ----------------------------------------------------- |
-| 1   | M        | The system **must** be able to count the amount of people in the crowd with a precision of|
+| 1   | M        | The system **must** be able to count the amount of people in the crowd with a precision of <100 MAE|
 |     |          |                                                             |
 | 2   | M        | The system **must** be able to segment the crowd into virtual sections for further processing |
 |     |          |                                                             |
@@ -191,21 +197,27 @@ An initial component diagram that maps this described system can be seen in @fig
 ## Method and theory
 
 ### Crowd counting
-**TODO:** Add defintion of crowd counting
-
 Crowd counting is a field of computer vision research that has developed quickly in recent years. It is a technique that aims to count the instances of any object in an image, no matter the context, density or type of object. [@sasnet] This differentiates it from object detection which is usually trained on one specific type of object by extracting certain visual features. The benefits from using crowd counting rather than object detection is: 
 * Crowd counting is less intensive on computing resources.
 * Crowd counting performs better in crowded scenes with varying scales of objects and overlapping objects.
 * Crowd counting is more robust in environments with changes in light, without the need of specific training data.
 * Crowd counting is not as exposed to the risk of over fitting the model. 
 [@li2021approaches]
+* Crowd counting does not single out individuals, but looks at the crowd holistically [@chan2008]
 For these reasons crowd counting is a method that can be used for many domains including traffic and parking analysis, pedestrian crowds, corn and crop counting, and much more. This project will use crowd counting methods to analyse, count and estimate density of concert crowds.
 
-In [@li2021approaches] the current leading approach to crowd counting is the use of a CNN. This paper, contrary to our definiton of crowd counting, includes object detection as a method of crowd counting. It also includes regression based methods and of course CNN's. The main challenge with CNN's for crowd counting is still to differentiate between the large scale variations in the countable human heads. [@li2021approaches] discusses several categories of approaches for CNN based models to solve the scale variation problems including multi-scale fusion. This approach is the main category that the paper recommends for future research, as it shows promising results in the balance between performance and accuracy.
+[@li2021approaches] says the current leading approach to crowd counting is the use of a CNN. This paper, contrary to our definiton of crowd counting, includes object detection as a method of crowd counting. It also includes regression based methods and, of course, CNN's. The main challenge with CNN's for crowd counting is to differentiate between the large scale variations in the countable human heads. [@li2021approaches] discuss several categories of approaches for CNN based models to solve the scale variation problems, one of which is multi-scale fusion. This approach is the category that this paper proposes for further research, as it shows promising results in the balance between performance and accuracy.
 
+#### Convolutional Neural Network (CNN)
+Convolutional Neural Networks (CNN) are a type of Artificial Neural Networks (ANN) that are used to "solve difficult image-driven pattern recognition tasks." [@DBLP:journals/corr/OSheaN15] ANN's function on an input in the form of a multi-dimensional vectors, which will be distributed to a number of hidden layers. The hidden layers will be weighted by evaluating how a stochastic change within itself affects the final output (backpropagation). Deep learning is an ANN with multiple hidden layers. ANN's can be either supervised: Being trained on a set of labeled training data, or unsupervised: Having no labeled training data, but instead minimizing the result of the cost function. According to @DBLP:journals/corr/OSheaN15, supervised learning is usually necessary for image-focused pattern recognition tasks.
+
+CNN's are similar to ANN's in almost every way, with the only difference being that CNN's allow to encode image specific features such as edges, textures, color patterns and shape features. This reduces the complexity of a traditional ANN trained on image data, where a vector representation grows in size exponentially depending on the image size. Reducing the feature vector also reduces the risk of overfitting the model. This is done through the process of convolution. In the convolution layer, local regions of the image vector are scanned for image relevant features. Usually the features are run through a pooling layer, reducing its computational complexity by sampling and down-scaling the features. This feature map is then fed to a traditional ANN, with a given amount of hidden layers. 
+
+For the reasons outlined here from @DBLP:journals/corr/OSheaN15 and @li2021approaches, this project will focus on the use of CNN based models for crowd counting. 
+
+#### SASNet
 Multi-scale fusion for SASNet.
 
-Use Crowdcounting and NOT objectcounting models. Object counting is better for segmenting visually clear definitions and not individual members of a crowd
 
 ### Regarding SAM model for crowd counting:  
 
