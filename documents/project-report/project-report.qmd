@@ -101,7 +101,7 @@ Can computer vision software and AI techniques be leveraged to improve crowd ove
 
 | **Acronyms**  | **Definition** |
 |--- |--- |
-| CSM              | Crowd Safety Management System |
+| CSMS              | Crowd Safety Management System |
 ||
 | Crowd Counting              | The defintion of crowd counting in this report follows the definition from @chan2008: "[...] a privacy-preserving system for estimating the size of inhomogeneous crowds, [...] without using explicit object segmentation or tracking" |
 ||
@@ -119,11 +119,13 @@ Can computer vision software and AI techniques be leveraged to improve crowd ove
 ||
 | Mosh pit         | A crowd situation where people vacate an area in the crowd followed by violent or aggressive dancing. Sizes of Mosh pits vary greatly. |
 ||
-| Technical user   | A developer or technician that can implement the CSM in the technical setup of a concert or venue |
+| Technical user   | A developer or technician that can implement the CSMS in the technical setup of a concert or venue |
 ||
-| Non-technical user | A security guard or someone viewing crowd footage through the CSM without any technical or software-related background |
+| Non-technical user | A security guard or someone viewing crowd footage through the CSMS without any technical or software-related background |
 ||
 | Choke point      | Point with high crowd density and crowd influx           |
+||
+| SASNet      | Scale-adaptive selection network @sasnet           |
 ||
 
 {{< pagebreak >}}
@@ -203,6 +205,11 @@ An initial component diagram that maps this described system can be seen in @fig
 
 ## Method and theory
 
+### Convolutional Neural Network (CNN)
+Convolutional Neural Networks (CNN) are a type of Artificial Neural Networks (ANN) that are used to "solve difficult image-driven pattern recognition tasks." [@DBLP:journals/corr/OSheaN15] ANN's function on an input in the form of a multi-dimensional vectors, which will be distributed to a number of hidden layers. The hidden layers will be weighted by evaluating how a stochastic change within itself affects the final output (backpropagation). Deep learning is an ANN with multiple hidden layers. ANN's can be either supervised: Being trained on a set of labeled training data, or unsupervised: Having no labeled training data, but instead minimizing the result of the cost function. According to @DBLP:journals/corr/OSheaN15 and @NIPS2010_fe73f687, supervised learning is usually necessary for image-focused pattern recognition tasks.
+
+CNN's are similar to ANN's in almost every way, with the only difference being that CNN's allow to encode image specific features such as edges, textures, color patterns and shape features. This reduces the complexity of a traditional ANN trained on image data, where a vector representation grows in size exponentially depending on the image size. Reducing the feature vector also reduces the risk of overfitting the model. This is done through the process of convolution. In the convolution layer, local regions of the image vector are scanned for image relevant features. Usually the features are run through a pooling layer, reducing its computational complexity by sampling and down-scaling the features. This feature map is then fed to a traditional ANN, with a given amount of hidden layers. 
+
 ### Crowd counting
 Crowd counting is a field of computer vision research that has developed quickly in recent years. It is a technique that aims to count the instances of any object in an image, no matter the context, density or type of object. [@sasnet] This differentiates it from object detection which is usually trained on one specific type of object by extracting certain visual features. The benefits from using crowd counting rather than object detection is: 
 * Crowd counting is less intensive on computing resources.
@@ -215,14 +222,13 @@ For these reasons crowd counting is a method that can be used for many domains i
 
 [@li2021approaches] says the current leading approach to crowd counting is the use of a CNN. This paper, contrary to our definiton of crowd counting, includes object detection as a method of crowd counting. It also includes regression based methods and, of course, CNN's. The main challenge with CNN's for crowd counting is to differentiate between the large scale variations in the countable human heads. [@li2021approaches] discuss several categories of approaches for CNN based models to solve the scale variation problems, one of which is multi-scale fusion. This approach is the category that this paper proposes for further research, as it shows promising results in the balance between performance and accuracy.
 
-#### Convolutional Neural Network (CNN)
-Convolutional Neural Networks (CNN) are a type of Artificial Neural Networks (ANN) that are used to "solve difficult image-driven pattern recognition tasks." [@DBLP:journals/corr/OSheaN15] ANN's function on an input in the form of a multi-dimensional vectors, which will be distributed to a number of hidden layers. The hidden layers will be weighted by evaluating how a stochastic change within itself affects the final output (backpropagation). Deep learning is an ANN with multiple hidden layers. ANN's can be either supervised: Being trained on a set of labeled training data, or unsupervised: Having no labeled training data, but instead minimizing the result of the cost function. According to @DBLP:journals/corr/OSheaN15, supervised learning is usually necessary for image-focused pattern recognition tasks.
+For the reasons outlined here from @DBLP:journals/corr/OSheaN15 and @li2021approaches, this project will focus on the use of CNN based models for crowd counting.
 
-CNN's are similar to ANN's in almost every way, with the only difference being that CNN's allow to encode image specific features such as edges, textures, color patterns and shape features. This reduces the complexity of a traditional ANN trained on image data, where a vector representation grows in size exponentially depending on the image size. Reducing the feature vector also reduces the risk of overfitting the model. This is done through the process of convolution. In the convolution layer, local regions of the image vector are scanned for image relevant features. Usually the features are run through a pooling layer, reducing its computational complexity by sampling and down-scaling the features. This feature map is then fed to a traditional ANN, with a given amount of hidden layers. 
+One of the useful datasets for crowd counting, "Shagnhaitech" comes from the paper @Zhang_2016_CVPR. In this paper they have two datasets, "part a" and "part b". For the purposes of the CSMS test data, "Shanghaitech Part A" is a more representative dataset to use, since it contains more densely populated crowds from a birds eye view. The dataset is labeled with one dot representing roughly the middle of a person's head. This is the approach outlined in one of the founding papers of crowd counting @NIPS2010_fe73f687. In @NIPS2010_fe73f687, it is explained how their approach to crowd counting, which has become the primary method in the field, is to create a density function F as a function of the pixels in an image I. This density function is analoguous to the physical idea of density, however not a direct representation of the same concept, as physical density is based on physical area. Integrating F over the entire image I will return the number of people in I. [@NIPS2010_fe73f687] Each object in the image I should be represented by a normalized 2D Gaussian kernel with the mean at the person's head. One disadvantage with this approach, is that the kernel for objects close to the edge of the image will not be counted as a whole object when summed. It is not assumed that this will pose a significant source of error for the purpose of the CSMS.  
 
-For the reasons outlined here from @DBLP:journals/corr/OSheaN15 and @li2021approaches, this project will focus on the use of CNN based models for crowd counting. 
+### SASNet
+Scale variation is one of the main challenges with crowd counting, since perspective in the image will lead to different size of heads. One solution to this, SASNet, is proposed in @sasnet. SASNet relies on the fact that heads in a local path share roughly the same scale.
 
-#### SASNet
 Multi-scale fusion for SASNet.
 
 
