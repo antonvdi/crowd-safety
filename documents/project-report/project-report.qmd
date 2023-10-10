@@ -205,9 +205,11 @@ Convolutional Neural Networks (CNN) are a type of Artificial Neural Networks (AN
 CNN's are similar to ANN's in almost every way, with the only difference being that CNN's allow to encode image specific features such as edges, textures, color patterns and shape features. This reduces the complexity of a traditional ANN trained on image data, where a vector representation grows in size exponentially depending on the image size. Reducing the feature vector also reduces the risk of overfitting the model. This is done through the process of convolution. In the convolution layer, local regions of the image vector are scanned for image relevant features. Usually the features are run through a pooling layer, reducing its computational complexity by sampling and down-scaling the features. This feature map is then fed to a traditional ANN, with a given amount of hidden layers. 
 
 ### Solving Scale-Variation with SASNet
-Scale variation is one of the main challenges with crowd counting, since perspective in the image will lead to different sizes of heads. One solution to this, SASNet, is proposed by @sasnet. SASNet relies on the fact that heads in a local path share roughly the same scale.
+Scale variation is one of the main challenges with crowd counting, since perspective in the image will lead to different sizes of heads. One solution to this is proposed by @sasnet. SASNet relies on the fact that heads in a local path share roughly the same scale. It is currently not a common approach to solve scale variation on a continuous scale. SASNet solves it discretly but in 5 discrete steps using a weighted average. This bridges the gap between discrete feature extraction and continuous feature extraction. This architecture can be seen in @fig-sasnet.
 
-Multi-scale fusion for SASNet.
+![Architecture of the SASNet model [Diagram from @sasnet]](../images/sasnet-architechture.png){#fig-sasnet}
+
+As it can be seen from the diagram, SASNet uses the first 13 convolutional layers from VGG-16 [@simonyan2014very] in the encoder. SASNet then produces 5 feature levels with 5 levels of downsampling (V_n). It produces 5 levels of predictions (P_n). This is what is referred to as the "U-shaped backbone". These are then fed to a confidence branch and a density branch that produces a confidence map and density map for each of the 5 levels. The complete density map is a product of the sum of the individual density and confidence branches using a softmax function for the confidence. 
 
 ### Transforming and warping matrixes using linear algebra
 
@@ -237,6 +239,10 @@ One of the original ideas for solving this problem was to use Meta's SAM model. 
 
 "Although the Segment Anything model (SAM) has shown impressive performance in many scenarios, it currently lags behind state-of-the-art few-shot counting methods, especially for small and congested objects. We believe that this is due to two main reasons. Firstly, SAM tends to segment congested objects of the same category with a single mask. Secondly, SAM is trained with masks that lack semantic class annota- tions, which could hinder its ability to differentiate between different objects. Nevertheless, further exploration of adapt- ing SAM to the object counting task is still worth studying." [@ma2023sam]
 
+## The choice of SASNet
+Fits our need to solve scale variation.
+Good performance according to https://github.com/gjy3035/Awesome-Crowd-Counting
+Open source and downloadable model weights.
 
 {{< pagebreak >}}
 
