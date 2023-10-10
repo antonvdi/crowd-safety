@@ -240,9 +240,13 @@ One of the original ideas for solving this problem was to use Meta's SAM model. 
 "Although the Segment Anything model (SAM) has shown impressive performance in many scenarios, it currently lags behind state-of-the-art few-shot counting methods, especially for small and congested objects. We believe that this is due to two main reasons. Firstly, SAM tends to segment congested objects of the same category with a single mask. Secondly, SAM is trained with masks that lack semantic class annota- tions, which could hinder its ability to differentiate between different objects. Nevertheless, further exploration of adapt- ing SAM to the object counting task is still worth studying." [@ma2023sam]
 
 ## The choice of SASNet
-Fits our need to solve scale variation.
-Good performance according to https://github.com/gjy3035/Awesome-Crowd-Counting
-Open source and downloadable model weights.
+The choice of using SASNet was based on three different factors:
+1. SASNets fits our need to solve the problem of scale variation in the video material. It was not possible to obtain video material from an approximate orthographic perspective. However, future endeavors for this project might include cameras like those from one of our collaborators [PhaseOne](https://www.phaseone.com/) who produces approximate orthographic perspectives using high pixel density cameras from high altitudes. SASNet, however, fulfills the requirement to produce relatively high accuracy on an image with perspective for now.
+2. SASNet has some of the lowest absolute errors on the ShanghaiTech testing data, according to @gjy3035_awesome_crowd_counting which compares at least 45 different crowd counting models and methods. 
+3. SASNet is open source and licensed under the permissive Apache 2.0 license, which allows us to use it legally and for free in our project. SASNet also publishes the pretrained model weights (trained on ShanghaiTech A and B), which means we can save many compute- and time resources on training the model ourselves. 
+
+Finally, SASNet publishes the model weights from the training on either ShanghaiTech part A or part B. For this project, it is deemed more useful to use the images from part A. While the labeled dataset is smaller in part A than part B, it more closely represents the data (i.e. amount of people, density and perspectives) that will be used in this project.
+
 
 {{< pagebreak >}}
 
