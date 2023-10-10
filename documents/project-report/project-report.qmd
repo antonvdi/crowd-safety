@@ -246,9 +246,6 @@ Scale variation is one of the main challenges with crowd counting, since perspec
 
 As it can be seen from the diagram, SASNet uses the first 13 convolutional layers from VGG-16 [@simonyan2014very] in the encoder. SASNet then produces 5 feature levels with 5 levels of downsampling (V_n). It produces 5 levels of predictions (P_n). This is what is referred to as the "U-shaped backbone". These are then fed to a confidence branch and a density branch that produces a confidence map and density map for each of the 5 levels. The complete density map is a product of the sum of the individual density and confidence branches using a softmax function for the confidence. 
 
-### Transforming and warping matrixes using linear algebra
-
-
 {{< pagebreak >}}
 
 # Design
