@@ -1,0 +1,77 @@
+@startuml
+|CSMS|
+start 
+
+partition preInitialization {
+:Validate input parameters; 
+note left: Inputs: \n1. Video_path\n2. Model_path
+
+if (Are inputs valid?) then (yes)
+  :Clear GPU memory;
+else (no)
+  stop
+endif
+
+:Load SASNet model;
+}
+
+
+partition sASNetConstructor {
+|SASNet|
+:Load vgg16_bn model;
+
+:Generate backbone confidence and density branch of SASNet;
+}
+
+partition preProcessor {
+|CSMS|
+:Send SASNet model to GPU;
+
+:Create pyTorch dataset from video;
+:Create pyTorch dataloader from dataset;
+
+
+if (Drone video has no metadata) then (true)
+   :Define cornerpoints of image manually;
+else (false)
+endif
+}
+
+while (Dataset has remaining images) is (true)
+partition imageCollector {
+   :Send next image to GPU;
+   :Forward image to SASNet;
+}
+
+|SASNet|
+partition forwardProcessing {
+:Pass input tensor through convolutional layer;
+
+:Run activation function; 
+note left: ReLU
+
+:Run pooling layer;
+
+:Run flattening;
+}
+
+|CSMS|
+partition postCountProcessing {
+:Send density to CPU;
+:Run perspectiveWarp on density map;
+:Calculate Total count;
+:Generate heatmap;
+:Write heatmap to output video object;
+}
+
+|CSMS|
+endwhile (false)
+partition generateOutput{
+  :Write all total counts to csv;
+
+|CSMS|
+:Save video file timelapse;
+:Generate report;
+}
+stop
+@enduml
