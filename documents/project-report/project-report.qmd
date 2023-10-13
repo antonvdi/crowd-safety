@@ -244,7 +244,9 @@ Scale variation is one of the main challenges with crowd counting, since perspec
 
 ![Architecture of the SASNet model [Diagram from @sasnet]](../images/sasnet-architechture.png){#fig-sasnet}
 
-As it can be seen from the diagram, SASNet uses the first 13 convolutional layers from VGG-16 [@simonyan2014very] in the encoder. SASNet then produces 5 feature levels with 5 levels of downsampling (V_n). It produces 5 levels of predictions (P_n). This is what is referred to as the "U-shaped backbone". These are then fed to a confidence branch and a density branch that produces a confidence map and density map for each of the 5 levels. The complete density map is a product of the sum of the individual density and confidence branches using a softmax function for the confidence. 
+As it can be seen from the diagram, SASNet uses the first 13 convolutional layers from VGG-16 [@simonyan2014very] in the encoder. SASNet then produces 5 feature levels with 5 levels of downsampling ($V_n$). It produces 5 levels of predictions ($P_n$). This is what is referred to as the "U-shaped backbone". These are then fed to a confidence branch and a density branch that produces a confidence map and density map for each of the 5 levels. The complete density map is a product of the sum of the individual density and confidence branches using a softmax function for the confidence. 
+
+### CUDA
 
 {{< pagebreak >}}
 
@@ -252,24 +254,29 @@ As it can be seen from the diagram, SASNet uses the first 13 convolutional layer
 
 ## About Crowd Counting
 Crowd counting is a field of computer vision research that has developed quickly in recent years. It is a technique that aims to count the instances of any object in an image, no matter the context, density or type of object. [@sasnet] This differentiates it from object detection which is usually trained on one specific type of object by extracting certain visual features. The benefits from using crowd counting rather than object detection is: 
+
 * Crowd counting is less intensive on computing resources.
+
 * Crowd counting performs better in crowded scenes with varying scales of objects and overlapping objects.
+
 * Crowd counting is more robust in environments with changes in light, without the need of specific training data.
-* Crowd counting is not as exposed to the risk of over fitting the model. 
-[@li2021approaches]
+
+* Crowd counting is not as exposed to the risk of over fitting the model. [@li2021approaches]
+
 * Crowd counting does not single out individuals, but looks at the crowd holistically [@chan2008]
+
 For these reasons crowd counting is a method that can be used for many domains including traffic and parking analysis, pedestrian crowds, corn and crop counting, and much more. This project will use crowd counting methods to analyse, count and estimate density of concert crowds.
 
 [@li2021approaches] says the current leading approach to crowd counting is the use of a CNN. This paper, contrary to our definiton of crowd counting, includes object detection as a method of crowd counting. It also includes regression based methods and, of course, CNN's. The main challenge with CNN's for crowd counting is to differentiate between the large scale variations in the countable human heads. [@li2021approaches] discuss several categories of approaches for CNN based models to solve the scale variation problems, one of which is multi-scale fusion. This approach is the category that this paper proposes for further research, as it shows promising results in the balance between performance and accuracy.
 
 For the reasons outlined here from @DBLP:journals/corr/OSheaN15 and @li2021approaches, this project will focus on the use of CNN based models for crowd counting.
 
-One of the useful datasets for crowd counting, "Shanghaitech" comes from the paper @Zhang_2016_CVPR. In this paper there are defined two datasets, "part a" and "part b". For the purposes of the CSMS test data, "Shanghaitech Part A" is a more representative dataset to use, since it contains more densely populated crowds from a birds eye view. The dataset is labeled with one dot representing roughly the middle of a person's head. This is the approach outlined in one of the founding papers of crowd counting @NIPS2010_fe73f687. In @NIPS2010_fe73f687, it is explained how their approach to crowd counting, which has become the primary method in the field, is to create a density function F as a function of the pixels in an image I. This density function is analoguous to the physical idea of density, however not a direct representation of the same concept, as physical density is based on physical area. Integrating F over the entire image I will return the number of people in I. [@NIPS2010_fe73f687] Each object in the image I should be represented by a normalized 2D Gaussian kernel with the mean at the person's head. One disadvantage with this approach, is that the kernel for objects close to the edge of the image will not be counted as a whole object when summed. It is not assumed that this will pose a significant source of error for the purpose of the CSMS.
+One of the useful datasets for crowd counting, "Shanghaitech" comes from the paper @Zhang_2016_CVPR. In this paper there are defined two datasets, "part a" and "part b". For the purposes of the CSMS test data, "Shanghaitech Part A" is a more representative dataset to use, since it contains more densely populated crowds from a birds eye view. The dataset is labeled with one dot representing roughly the middle of a person's head. This is the approach outlined in one of the founding papers of crowd counting @NIPS2010_fe73f687. In @NIPS2010_fe73f687, it is explained how their approach to crowd counting, which has become the primary method in the field, is to create a density function $F$ as a function of the pixels in an image $I$. This density function is analoguous to the physical idea of density, however not a direct representation of the same concept, as physical density is based on physical area. Integrating $F$ over the entire image $I$ will return the number of people in $I$. [@NIPS2010_fe73f687] Each object in the image I should be represented by a normalized 2D Gaussian kernel with the mean at the person's head. One disadvantage with this approach, is that the kernel for objects close to the edge of the image will not be counted as a whole object when summed. It is not assumed that this will pose a significant source of error for the purpose of the CSMS.
 
 ## Regarding SAM model for Crowd Counting:  
 One of the original ideas for solving this problem was to use Meta's SAM model. During the preliminary research sessions, it was discovered that SAM was not adequate in counting people but better suited for object detection. The following citation from @ma2023sam highlights the problems well:
 
-"Although the Segment Anything model (SAM) has shown impressive performance in many scenarios, it currently lags behind state-of-the-art few-shot counting methods, especially for small and congested objects. We believe that this is due to two main reasons. Firstly, SAM tends to segment congested objects of the same category with a single mask. Secondly, SAM is trained with masks that lack semantic class annota- tions, which could hinder its ability to differentiate between different objects. Nevertheless, further exploration of adapt- ing SAM to the object counting task is still worth studying." [@ma2023sam]
+"Although the Segment Anything model (SAM) has shown impressive performance in many scenarios, it currently lags behind state-of-the-art few-shot counting methods, especially for small and congested objects. We believe that this is due to two main reasons. Firstly, SAM tends to segment congested objects of the same category with a single mask. Secondly, SAM is trained with masks that lack semantic class annotations, which could hinder its ability to differentiate between different objects. Nevertheless, further exploration of adapting SAM to the object counting task is still worth studying." [@ma2023sam]
 
 ## The choice of SASNet
 The choice of using SASNet was based on three different factors:
@@ -298,6 +305,39 @@ As depicted in the diagram, section of the activities are divided into partition
 
 # Implementation
 
+## Data Collection and Preparation
+To implement this project it was necessary to gather useful evaluation data. For the purposes of this project, that is video security footage and drone footage. Our collaborative partner EventSafety was very helpful in letting us gather this data at their 2 festivals, "Smukfest" and "Grøn". This was done in 1-2 months before the project start since this is when the festivals were held. This means that we gathered the data before completing the research on crowd counting and computer vision. It did pose a challenge to collect the data before knowing exactly what type of data was needed. For these reasons we collected many types of data, including:
+
+1. Drone footage from "Grøn" at a height of 25-50 meters from the entrance
+
+1. Drone footage from "Grøn" at a height of 25-50 meters of the concerts and end of concerts
+
+1. GoPro footage from "Grøn" at a height of 2-5 meters from the entrance
+
+1. Security camera footage from "Smukfest at a height of approximately 10-15 meters from the center of the stage. 
+
+1. Security camera footage from "Smukfest" at various heights from bars and paths
+
+What turned out to be most useful was option no. 2, drone footage from "Grøn" at a height of 25-50 meters of the concerts. Having a perspective from higher up, means that more people are clearly visible and also minimizes the distortion when warping for perspective correction. In fact, having an even higher resolution from a higher altitude could also increase the accuracy of the predictions. The resolution of the drone footage was 1080p. Having a higher resolution could limit the video compression artifacts. The camera options were discussed with our secondary partner PhaseOne. They have experience with ultra high resolution top-down drone footage. This could be an option for future endeavors, which will be discussed in @sec-perspective section in this report.
+
+While we, with the help of a certified drone pilot, collected the footage from "Grøn" ourselves, the security footage from "Smukfest" was collected by EventSafety. For this, we created a technical specification with our requirements for the footage at the time. This can be read in @fig-camera-specs in @sec-appendices. 
+
+## Environment
+
+Setting up an environment for machine learning in Python can pose a bit of a challenge. Is a requirement to have access to a NVIDIA GPU to take advantage of the CUDA toolkit in PyTorch. This opens up for GPU acceleration which enables a large perforamnce boost rather than running the CNN models on the CPU. Furthermore the SASNet open source projects was built for Python 3.6.8 and PyTorch >= 1.5.0 @sasnet.
+
+Because of these strict software and hardware requirements, we decided to use the virtual environment in [Google Colab](https://research.google.com/colaboratory/faq.html). Google Colab provides a preconfigured Python environment with (free but not unlimited) access to a NVIDIA GPU. Doing this project in the cloud removes the software and hardware limitations on both the users and developers of the project. However, Google Colab has some feature limitations such as it being disallowed to use it for the purpose of hosting web services. Google Drive can then be volume mounted inside the virtual environment making it posssible to use and make persisted files.
+
+The Python version in Google Colab is downgraded to match the version needed for SASNet and both PyTorch and the required PIP-packages are installed. 
+
+## SASNet Model Adaption
+
+## Integeration 
+
+## Optimization and Performance
+
+## Error Handling, Security and Privacy
+
 {{< pagebreak >}}
 
 # Validation and Verification
@@ -306,14 +346,19 @@ As depicted in the diagram, section of the activities are divided into partition
 
 # Discussion
 
+TODO: Add section on possibilities with PhaseOne
 {{< pagebreak >}}
 
 # Conclusion
 
 {{< pagebreak >}}
 
-# Perspective
+# Perspective {#sec-perspective}
 
 {{< pagebreak >}}
 
 # References
+
+# Appendices {.appendix #sec-appendices}
+
+![Technical specification document for cameras](../appendices/teknisk-specifikation.png){#fig-camera-specs width=100% height=100%}
