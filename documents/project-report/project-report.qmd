@@ -296,9 +296,33 @@ Finally, SASNet publishes the model weights from the training on either Shanghai
 
 As depicted in the diagram, section of the activities are divided into partitions to visualise a rough partioning into classes and for better readability throughout the diagram. The input is specified as the path to the pretrained model and the path to the video for it to run on.
 
+Below is a short runthrough of the different partitions. A more indepth description can be found in the implemetation section
+
+1. System Initialization and Input Validation
+
+The CSMS is initialized and the inputs for the model and video path are validated
+
+2. SASNet Model Setup and Construction
+
+The SASNet model is loaded together with VGG16 model which it is based on. This sets the foundation for subsequent image processing.
+
+3. Pre-Processing of Input Data
+
+Preprocessing involves creating a dataset from the video in pyTorch and in turn creating a dataloader from this dataset.
+
+4. Image processing Loop
+
+The images in the dataloader are iterated through and forwarded to the SASNet model until the dataloader is empty. Each image processed through the different layers to prepare them for post-processing
+
+5. Post-Processing & Result Generation
+
+Following the image processing, the CSMS takes over again. Here density information is computed, perspective warping is applied to in turn generate the correct heatmap for further analysis.
+
+6. Output Generation & Reporting
+
+All of the crowd counting data is saved to a CSV filed and the images are stitched together to form a timelapse and a report, summarizing the observations.
+
 ![Activity diagram depicting flow in the solution](../images/activity-diagram-1.png){#fig-activity-diagram}
-
-
 
 
 {{< pagebreak >}}
