@@ -283,6 +283,17 @@ The choice of using SASNet was based on three different factors:
 Finally, SASNet publishes the model weights from the training on either ShanghaiTech part A or part B. For this project, it is deemed more useful to use the images from part A. While the labeled dataset is smaller in part A than part B, it more closely represents the data (i.e. amount of people, density and perspectives) that will be used in this project.
 
 
+## Activity diagram
+
+@fig-activity-diagram illustrates the flow of the program through an activity diagram. The diagram was created to obtain a deeper understanding of the general flow and processes the program goes through during its runtime. The diagram is split into 2 "swimlanes", one lane for our CSMS system and one lane for the implementation of the SASNet model. In broad terms, this can also be specified as a CPU and a GPU lane where our CSMS system handles CPU processing and SASNet focuses on GPU processing.
+
+As depicted in the diagram, section of the activities are divided into partitions to visualise a rough partioning into classes and for better readability throughout the diagram. The input is specified as the path to the pretrained model and the path to the video for it to run on.
+
+![Activity diagram depicting flow in the solution](../images/activity-diagram-1.png){#fig-activity-diagram}
+
+
+
+
 {{< pagebreak >}}
 
 # Implementation
