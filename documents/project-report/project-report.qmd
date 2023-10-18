@@ -350,15 +350,50 @@ While we, with the help of a certified drone pilot, collected the footage from "
 
 Setting up an environment for machine learning in Python can pose a bit of a challenge. Is a requirement to have access to a NVIDIA GPU to take advantage of the CUDA toolkit in PyTorch. This opens up for GPU acceleration which enables a large perforamnce boost rather than running the CNN models on the CPU. Furthermore the SASNet open source projects was built for Python 3.6.8 and PyTorch >= 1.5.0 @sasnet.
 
-Because of these strict software and hardware requirements, we decided to use the virtual environment in [Google Colab](https://research.google.com/colaboratory/faq.html). Google Colab provides a preconfigured Python environment with (free but not unlimited) access to a NVIDIA GPU. Doing this project in the cloud removes the software and hardware limitations on both the users and developers of the project. However, Google Colab has some feature limitations such as it being disallowed to use it for the purpose of hosting web services. Google Drive can then be volume mounted inside the virtual environment making it posssible to use and make persisted files.
+### Google Colab
+Because of these strict software and hardware requirements, we decided to use the virtual environment in [Google Colab](https://research.google.com/colaboratory/faq.html). Google Colab provides a preconfigured Python environment with (free but not unlimited) access to a NVIDIA GPU. Doing this project in the cloud removes the software and hardware limitations on both the users and developers of the project. However, Google Colab has some feature limitations such as it being disallowed to use it for the purpose of hosting web services. Google Drive can then be volume mounted inside the virtual environment making it posssible to use and make persisted files. 
 
 The Python version in Google Colab is downgraded to match the version needed for SASNet and both PyTorch and the required PIP-packages are installed. 
 
+### UCloud
+University of Southern Denmark provides a cloud computing service for faculty members through [eScience](https://escience.sdu.dk/index.php/national-hpc-systems/). Our supervisor applied through this site for a cloud compute resource with 100 GPU hours. 
+
 ## SASNet Model Adaption
+The SASNet model is loaded using pretrained weights and biases for the underlying vgg16_bn model trained on ImageNet. This allows SASNet to more efficiently identify image features with low memory usage. Furthermore, the SASNet weights and bias fine tuning is loaded to the model which has been trained on the Shanghai Tech Part A dataset. A block_size of 32 is being used here.
+
+<!-- TODO: Write about block size -->
+
+```python
+class Args:
+  model_path = "<path-to-model-dir>/SHHA.pth"
+  video_path = "<path-to-input-video-dir>/DJI_0461_trimmed.MP4"
+  block_size = 32
+  use_pretrained = True
+
+model = SASNet(args.use_pretrained, args).cuda()
+model.load_state_dict(torch.load(args.model_path))
+```
 
 ## Integeration 
 
 ## Optimization and Performance
+For two main reasons, it is necessary to limit the compute resource usage:
+
+1. This project is using free and limited GPU and compute resources. Computer vision and CNN's can be very GPU intensive, so it is in the project's to limit the GPU memory consumption as this was found to be the largest resource bottle neck.
+
+1. In order for the CSMS to be scalable to (near) real time evaluation performance, it makes sense to limit the use of computing power as much as possible.
+
+According to @pytorch, [disabling gradient calculation](https://pytorch.org/docs/stable/generated/torch.no_grad.html) is useful for lowering memory usage when using a model for inference. This fits the use case and greatly reduced the memory usage. This was done using the following way:
+
+```python
+img = img.cuda()
+with torch.no_grad():
+  model.eval()
+  pred_map = model(img)
+pred_map = pred_map.data.cpu().numpy()
+```
+
+Here the image tensor is first sent to the NVIDIA GPU using img.cuda(). Gradient calculations are then disabled for the inference, and the model is set to eval mode. These two reduce the GPU memory usage. Finally, after the inference is run and the predicition_map is calculated, the tensor data is sent to the cpu and the tensor is converted to a numpy matrix (an image). This way limits the time that the tensor spends in the GPU greatly, as well as reducing the memory usage.
 
 ## Error Handling, Security and Privacy
 
