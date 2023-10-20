@@ -330,7 +330,7 @@ All of the crowd counting data is saved to a CSV filed and the images are stitch
 # Implementation
 
 ## Data Collection and Preparation
-To implement this project it was necessary to gather useful evaluation data. For the purposes of this project, that is video security footage and drone footage. Our collaborative partner EventSafety was very helpful in letting us gather this data at their 2 festivals, "Smukfest" and "Grøn". This was done in 1-2 months before the project start since this is when the festivals were held. This means that we gathered the data before completing the research on crowd counting and computer vision. It did pose a challenge to collect the data before knowing exactly what type of data was needed. For these reasons we collected many types of data, including:
+To implement this project it was necessary to gather useful evaluation data. For the purposes of this project, that is video security footage and drone footage. Our collaborative partner EventSafety was very helpful in letting us gather this data at their 2 festivals, "Smukfest" and "Grøn Koncert". This was done 1-2 months before the project start since this is when the festivals were held. This means that we gathered the data before completing the research on crowd counting and computer vision. It did pose a challenge to collect the data before knowing exactly what type of data was needed. For these reasons we collected many types of data, including:
 
 1. Drone footage from "Grøn" at a height of 25-50 meters from the entrance
 
@@ -381,7 +381,7 @@ For two main reasons, it is necessary to limit the compute resource usage:
 
 1. This project is using free and limited GPU and compute resources. Computer vision and CNN's can be very GPU intensive, so it is in the project's to limit the GPU memory consumption as this was found to be the largest resource bottle neck.
 
-1. In order for the CSMS to be scalable to (near) real time evaluation performance, it makes sense to limit the use of computing power as much as possible.
+2. For the CSMS to be scalable to (near) real-time evaluation performance, it makes sense to limit the use of computing power as much as possible.
 
 According to @pytorch, [disabling gradient calculation](https://pytorch.org/docs/stable/generated/torch.no_grad.html) is useful for lowering memory usage when using a model for inference. This fits the use case and greatly reduced the memory usage. This was done using the following way:
 
@@ -397,9 +397,44 @@ Here the image tensor is first sent to the NVIDIA GPU using img.cuda(). Gradient
 
 ## Error Handling, Security and Privacy
 
+### Error Handling
+One of the major error-handling implementations made is checking if the data uploaded to the model is present and valid. If either of these checks fail, the code is not run and the program shuts down.
+
+### Security
+
+### Privacy
+
+Being citizens in and using data of people from an EU country means that we have to abide by the rules of GDPR. This means that security and privacy around the data that we have acquired is crucial. Practically, this means that we have a responsibility in making sure that we only upload the images and videos we need to run the model on when they need to be there and remove them when not needed. In a perfect world we would run our program locally as to limit the uploading and removal of sensitive data.
+
+### Facial recognition vs. Crowd Counting
+
+When reading about this project, one might assume that privacy around facial recognition would be an issue. However, as this is related to heatmaps and crowd density instead of direct recognition of people, the identity of people in our footage is not a major concern, and thus was not featured in our risk management section. 
+
 {{< pagebreak >}}
 
 # Validation and Verification
+Since this project is a proof of concept, unit tests and integration tests are not as favored as user tests and similar. Testing of this system relies on making sure that it is useful and understandable to those who need it. To accomplish these tests, we decided to get the opinions of some EventSafety security personnel about our project and their thoughts. 
+
+## EventSafety employee questionnaire
+
+**User interview nr 1:**
+Question 1 (Usefulness of provided video/heatmap/report)
+Question 2 (Likelihood of implementing this for post-event evaluation)
+Question 3 (How could data like this improve your post-event evaluations)
+Question 4 (Data readability)
+Question 5 (Other thoughts and notes from interviewee)
+
+**User interview nr 2:**
+Question 1 (Usefulness of provided video/heatmap/report)
+Question 2 (Likelihood of implementing this for post-event evaluation)
+Question 3 (How could data like this improve your post-event evaluations)
+Question 4 (Data readability)
+Question 5 (Other thoughts and notes from interviewee)
+
+## Questionnaire evaluation
+
+## Runtime and GPU usage
+While GPU usage is something already discussed in implementation, runtime and the optimization of this is still crucial to test. While we originally wanted this project to be able to run in real time, we quckly realised that this was close to impossible with our current setup and implementation. When running the model on a video, we originally ran it on a 3 minute clip with an image every 10 seconds being processed. This resulted in a 6 second video and a runtime of the program of around 15 minutes. Not great, not terrible. In the future, if we want to run this live, additional ressources are required. More about this in @sec-perspective
 
 {{< pagebreak >}}
 
