@@ -330,38 +330,36 @@ All of the crowd counting data is saved to a CSV filed and the images are stitch
 # Implementation
 
 ## Data Collection and Preparation
-To implement this project it was necessary to gather useful evaluation data. For the purposes of this project, that is video security footage and drone footage. Our collaborative partner EventSafety was very helpful in letting us gather this data at their 2 festivals, "Smukfest" and "Grøn Koncert". This was done 1-2 months before the project start since this is when the festivals were held. This means that we gathered the data before completing the research on crowd counting and computer vision. It did pose a challenge to collect the data before knowing exactly what type of data was needed. For these reasons we collected many types of data, including:
+To implement this project it was necessary to gather useful evaluation data. For the purposes of this project, that is video security footage and drone footage. Our collaborative partner EventSafety was very helpful in letting us gather this data at their 2 festivals, "Smukfest" and "Grøn". This was done 1-2 months before the project started since this is when the festivals were held. This means that we gathered the data before completing the research on crowd counting and computer vision. It did pose a challenge to collect the data before knowing exactly what type of data was needed. For these reasons, we collected many types of data, including:
 
-1. Drone footage from "Grøn" at a height of 25-50 meters from the entrance
+1. Drone footage from "Grøn" at an altitude of 25-50 meters from the entrance
 
-1. Drone footage from "Grøn" at a height of 25-50 meters of the concerts and end of concerts
+1. Drone footage from "Grøn" at an altitude of 25-50 meters of the concerts and end of concerts
 
-1. GoPro footage from "Grøn" at a height of 2-5 meters from the entrance
+1. GoPro footage from "Grøn" at an altitude of 2-5 meters from the entrance
 
-1. Security camera footage from "Smukfest at a height of approximately 10-15 meters from the center of the stage. 
+1. Security camera footage from "Smukfest at an altitude of approximately 10-15 meters from the center of the stage. 
 
 1. Security camera footage from "Smukfest" at various heights from bars and paths
 
-What turned out to be most useful was option no. 2, drone footage from "Grøn" at a height of 25-50 meters of the concerts. Having a perspective from higher up, means that more people are clearly visible and also minimizes the distortion when warping for perspective correction. In fact, having an even higher resolution from a higher altitude could also increase the accuracy of the predictions. The resolution of the drone footage was 1080p. Having a higher resolution could limit the video compression artifacts. The camera options were discussed with our secondary partner PhaseOne. They have experience with ultra high resolution top-down drone footage. This could be an option for future endeavors, which will be discussed in @sec-perspective section in this report.
+What turned out to be most useful was option no. 2, drone footage from "Grøn" at an altitude of 25-50 meters of the concerts. Having a perspective from a higher altitude means that more people are clearly visible and also minimizes distortion when warping for perspective correction. Having an even higher resolution from a higher altitude could also increase the accuracy of the predictions. The resolution of the drone footage was 1080p. Having a higher resolution could limit the video compression artifacts. The camera options were discussed with our secondary partner PhaseOne. They have experience with ultra-high-resolution top-down drone footage. This could be an option for future endeavors, which will be discussed in @sec-perspective section of this report.
 
 While we, with the help of a certified drone pilot, collected the footage from "Grøn" ourselves, the security footage from "Smukfest" was collected by EventSafety. For this, we created a technical specification with our requirements for the footage at the time. This can be read in @fig-camera-specs in @sec-appendices. 
 
 ## Environment
 
-Setting up an environment for machine learning in Python can pose a bit of a challenge. Is a requirement to have access to a NVIDIA GPU to take advantage of the CUDA toolkit in PyTorch. This opens up for GPU acceleration which enables a large perforamnce boost rather than running the CNN models on the CPU. Furthermore the SASNet open source projects was built for Python 3.6.8 and PyTorch >= 1.5.0 @sasnet.
+Setting up an environment for machine learning in Python can pose a bit of a challenge. Is a requirement to have access to a NVIDIA GPU to take advantage of the CUDA toolkit in PyTorch. This opens up GPU acceleration which enables a large performance boost rather than running the CNN models on the CPU. Furthermore, the SASNet open source projects were built for Python 3.6.8 and PyTorch >= 1.5.0 @sasnet.
 
 ### Google Colab
-Because of these strict software and hardware requirements, we decided to use the virtual environment in [Google Colab](https://research.google.com/colaboratory/faq.html). Google Colab provides a preconfigured Python environment with (free but not unlimited) access to a NVIDIA GPU. Doing this project in the cloud removes the software and hardware limitations on both the users and developers of the project. However, Google Colab has some feature limitations such as it being disallowed to use it for the purpose of hosting web services. Google Drive can then be volume mounted inside the virtual environment making it posssible to use and make persisted files. 
+Because of these strict software and hardware requirements, we decided to use the virtual environment in [Google Colab](https://research.google.com/colaboratory/faq.html). Google Colab provides a preconfigured Python environment with (free but not unlimited) access to a NVIDIA GPU. Doing this project in the cloud removes the software and hardware limitations on both the users and developers of the project. However, Google Colab has some feature limitations such as it being disallowed to use it for the purpose of hosting web services. Google Drive can then be volume mounted inside the virtual environment making it possible to use and make persisted files. 
 
-The Python version in Google Colab is downgraded to match the version needed for SASNet and both PyTorch and the required PIP-packages are installed. 
+The Python version in Google Colab is downgraded to match the version needed for SASNet and both PyTorch and the required PIP packages are installed. 
 
 ### UCloud
-University of Southern Denmark provides a cloud computing service for faculty members through [eScience](https://escience.sdu.dk/index.php/national-hpc-systems/). Our supervisor applied through this site for a cloud compute resource with 100 GPU hours. 
+University of Southern Denmark provides a cloud computing service for faculty members through [eScience](https://escience.sdu.dk/index.php/national-hpc-systems/). Our supervisor applied through this site for a cloud computing resource with 100 GPU hours. 
 
 ## SASNet Model Adaption
-The SASNet model is loaded using pretrained weights and biases for the underlying vgg16_bn model trained on ImageNet. This allows SASNet to more efficiently identify image features with low memory usage. Furthermore, the SASNet weights and bias fine tuning is loaded to the model which has been trained on the Shanghai Tech Part A dataset. A block_size of 32 is being used here.
-
-<!-- TODO: Write about block size -->
+The SASNet model is loaded using pre-trained weights and biases for the underlying vgg16_bn model trained on ImageNet. This allows SASNet to more efficiently identify image features with low memory usage. Furthermore, the SASNet weights and bias fine-tunings are loaded into the model which has been trained on the Shanghai Tech Part A dataset. A block size of 32 is being used here.
 
 ```python
 class Args:
@@ -373,6 +371,21 @@ class Args:
 model = SASNet(args.use_pretrained, args).cuda()
 model.load_state_dict(torch.load(args.model_path))
 ```
+
+A quick note on block size. Block size is important because when loading data into a CNN model (or any model for that matter) minimal data variance is key. For this reason, a block size is added to make sure that each data input is the same length, see example below:
+
+```python
+Hello SDU
+This is a cool project
+```
+say our input block size was set to 2, this would make sure that each of those lines was truncated to a set length, in this case, a length of 10:
+
+```python
+Hello SDU 0 0     0       0 0 0 0 0 
+This  is  a cool  project 0 0 0 0 0
+```
+
+
 
 ## Integeration 
 
