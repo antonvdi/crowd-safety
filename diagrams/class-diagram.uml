@@ -1,0 +1,73 @@
+@startuml
+
+class Dataset {
+  __len__(): int
+  __getitem__(idx: int): torch.Tensor
+}
+
+class VideoFrameDataset {
+  video_path: str
+  cap: cv2.VideoCapture
+  transform: Optional[Callable]
+  frame_interval: int
+  target_resolution: Tuple[int, int]
+  total_frames: int
+  __init__(video_path: str, transform: Optional[Callable] = None, frame_interval: int = 300, target_resolution: Tuple[int, int] = (1920, 1080))
+  __len__(): int
+  __getitem__(idx: int): torch.Tensor
+  __del__(): None
+}
+
+class Model {
+  model_path: str
+  use_pretrained: bool
+  block_size: int
+  model: SASNet
+  __init__(model_path: str, use_pretrained: bool, block_size: int)
+  get_model(): torch.nn.Module
+}
+
+class CameraUtils {
+  heatmap_alpha: int
+  output_dir: str
+  upsampling_factor: int
+  __init__(heatmap_alpha: int, output_dir: str, upsampling_factor: int)
+  correct_perspective(matrix: np.ndarray, corner_matrix: np.ndarray): np.ndarray
+  downsample_image(matrix: np.ndarray, scale_factor: int): np.ndarray
+  upsample_image(matrix: np.ndarray): np.ndarray
+  make_heatmap(matrix: np.ndarray): np.ndarray
+  add_graphics(picture: np.ndarray, count: int): np.ndarray
+}
+
+class Camera {
+  video_path: str
+  frame_interval: int
+  batch_size: int
+  local_coordinates: List[Tuple[int, int]]
+  global_coordinates: List[Tuple[int, int]]
+  distortion_parameters: Optional[float]
+  model: Model
+  log_parameter: int
+  camera_utils: CameraUtils
+  predicted_counts: List[float]
+  images: List[np.ndarray]
+  __init__(video_path: str, local_coordinates: List[Tuple[int, int]], global_coordinates: List[Tuple[int, int]], model: torch.nn.Module, 
+frame_interval: int, batch_size: int, log_parameter: int, camera_utils: CameraUtils, distortion_parameters: Optional[float] = None)
+  get_video_dataloader(): DataLoader
+  predict(): None
+}
+
+class CameraCollection {
+  cameras: List[Camera]
+  camera_utils: CameraUtils
+  __init__(cameras: List[Camera], camera_utils: CameraUtils)
+  combine_images_to_video(fps: int = 30): None
+  generate_report(): None
+}
+
+VideoFrameDataset --|> Dataset
+Camera "n" -- "1" Model
+Camera "n" -- "1" CameraUtils
+CameraCollection "1" -- "n" Camera : contains
+
+@enduml
