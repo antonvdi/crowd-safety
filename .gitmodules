@@ -1,0 +1,3 @@
+[submodule "backend/CrowdCounting-SASNet"]
+	path = backend/CrowdCounting-SASNet
+	url = https://github.com/TencentYoutuResearch/CrowdCounting-SASNet.git
