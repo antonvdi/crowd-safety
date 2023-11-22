@@ -2,10 +2,11 @@ import numpy as np
 import cv2
 
 class CameraUtils:
-  def __init__(self, heatmap_alpha: int, output_dir: str, upsampling_factor: int) -> None:
+  def __init__(self, heatmap_alpha: int, output_dir: str, upsampling_factor: int, color_map: int) -> None:
     self.heatmap_alpha: int = heatmap_alpha
     self.output_dir: str = output_dir
     self.upsampling_factor: int = upsampling_factor
+    self.color_map: int = color_map
 
   def correct_perspective(self, matrix: np.ndarray, corner_matrix: np.ndarray) -> np.ndarray:
     pt_A = corner_matrix[0]
@@ -65,14 +66,20 @@ class CameraUtils:
     return upscaled_image
 
   def make_heatmap(self, matrix: np.ndarray) -> np.ndarray:
-    scaled_map = cv2.convertScaleAbs(matrix, alpha=self.heatmap_alpha / 1000)
-    colormap = cv2.applyColorMap(np.uint8(scaled_map), cv2.COLORMAP_JET)
-    return colormap
+    scaled_map = np.uint8(cv2.convertScaleAbs(matrix, alpha=self.heatmap_alpha / 1000))
+    if not self.color_map:
+      final_map = np.stack((scaled_map,)*3, axis=-1)
+      return final_map
+
+    return cv2.applyColorMap(scaled_map, self.color_map)
 
   def add_graphics(self, picture: np.ndarray, count: int) -> np.ndarray:
     cv2.putText(picture, f'Predicted Count: {count}', (50, 50),
                 cv2.FONT_HERSHEY_SIMPLEX, 1,
                 (255, 255, 255), 2)
+
+    if not self.color_map:
+      return picture
 
     # Number of discrete colors and colorbar dimensions
     num_colors = 256
@@ -85,7 +92,7 @@ class CameraUtils:
     gradient = cv2.resize(gradient, (bar_width, bar_height), interpolation=cv2.INTER_LINEAR)
     gradient = (255 * gradient).astype(np.uint8)
 
-    colorbar_img = cv2.applyColorMap(gradient, cv2.COLORMAP_JET)
+    colorbar_img = cv2.applyColorMap(gradient, self.color_map)
 
     # Create a white canvas for the labels
     label_width = 100  # Width of the area for the labels
