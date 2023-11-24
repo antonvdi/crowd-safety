@@ -7,6 +7,9 @@ from PySide6.QtWidgets import (
     QHBoxLayout, QWidget, QFileDialog, QLabel, QGraphicsScene, QGraphicsView, QGraphicsPixmapItem, QDialog
 )
 import os
+import cv2
+import tempfile
+import numpy as np
 
 class VideoPlayer(QWidget):
     def __init__(self, parent=None):
@@ -14,23 +17,24 @@ class VideoPlayer(QWidget):
 
         self.Instance = vlc.Instance("--no-xlib")  # Use "--no-xlib" on macOS
         self.player = self.Instance.media_player_new()
+        self.player_size = (1280, 720)
         self.Media = None  # Initialize Media to None
 
         self.init_ui()
 
-        self.polygon_mask = []
+        self.polygon = []
 
     def mousePressEvent(self, event):
-        if event.button() == Qt.LeftButton and self.vlcWidget.geometry().contains(event.pos()):
-            x, y = event.x(), event.y()
+        if event.button() == Qt.LeftButton and self.vlcWidget.geometry().contains(event.position().toPoint()):
+            x, y = event.position().toTuple()
             widget_top_left = self.vlcWidget.geometry().topLeft()
-            self.polygon_mask.append((x - widget_top_left.x(), y - widget_top_left.y()))
+            self.polygon.append((x - widget_top_left.x(), y - widget_top_left.y()))
 
     def init_ui(self):
         self.vlcWidget = QFrame(self)
-        self.vlcWidget.setFixedSize(1280, 720)
+        self.vlcWidget.setFixedSize(self.player_size[0], self.player_size[1])
 
-        self.play_button = QPushButton("Play", self)
+        self.play_button = QPushButton("Pause", self)
         self.play_button.clicked.connect(self.toggle_play)
         self.play_button.setFixedSize(80, 30)  # Set a fixed size for the button
 
@@ -52,10 +56,54 @@ class VideoPlayer(QWidget):
         layout.addLayout(button_layout)
         layout.addWidget(self.progress_slider)
 
+        self.apply_mask_button = QPushButton("Apply Mask", self)
+        self.apply_mask_button.clicked.connect(self.apply_mask)
+        self.apply_mask_button.setFixedSize(100, 30)
+        button_layout.addWidget(self.apply_mask_button)
+
         self.setLayout(layout)
 
         self.player.set_nsobject(self.vlcWidget.winId())
         self.timer = self.startTimer(200)  # Update every 200 milliseconds
+
+
+    def set_mask(self):
+        if not self.Media:
+            return  # No video loaded
+
+        video_path = self.Media.get_mrl()
+        cap = cv2.VideoCapture(video_path)
+
+        # Create a temporary file to store the processed video
+        frame_width = int(cap.get(cv2.CAP_PROP_FRAME_WIDTH))
+        frame_height = int(cap.get(cv2.CAP_PROP_FRAME_HEIGHT))
+
+        original_aspect_ratio = frame_width / frame_height
+        fixed_aspect_ratio = self.player_size[0] / self.player_size[1]
+        if original_aspect_ratio > fixed_aspect_ratio:
+            # Video is wider than 1280x720, letterboxing
+            scale_width = frame_width / self.player_size[0]
+            scale_height = scale_width
+            vertical_offset = (self.player_size[1] - (frame_height / scale_height)) / 2
+            horizontal_offset = 0
+        else:
+            # Video is taller than 1280x720, pillarboxing
+            scale_height = frame_height / self.player_size[1]
+            scale_width = scale_height
+            horizontal_offset = (self.player_size[0] - (frame_width / scale_width)) / 2
+            vertical_offset = 0
+
+        scaled_polygon_mask = [
+            (int((x - horizontal_offset) * scale_width), int((y - vertical_offset) * scale_height))
+            for x, y in self.polygon
+        ]
+
+        mask = np.zeros((frame_height, frame_width), np.uint8)
+        pts = np.array(scaled_polygon_mask, np.int32)
+        cv2.fillPoly(mask, [pts], 255)
+
+        self.poly_mask = mask
+        #masked_frame = cv2.bitwise_and(frame, frame, mask=mask)
 
     def toggle_play(self):
         if self.player.is_playing():
