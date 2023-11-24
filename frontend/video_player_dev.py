@@ -1,15 +1,14 @@
 import sys
 import vlc
-from PySide6.QtCore import Qt
-from PySide6.QtGui import QPixmap, QPainter
+from PySide6.QtCore import Qt, QPoint
+from PySide6.QtGui import QPixmap, QPainter, QPolygon
 from PySide6.QtWidgets import (
     QApplication, QFrame, QPushButton, QSlider, QVBoxLayout,
-    QHBoxLayout, QWidget, QFileDialog, QLabel, QGraphicsScene, QGraphicsView, QGraphicsPixmapItem, QDialog
+    QHBoxLayout, QWidget, QFileDialog, QLabel, QGraphicsScene, QGraphicsView, QGraphicsPixmapItem, QDialog, QGraphicsPolygonItem
 )
-import os
 import cv2
-import tempfile
 import numpy as np
+
 
 class VideoPlayer(QWidget):
     def __init__(self, parent=None):
@@ -24,11 +23,11 @@ class VideoPlayer(QWidget):
 
         self.polygon = []
 
+
     def mousePressEvent(self, event):
         if event.button() == Qt.LeftButton and self.vlcWidget.geometry().contains(event.position().toPoint()):
             x, y = event.position().toTuple()
-            widget_top_left = self.vlcWidget.geometry().topLeft()
-            self.polygon.append((x - widget_top_left.x(), y - widget_top_left.y()))
+            self.polygon.append((x, y))
 
     def init_ui(self):
         self.vlcWidget = QFrame(self)
@@ -56,16 +55,15 @@ class VideoPlayer(QWidget):
         layout.addLayout(button_layout)
         layout.addWidget(self.progress_slider)
 
-        self.apply_mask_button = QPushButton("Apply Mask", self)
-        self.apply_mask_button.clicked.connect(self.apply_mask)
-        self.apply_mask_button.setFixedSize(100, 30)
-        button_layout.addWidget(self.apply_mask_button)
+        self.set_mask_button = QPushButton("Set Mask", self)
+        self.set_mask_button.clicked.connect(self.set_mask)
+        self.set_mask_button.setFixedSize(100, 30)
+        button_layout.addWidget(self.set_mask_button)
 
         self.setLayout(layout)
 
         self.player.set_nsobject(self.vlcWidget.winId())
         self.timer = self.startTimer(200)  # Update every 200 milliseconds
-
 
     def set_mask(self):
         if not self.Media:
@@ -92,6 +90,10 @@ class VideoPlayer(QWidget):
             scale_width = scale_height
             horizontal_offset = (self.player_size[0] - (frame_width / scale_width)) / 2
             vertical_offset = 0
+
+        widget_top_left = self.vlcWidget.geometry().topLeft()
+        horizontal_offset +=  widget_top_left.x()
+        vertical_offset +=  widget_top_left.y()
 
         scaled_polygon_mask = [
             (int((x - horizontal_offset) * scale_width), int((y - vertical_offset) * scale_height))
