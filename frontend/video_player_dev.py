@@ -1,7 +1,7 @@
 import sys
 import vlc
-from PySide6.QtCore import Qt, QPoint
-from PySide6.QtGui import QPixmap, QPainter, QPolygon
+from PySide6.QtCore import Qt, QPoint, QPointF
+from PySide6.QtGui import QPixmap, QPainter, QPolygon, QPen, QColor, QBrush
 from PySide6.QtWidgets import (
     QApplication, QFrame, QPushButton, QSlider, QVBoxLayout,
     QHBoxLayout, QWidget, QFileDialog, QLabel, QGraphicsScene, QGraphicsView, QGraphicsPixmapItem, QDialog, QGraphicsPolygonItem
@@ -9,6 +9,32 @@ from PySide6.QtWidgets import (
 import cv2
 import numpy as np
 
+class DrawingWidget(QFrame):
+    def __init__(self, parent=None):
+        super().__init__(parent)
+        self.polygon = []
+        self.polygon_obj = []
+
+    def mousePressEvent(self, event):
+        if event.button() == Qt.LeftButton:
+            x, y = event.position().toTuple()
+            self.polygon.append((x, y))
+            self.polygon_obj.append(QPointF(x, y))
+            self.update()
+
+    def paintEvent(self, event):
+        painter = QPainter(self)
+        painter.setPen(Qt.white)
+
+        if len(self.polygon_obj) < 2:
+            return
+
+        for i in range(len(self.polygon_obj)):
+            if i + 1 == len(self.polygon_obj):
+                painter.drawLine(self.polygon_obj[i], self.polygon_obj[0])
+                continue
+
+            painter.drawLine(self.polygon_obj[i], self.polygon_obj[i + 1])
 
 class VideoPlayer(QWidget):
     def __init__(self, parent=None):
@@ -21,17 +47,15 @@ class VideoPlayer(QWidget):
 
         self.init_ui()
 
-        self.polygon = []
-
-
-    def mousePressEvent(self, event):
-        if event.button() == Qt.LeftButton and self.vlcWidget.geometry().contains(event.position().toPoint()):
-            x, y = event.position().toTuple()
-            self.polygon.append((x, y))
-
     def init_ui(self):
         self.vlcWidget = QFrame(self)
         self.vlcWidget.setFixedSize(self.player_size[0], self.player_size[1])
+
+        vlcLayout = QVBoxLayout(self.vlcWidget)  # Use QVBoxLayout or QHBoxLayout as needed
+        vlcLayout.setContentsMargins(0, 0, 0, 0)  # Optional: remove margins if desired
+
+        self.drawingWidget = DrawingWidget(self.vlcWidget)
+        vlcLayout.addWidget(self.drawingWidget)
 
         self.play_button = QPushButton("Pause", self)
         self.play_button.clicked.connect(self.toggle_play)
@@ -68,11 +92,10 @@ class VideoPlayer(QWidget):
     def set_mask(self):
         if not self.Media:
             return  # No video loaded
-
+        
         video_path = self.Media.get_mrl()
         cap = cv2.VideoCapture(video_path)
 
-        # Create a temporary file to store the processed video
         frame_width = int(cap.get(cv2.CAP_PROP_FRAME_WIDTH))
         frame_height = int(cap.get(cv2.CAP_PROP_FRAME_HEIGHT))
 
