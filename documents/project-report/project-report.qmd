@@ -421,7 +421,7 @@ Being citizens in and using data of people from an EU country means that we have
 
 ### Facial recognition vs. Crowd Counting
 
-When reading about this project, one might assume that privacy around facial recognition would be an issue. However, as this is related to heatmaps and crowd density instead of direct recognition of people, the identity of people in our footage is not a major concern, and thus was not featured in our risk management section. 
+When reading about this project, one might assume that privacy around facial recognition would be an issue. However, as this is related to heatmaps and crowd density instead of direct recognition of people, the identity of people in our footage is not a major concern, and thus was not featured in our risk management section. The CSMS does not track individuals through time, which could be a privacy concern. 
 
 {{< pagebreak >}}
 
