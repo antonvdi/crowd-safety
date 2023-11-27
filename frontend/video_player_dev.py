@@ -1,137 +1,104 @@
 import sys
-import vlc
-from PySide6.QtCore import Qt, QPoint, QPointF
-from PySide6.QtGui import QPixmap, QPainter, QPolygon, QPen, QColor, QBrush
-from PySide6.QtWidgets import (
-    QApplication, QFrame, QPushButton, QSlider, QVBoxLayout,
-    QHBoxLayout, QWidget, QFileDialog, QLabel, QGraphicsScene, QGraphicsView, QGraphicsPixmapItem, QDialog, QGraphicsPolygonItem
-)
-import cv2
-import numpy as np
+from PySide6.QtWidgets import QApplication, QWidget, QVBoxLayout, QPushButton, QSlider, QFileDialog, QLabel, QStackedLayout
+from PySide6.QtMultimediaWidgets import QVideoWidget
+from PySide6.QtMultimedia import QMediaPlayer
+from PySide6.QtCore import Qt, QUrl, QSize
+from PySide6.QtGui import QPainter, QPolygon, QColor, QPen, QPalette, QColor, QFont
 
-class DrawingWidget(QFrame):
+class FloatingOverlay(QWidget):
     def __init__(self, parent=None):
-        super().__init__(parent)
-        self.polygon = []
-        self.polygon_obj = []
+        super().__init__(parent, Qt.Window | Qt.FramelessWindowHint | Qt.WindowStaysOnTopHint)
+        self.setPalette(QPalette(QColor(0, 0, 0, 0)))  # Semi-transparent
+        self.setAutoFillBackground(True)
+        self.setAttribute(Qt.WA_TransparentForMouseEvents, True)  # Click-through
+
+        self.click_positions = []
+
+    def resizeEvent(self, event):
+        super().resizeEvent(event)
 
     def mousePressEvent(self, event):
         if event.button() == Qt.LeftButton:
-            x, y = event.position().toTuple()
-            self.polygon.append((x, y))
-            self.polygon_obj.append(QPointF(x, y))
-            self.update()
+            self.click_positions.append(event.pos())
+            print(f"Clicked at: {event.pos()}")  # For debugging
+            self.update()  # Request a repaint
 
     def paintEvent(self, event):
+        super().paintEvent(event)  # Call the base class paint event
         painter = QPainter(self)
-        painter.setPen(Qt.white)
+        if self.click_positions:
+            # Draw the polygon
+            pen = QPen(QColor(255, 0, 0), 2)  # Red color, 2px thick
+            painter.setPen(pen)
+            polygon = QPolygon(self.click_positions)
+            painter.drawPolygon(polygon)
 
-        if len(self.polygon_obj) < 2:
-            return
+    def clearPolygon(self):
+        self.click_positions.clear()
+        self.update()
 
-        for i in range(len(self.polygon_obj)):
-            if i + 1 == len(self.polygon_obj):
-                painter.drawLine(self.polygon_obj[i], self.polygon_obj[0])
-                continue
-
-            painter.drawLine(self.polygon_obj[i], self.polygon_obj[i + 1])
 
 class VideoPlayer(QWidget):
     def __init__(self, parent=None):
         super().__init__(parent)
 
-        self.Instance = vlc.Instance("--no-xlib")  # Use "--no-xlib" on macOS
-        self.player = self.Instance.media_player_new()
-        self.player_size = (1280, 720)
-        self.Media = None  # Initialize Media to None
+        self.player = QMediaPlayer()
+        self.videoWidget = QVideoWidget(self)
+        self.videoWidget.setMinimumSize(QSize(1, 1))
 
-        self.init_ui()
+        self.overlay = FloatingOverlay()
+        self.overlay.show()
 
-    def init_ui(self):
-        self.vlcWidget = QFrame(self)
-        self.vlcWidget.setFixedSize(self.player_size[0], self.player_size[1])
-
-        vlcLayout = QVBoxLayout(self.vlcWidget)  # Use QVBoxLayout or QHBoxLayout as needed
-        vlcLayout.setContentsMargins(0, 0, 0, 0)  # Optional: remove margins if desired
-
-        self.drawingWidget = DrawingWidget(self.vlcWidget)
-        vlcLayout.addWidget(self.drawingWidget)
-
-        self.play_button = QPushButton("Pause", self)
+        self.play_button = QPushButton("Play")
         self.play_button.clicked.connect(self.toggle_play)
-        self.play_button.setFixedSize(80, 30)  # Set a fixed size for the button
 
-        self.progress_slider = QSlider(Qt.Horizontal, self)
-        self.progress_slider.setRange(0, 100)  # Assuming the progress is in percentage
+        self.progress_slider = QSlider(Qt.Horizontal)
         self.progress_slider.sliderMoved.connect(self.set_position)
 
-        self.upload_button = QPushButton("Upload Video", self)
+        self.upload_button = QPushButton("Upload Video")
         self.upload_button.clicked.connect(self.upload_video)
-        self.upload_button.setFixedSize(100, 30)  # Set a fixed size for the button
 
-        button_layout = QHBoxLayout()
-        button_layout.addWidget(self.play_button)
-        button_layout.addWidget(self.upload_button)
-        button_layout.addStretch(1)  # Add stretch to move buttons to the left
+        self.set_mask_button = QPushButton("Set Mask")
+        self.set_mask_button.clicked.connect(self.set_mask)
 
         layout = QVBoxLayout()
-        layout.addWidget(self.vlcWidget)
-        layout.addLayout(button_layout)
-        layout.addWidget(self.progress_slider)
 
-        self.set_mask_button = QPushButton("Set Mask", self)
-        self.set_mask_button.clicked.connect(self.set_mask)
-        self.set_mask_button.setFixedSize(100, 30)
-        button_layout.addWidget(self.set_mask_button)
+        layout.addWidget(self.videoWidget)
+        layout.addWidget(self.play_button)
+        layout.addWidget(self.progress_slider)
+        layout.addWidget(self.upload_button)
+        layout.addWidget(self.set_mask_button)
 
         self.setLayout(layout)
 
-        self.player.set_nsobject(self.vlcWidget.winId())
-        self.timer = self.startTimer(200)  # Update every 200 milliseconds
+        self.player.setVideoOutput(self.videoWidget)
 
-    def set_mask(self):
-        if not self.Media:
-            return  # No video loaded
-        
-        video_path = self.Media.get_mrl()
-        cap = cv2.VideoCapture(video_path)
+        self.polygon_mask = []
 
-        frame_width = int(cap.get(cv2.CAP_PROP_FRAME_WIDTH))
-        frame_height = int(cap.get(cv2.CAP_PROP_FRAME_HEIGHT))
+    def showEvent(self, event):
+        super().showEvent(event)
+        self.updateOverlayGeometry()
 
-        original_aspect_ratio = frame_width / frame_height
-        fixed_aspect_ratio = self.player_size[0] / self.player_size[1]
-        if original_aspect_ratio > fixed_aspect_ratio:
-            # Video is wider than 1280x720, letterboxing
-            scale_width = frame_width / self.player_size[0]
-            scale_height = scale_width
-            vertical_offset = (self.player_size[1] - (frame_height / scale_height)) / 2
-            horizontal_offset = 0
-        else:
-            # Video is taller than 1280x720, pillarboxing
-            scale_height = frame_height / self.player_size[1]
-            scale_width = scale_height
-            horizontal_offset = (self.player_size[0] - (frame_width / scale_width)) / 2
-            vertical_offset = 0
+    def resizeEvent(self, event):
+        super().resizeEvent(event)
+        self.updateOverlayGeometry()
 
-        widget_top_left = self.vlcWidget.geometry().topLeft()
-        horizontal_offset +=  widget_top_left.x()
-        vertical_offset +=  widget_top_left.y()
+    def moveEvent(self, event):
+        super().moveEvent(event)
+        self.updateOverlayGeometry()
 
-        scaled_polygon_mask = [
-            (int((x - horizontal_offset) * scale_width), int((y - vertical_offset) * scale_height))
-            for x, y in self.polygon
-        ]
+    def closeEvent(self, event):
+        self.overlay.close()  # Close the overlay when VideoPlayer is closed
+        super().closeEvent(event)  # Continue with the normal closing process
 
-        mask = np.zeros((frame_height, frame_width), np.uint8)
-        pts = np.array(scaled_polygon_mask, np.int32)
-        cv2.fillPoly(mask, [pts], 255)
+    def updateOverlayGeometry(self):
+        video_geometry = self.videoWidget.geometry()
+        global_position = self.videoWidget.mapToGlobal(video_geometry.topLeft())
 
-        self.poly_mask = mask
-        #masked_frame = cv2.bitwise_and(frame, frame, mask=mask)
+        self.overlay.setGeometry(global_position.x()-video_geometry.x(), global_position.y()-video_geometry.y(), video_geometry.width(), video_geometry.height())
 
     def toggle_play(self):
-        if self.player.is_playing():
+        if self.player.playbackState() == QMediaPlayer.PlaybackState.PlayingState:
             self.player.pause()
             self.play_button.setText("Play")
         else:
@@ -139,26 +106,31 @@ class VideoPlayer(QWidget):
             self.play_button.setText("Pause")
 
     def set_position(self, position):
-        self.player.set_position(position / 100.0)
+        self.player.setPosition(position)
 
     def upload_video(self):
         file_dialog = QFileDialog(self)
-        file_dialog.setNameFilter("MP4 Files (*.mp4)")
+        file_dialog.setNameFilter("Video Files (*.mp4 *.avi *.mkv)")
         file_dialog.setFileMode(QFileDialog.ExistingFile)
 
         if file_dialog.exec_() == QFileDialog.Accepted:
             file_path = file_dialog.selectedFiles()[0]
-            self.Media = self.Instance.media_new(file_path)  # Set the MRL during the upload
-            self.player.set_media(self.Media)
+            self.player.setSource(QUrl.fromLocalFile(file_path))
             self.player.play()
-            
-    def timerEvent(self, event):
-        # Update the progress bar based on the current position of the video
-        if not self.player.get_length():
-            return
 
-        position = self.player.get_position()
-        self.progress_slider.setValue(int(position * 100))
+    def set_mask(self):
+        # Assuming video resolution is needed to calculate relative positions
+        video_size = self.videoWidget.sizeHint()
+        if video_size.isValid():
+            original_width, original_height = video_size.width(), video_size.height()
+            for pos in self.videoWidget.click_positions:
+                relative_x = pos.x() / self.videoWidget.width() * original_width
+                relative_y = pos.y() / self.videoWidget.height() * original_height
+
+                print(f"Relative Position: ({relative_x}, {relative_y})")  # For debugging
+                self.polygon_mask.append((relative_x, relative_y))
+
+        self.videoWidget.clearPolygon()
 
 if __name__ == '__main__':
     app = QApplication(sys.argv)
