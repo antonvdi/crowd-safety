@@ -272,7 +272,7 @@ class VideoPlayer(QWidget):
         if file_dialog.exec_() == QFileDialog.Accepted:
             file_path = file_dialog.selectedFiles()[0]
             self.player.setSource(QUrl.fromLocalFile(file_path))
-            self.player.play()
+            self.player.pause()
 
     def clear_mask(self):
         self.overlay.clear_mask()
