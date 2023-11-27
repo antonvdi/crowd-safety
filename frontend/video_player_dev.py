@@ -2,29 +2,103 @@ import sys
 from PySide6.QtWidgets import QApplication, QWidget, QVBoxLayout, QPushButton, QSlider, QFileDialog, QLabel, QStackedLayout
 from PySide6.QtMultimediaWidgets import QVideoWidget
 from PySide6.QtMultimedia import QMediaPlayer
-from PySide6.QtCore import Qt, QUrl, QSize
+from PySide6.QtCore import Qt, QUrl, QSize, QPoint
 from PySide6.QtGui import QPainter, QPolygon, QColor, QPen, QPalette, QColor, QFont
 
 class FloatingOverlay(QWidget):
-    def __init__(self, parent=None):
+    def __init__(self, video_widget, parent=None):
         super().__init__(parent, Qt.Window | Qt.FramelessWindowHint | Qt.WindowStaysOnTopHint)
+        self.video_widget = video_widget  # Reference to the video widget
         self.setPalette(QPalette(QColor(0, 0, 0, 0)))  # Semi-transparent
         self.setAutoFillBackground(True)
         self.setAttribute(Qt.WA_TransparentForMouseEvents, True)  # Click-through
 
         self.click_positions = []
-
-    def resizeEvent(self, event):
-        super().resizeEvent(event)
+        self.relative_click_positions = []  # Store relative positions
 
     def mousePressEvent(self, event):
         if event.button() == Qt.LeftButton:
-            self.click_positions.append(event.pos())
-            print(f"Clicked at: {event.pos()}")  # For debugging
-            self.update()  # Request a repaint
+            if self.isClickWithinVideoArea(event.pos()):
+                self.click_positions.append(event.pos())
+                
+                # Calculate and store the relative position
+                relative_x, relative_y = self.getRelativePosition(event.pos())
+                self.relative_click_positions.append((relative_x, relative_y))
+                print(f"Clicked at: {event.pos()}, Relative position: ({relative_x}, {relative_y})")
+                self.update()  # Request a repaint
+
+    def getAspectRatios(self):
+        widget_width = self.video_widget.width()
+        widget_height = self.video_widget.height()
+        widget_aspect_ratio = widget_width / widget_height
+
+        video_width = self.video_widget.sizeHint().width()
+        video_height = self.video_widget.sizeHint().height()
+
+        video_aspect_ratio = video_width / video_height
+
+        return widget_aspect_ratio, video_aspect_ratio
+
+    def getRelativePosition(self, position):
+        widget_width = self.video_widget.width()
+        widget_height = self.video_widget.height()
+
+        widget_aspect_ratio, video_aspect_ratio = self.getAspectRatios()
+
+        if widget_aspect_ratio > video_aspect_ratio:
+            display_width = widget_height * video_aspect_ratio
+            offset_x = (widget_width - display_width) / 2
+            return (position.x() - offset_x) / display_width, position.y() / widget_height
+        else:
+            display_height = widget_width / video_aspect_ratio
+            offset_y = (widget_height - display_height) / 2
+            return position.x() / widget_width, (position.y() - offset_y) / display_height
+
+    def isClickWithinVideoArea(self, position):
+        widget_width = self.video_widget.width()
+        widget_height = self.video_widget.height()
+
+        widget_aspect_ratio, video_aspect_ratio = self.getAspectRatios()
+
+        if widget_aspect_ratio > video_aspect_ratio:
+            display_width = widget_height * video_aspect_ratio
+            offset_x = (widget_width - display_width) / 2
+            return offset_x <= position.x() <= widget_width - offset_x
+        else:
+            display_height = widget_width / video_aspect_ratio
+            offset_y = (widget_height - display_height) / 2
+            return offset_y <= position.y() <= widget_height - offset_y
+
+
+    def updateClickPositions(self):
+        self.click_positions.clear()
+        widget_width = self.video_widget.width()
+        widget_height = self.video_widget.height()
+
+        widget_aspect_ratio, video_aspect_ratio = self.getAspectRatios()
+
+        # Determine the actual video display area
+        if widget_aspect_ratio > video_aspect_ratio:
+            display_height = widget_height
+            display_width = display_height * video_aspect_ratio
+            offset_x = (widget_width - display_width) / 2
+            offset_y = 0
+        else:
+            display_width = widget_width
+            display_height = display_width / video_aspect_ratio
+            offset_x = 0
+            offset_y = (widget_height - display_height) / 2
+
+        for rel_pos in self.relative_click_positions:
+            new_x = rel_pos[0] * display_width + offset_x
+            new_y = rel_pos[1] * display_height + offset_y
+            self.click_positions.append(QPoint(new_x, new_y))
+
+        self.update() 
+
 
     def paintEvent(self, event):
-        super().paintEvent(event)  # Call the base class paint event
+        super().paintEvent(event)
         painter = QPainter(self)
         if self.click_positions:
             # Draw the polygon
@@ -43,10 +117,11 @@ class VideoPlayer(QWidget):
         super().__init__(parent)
 
         self.player = QMediaPlayer()
+
         self.videoWidget = QVideoWidget(self)
         self.videoWidget.setMinimumSize(QSize(1, 1))
 
-        self.overlay = FloatingOverlay()
+        self.overlay = FloatingOverlay(self.videoWidget)  # Pass the video widget reference
         self.overlay.show()
 
         self.play_button = QPushButton("Play")
@@ -82,6 +157,7 @@ class VideoPlayer(QWidget):
     def resizeEvent(self, event):
         super().resizeEvent(event)
         self.updateOverlayGeometry()
+        self.overlay.updateClickPositions()
 
     def moveEvent(self, event):
         super().moveEvent(event)
@@ -129,8 +205,6 @@ class VideoPlayer(QWidget):
 
                 print(f"Relative Position: ({relative_x}, {relative_y})")  # For debugging
                 self.polygon_mask.append((relative_x, relative_y))
-
-        self.videoWidget.clearPolygon()
 
 if __name__ == '__main__':
     app = QApplication(sys.argv)
