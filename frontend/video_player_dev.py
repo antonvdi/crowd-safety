@@ -1,9 +1,29 @@
 import sys
-from PySide6.QtWidgets import QApplication, QWidget, QVBoxLayout, QPushButton, QSlider, QFileDialog, QLabel, QStackedLayout
+from PySide6.QtWidgets import QApplication, QSplitter, QWidget, QVBoxLayout, QHBoxLayout, QPushButton, QSlider, QFileDialog, QLabel, QStackedLayout, QMainWindow, QTextEdit
 from PySide6.QtMultimediaWidgets import QVideoWidget
 from PySide6.QtMultimedia import QMediaPlayer
-from PySide6.QtCore import Qt, QUrl, QSize, QPoint
-from PySide6.QtGui import QPainter, QPolygon, QColor, QPen, QPalette, QColor, QFont
+from PySide6.QtCore import Qt, QUrl, QSize, QPoint, QTimer
+from PySide6.QtGui import QPainter, QPolygon, QColor, QPen, QPalette, QColor, QFont, QImage
+import cv2
+import numpy as np
+import locale
+
+locale.setlocale(locale.LC_ALL, 'da_DK')
+
+class InfoWidget(QWidget):
+    def __init__(self, parent=None):
+        super().__init__(parent)
+        self.textEdit = QTextEdit()
+
+        layout = QVBoxLayout()
+        layout.addWidget(self.textEdit)
+        self.setLayout(layout)
+
+    def update_info(self, pixel_sum_total, pixel_sum_masked):
+        info_text = f"Total Pixel Sum: {locale.format_string('%d', pixel_sum_total, grouping=True).replace(',', '.')}\n"
+        info_text += f"Masked Area Pixel Sum: {locale.format_string('%d', pixel_sum_masked, grouping=True).replace(',', '.')}\n"
+        self.textEdit.setText(info_text)
+
 
 class FloatingOverlay(QWidget):
     def __init__(self, video_widget, parent=None):
@@ -18,13 +38,13 @@ class FloatingOverlay(QWidget):
 
     def mousePressEvent(self, event):
         if event.button() == Qt.LeftButton:
-            if self.isClickWithinVideoArea(event.pos()):
+            if self.isClickWithinVideoArea(event.pos()) and self.video_widget.sizeHint().width() > -1:
                 self.click_positions.append(event.pos())
-                
+
                 # Calculate and store the relative position
                 relative_x, relative_y = self.getRelativePosition(event.pos())
                 self.relative_click_positions.append((relative_x, relative_y))
-                print(f"Clicked at: {event.pos()}, Relative position: ({relative_x}, {relative_y})")
+
                 self.update()  # Request a repaint
 
     def getAspectRatios(self):
@@ -107,8 +127,9 @@ class FloatingOverlay(QWidget):
             polygon = QPolygon(self.click_positions)
             painter.drawPolygon(polygon)
 
-    def clearPolygon(self):
+    def clear_mask(self):
         self.click_positions.clear()
+        self.relative_click_positions.clear()
         self.update()
 
 
@@ -124,6 +145,8 @@ class VideoPlayer(QWidget):
         self.overlay = FloatingOverlay(self.videoWidget)  # Pass the video widget reference
         self.overlay.show()
 
+        self.infoWidget = InfoWidget()
+
         self.play_button = QPushButton("Play")
         self.play_button.clicked.connect(self.toggle_play)
 
@@ -133,22 +156,78 @@ class VideoPlayer(QWidget):
         self.upload_button = QPushButton("Upload Video")
         self.upload_button.clicked.connect(self.upload_video)
 
-        self.set_mask_button = QPushButton("Set Mask")
-        self.set_mask_button.clicked.connect(self.set_mask)
+        self.clear_mask_button = QPushButton("Clear Mask")
+        self.clear_mask_button.clicked.connect(self.clear_mask)
 
-        layout = QVBoxLayout()
+        self.update_info_button = QPushButton("Update Info")
+        self.update_info_button.clicked.connect(self.update_info)
 
-        layout.addWidget(self.videoWidget)
-        layout.addWidget(self.play_button)
-        layout.addWidget(self.progress_slider)
-        layout.addWidget(self.upload_button)
-        layout.addWidget(self.set_mask_button)
+        vlayout = QVBoxLayout()
 
-        self.setLayout(layout)
+        vlayout.addWidget(self.videoWidget)
+        vlayout.addWidget(self.play_button)
+        vlayout.addWidget(self.progress_slider)
+        vlayout.addWidget(self.upload_button)
+        vlayout.addWidget(self.clear_mask_button)
+        vlayout.addWidget(self.update_info_button)
+
+        hlayout = QHBoxLayout()
+
+        hlayout.addLayout(vlayout, 3)
+        hlayout.addWidget(self.infoWidget, 1)
+
+        self.setLayout(hlayout)
 
         self.player.setVideoOutput(self.videoWidget)
 
         self.polygon_mask = []
+
+    def update_info(self):
+        source = self.player.source()
+
+        if source.toString() != "":
+            time_in_ms = self.player.position()
+
+            cap = cv2.VideoCapture(source.toString(), 0)
+
+            if not cap.isOpened():
+                print("Error: Unable to open video")
+                return
+
+            cap.set(cv2.CAP_PROP_POS_MSEC, time_in_ms)
+
+            ret, frame = cap.read()
+
+            if not ret:
+                print("Error: Unable to read the frame")
+                cap.release()
+                return
+            
+            if len(self.overlay.relative_click_positions) == 0:
+                pixel_sum_masked = 0
+            else:
+                height, width = frame.shape[:2]
+
+                # Get relative click positions and convert them to absolute positions
+                relative_positions = self.overlay.relative_click_positions
+                absolute_positions = [(int(x * width), int(y * height)) for x, y in relative_positions]
+
+                # Create a mask with the same dimensions as the frame
+                mask = np.zeros(frame.shape, dtype=np.uint8)
+
+                # Define a polygon with the absolute positions
+                polygon = np.array(absolute_positions, np.int32)
+                cv2.fillPoly(mask, [polygon], (255, 255, 255))
+
+                masked_frame = cv2.bitwise_and(frame, mask)
+
+                pixel_sum_masked = masked_frame.sum()
+
+            pixel_sum = frame.sum()
+
+            cap.release()
+
+            self.infoWidget.update_info(pixel_sum, pixel_sum_masked)
 
     def showEvent(self, event):
         super().showEvent(event)
@@ -182,7 +261,8 @@ class VideoPlayer(QWidget):
             self.play_button.setText("Pause")
 
     def set_position(self, position):
-        self.player.setPosition(position)
+        new_position = position / 100 * self.player.duration()
+        self.player.setPosition(new_position)
 
     def upload_video(self):
         file_dialog = QFileDialog(self)
@@ -194,20 +274,12 @@ class VideoPlayer(QWidget):
             self.player.setSource(QUrl.fromLocalFile(file_path))
             self.player.play()
 
-    def set_mask(self):
-        # Assuming video resolution is needed to calculate relative positions
-        video_size = self.videoWidget.sizeHint()
-        if video_size.isValid():
-            original_width, original_height = video_size.width(), video_size.height()
-            for pos in self.videoWidget.click_positions:
-                relative_x = pos.x() / self.videoWidget.width() * original_width
-                relative_y = pos.y() / self.videoWidget.height() * original_height
-
-                print(f"Relative Position: ({relative_x}, {relative_y})")  # For debugging
-                self.polygon_mask.append((relative_x, relative_y))
+    def clear_mask(self):
+        self.overlay.clear_mask()
 
 if __name__ == '__main__':
     app = QApplication(sys.argv)
     player = VideoPlayer()
     player.show()
+
     sys.exit(app.exec_())
