@@ -1,5 +1,8 @@
 #!/bin/bash
 
+git submodule init
+git submodule update
+
 sudo add-apt-repository -y ppa:deadsnakes/ppa   
 sudo apt-get update
 sudo apt-get install -y libgl1-mesa-glx
@@ -20,3 +23,4 @@ python3 -m pip install --upgrade pip
 # Install packages from the requirements file
 pip install -r CrowdCounting-SASNet/requirements.txt
 pip install -r requirements.txt
+#pip uninstall -y opencv-python
