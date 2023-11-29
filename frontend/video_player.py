@@ -1,12 +1,14 @@
 import sys
-from PySide6.QtWidgets import QApplication, QSplitter, QWidget, QVBoxLayout, QHBoxLayout, QPushButton, QSlider, QFileDialog, QLabel, QStackedLayout, QMainWindow, QTextEdit
+from PySide6.QtWidgets import QApplication, QWidget, QComboBox, QVBoxLayout, QLabel, QHBoxLayout, QPushButton, QSlider, QFileDialog, QTextEdit
 from PySide6.QtMultimediaWidgets import QVideoWidget
 from PySide6.QtMultimedia import QMediaPlayer
-from PySide6.QtCore import Qt, QUrl, QSize, QPoint, QTimer
-from PySide6.QtGui import QPainter, QPolygon, QColor, QPen, QPalette, QColor, QFont, QImage
+from PySide6.QtCore import Qt, QUrl, QSize, QPoint
+from PySide6.QtGui import QPainter, QPolygon, QColor, QPen, QPalette, QColor, QImage, QPixmap
 import cv2
-import numpy as np
+import numpy as np  
 import locale
+import tempfile
+from colormaps import colormaps
 
 locale.setlocale(locale.LC_ALL, 'da_DK')
 
@@ -162,17 +164,30 @@ class VideoPlayer(QWidget):
         self.update_info_button = QPushButton("Update Info")
         self.update_info_button.clicked.connect(self.update_info)
 
-        vlayout = QVBoxLayout()
+        self.dropdown_menu = QComboBox()
+        self.dropdown_menu.addItems(colormaps.keys()) 
+        self.dropdown_menu.setCurrentIndex(2)
 
-        vlayout.addWidget(self.videoWidget)
+        # Create a layout for the dropdown and upload button
+        upload_layout = QHBoxLayout()
+        upload_layout.addWidget(self.dropdown_menu)
+        upload_layout.addWidget(self.upload_button)
+
+        self.heatmap_scale_label = QLabel(self)
+
+        videoLayout = QHBoxLayout()
+        videoLayout.addWidget(self.videoWidget, 6)
+        videoLayout.addWidget(self.heatmap_scale_label, 1)
+        # Use the upload_layout instead of adding the upload_button directly
+        vlayout = QVBoxLayout()
+        vlayout.addLayout(videoLayout)
         vlayout.addWidget(self.play_button)
         vlayout.addWidget(self.progress_slider)
-        vlayout.addWidget(self.upload_button)
+        vlayout.addLayout(upload_layout)  # Add the combined layout of dropdown and button
         vlayout.addWidget(self.clear_mask_button)
         vlayout.addWidget(self.update_info_button)
 
         hlayout = QHBoxLayout()
-
         hlayout.addLayout(vlayout, 3)
         hlayout.addWidget(self.infoWidget, 1)
 
@@ -183,12 +198,10 @@ class VideoPlayer(QWidget):
         self.polygon_mask = []
 
     def update_info(self):
-        source = self.player.source()
-
-        if source.toString() != "":
+        if self.original_file_path:
             time_in_ms = self.player.position()
 
-            cap = cv2.VideoCapture(source.toString(), 0)
+            cap = cv2.VideoCapture(self.original_file_path, 0)
 
             if not cap.isOpened():
                 print("Error: Unable to open video")
@@ -221,9 +234,9 @@ class VideoPlayer(QWidget):
 
                 masked_frame = cv2.bitwise_and(frame, mask)
 
-                pixel_sum_masked = masked_frame.sum()
+                pixel_sum_masked = masked_frame.sum() / 1000
 
-            pixel_sum = frame.sum()
+            pixel_sum = frame.sum() / 1000
 
             cap.release()
 
@@ -264,15 +277,112 @@ class VideoPlayer(QWidget):
         new_position = position / 100 * self.player.duration()
         self.player.setPosition(new_position)
 
+    def preprocess_frame(self, frame, upscale_factor):
+        # Convert frame to grayscale
+        gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
+
+        # Apply the JET colormap
+        processed_frame = cv2.applyColorMap(gray, colormaps[self.dropdown_menu.currentText()])
+
+        # Determine the new dimensions
+        new_width = int(processed_frame.shape[1] * upscale_factor)
+        new_height = int(processed_frame.shape[0] * upscale_factor)
+        new_dimensions = (new_width, new_height)
+
+        # Upscale the image
+        upscaled_frame = cv2.resize(processed_frame, new_dimensions, interpolation=cv2.INTER_NEAREST)
+
+        return upscaled_frame
+
+
+    def preprocess_video(self, input_path, output_path, upscale_factor=20):
+        # Open the video file
+        cap = cv2.VideoCapture(input_path)
+
+        # Get properties of the video
+        codec = int(cap.get(cv2.CAP_PROP_FOURCC))  # Codec of the video
+        frame_width = int(cap.get(cv2.CAP_PROP_FRAME_WIDTH)*upscale_factor)  # Width of the frames
+        frame_height = int(cap.get(cv2.CAP_PROP_FRAME_HEIGHT)*upscale_factor)  # Height of the frames
+        frame_rate = cap.get(cv2.CAP_PROP_FPS)  # Frame rate
+
+        # Define the codec and create VideoWriter object
+        out = cv2.VideoWriter(output_path, codec, frame_rate, (frame_width, frame_height))
+
+        while cap.isOpened():
+            ret, frame = cap.read()
+            if ret:
+                # Apply heatmap to the frame
+                processed_frame = self.preprocess_frame(frame, upscale_factor)
+
+                # Write the processed frame
+                out.write(processed_frame)
+            else:
+                break
+
+        # Release everything
+        cap.release()
+        out.release()
+
+    def create_heatmap_scale(self):
+        # Number of discrete colors and colorbar dimensions
+        num_colors = 256
+        bar_width = 50
+        bar_height = 500
+
+        # Create an image with a vertical gradient
+        gradient = np.linspace(1, 0, num_colors).reshape(num_colors, 1)
+        gradient = np.repeat(gradient, bar_width, axis=1)
+        gradient = cv2.resize(gradient, (bar_width, bar_height), interpolation=cv2.INTER_LINEAR)
+        gradient = (255 * gradient).astype(np.uint8)
+
+        colorbar_img = cv2.applyColorMap(gradient, colormaps[self.dropdown_menu.currentText()])
+
+        # Create a white canvas for the labels
+        label_width = 100
+        full_img = 255 * np.ones((bar_height+label_width, bar_width + label_width, 3), dtype=np.uint8)
+        full_img[50:50+bar_height, :bar_width, :] = colorbar_img
+
+        # Add labels
+        step = int(bar_height / 10)
+        value_range = np.linspace(255 / 50, 0, bar_height+1)
+        for i in range(0, bar_height+step, step):
+            value = value_range[i]
+            text = f"{value:.2f}"
+            cv2.putText(full_img, text, (bar_width + 10, i + 55), cv2.FONT_HERSHEY_DUPLEX, 0.5, (0, 0, 0), 1, cv2.LINE_AA)
+
+        return full_img
+    
+    def convert_cv_qt(self, cv_img):
+        """Convert from an opencv image to QPixmap"""
+        rgb_image = cv2.cvtColor(cv_img, cv2.COLOR_BGR2RGB)
+        h, w, ch = rgb_image.shape
+        bytes_per_line = ch * w
+        convert_to_Qt_format = QImage(rgb_image.data, w, h, bytes_per_line, QImage.Format_RGB888)
+        return QPixmap.fromImage(convert_to_Qt_format)
+
+
     def upload_video(self):
         file_dialog = QFileDialog(self)
-        file_dialog.setNameFilter("Video Files (*.mp4 *.avi *.mkv)")
+        file_dialog.setNameFilter("Video Files (*.avi)")
         file_dialog.setFileMode(QFileDialog.ExistingFile)
 
         if file_dialog.exec_() == QFileDialog.Accepted:
-            file_path = file_dialog.selectedFiles()[0]
-            self.player.setSource(QUrl.fromLocalFile(file_path))
+            self.original_file_path = file_dialog.selectedFiles()[0]
+
+            # Create a temporary file for the processed video
+            with tempfile.NamedTemporaryFile(delete=False, suffix='.avi') as temp_file:
+                processed_file_path = temp_file.name
+
+            # Process the video
+            self.preprocess_video(self.original_file_path, processed_file_path)
+
+            # Set the processed video as the source
+            self.player.setSource(QUrl.fromLocalFile(processed_file_path))
             self.player.pause()
+
+        heatmap_scale_image = self.create_heatmap_scale()
+        self.heatmap_scale_label.setPixmap(self.convert_cv_qt(heatmap_scale_image))
+
 
     def clear_mask(self):
         self.overlay.clear_mask()
