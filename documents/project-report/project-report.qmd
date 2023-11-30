@@ -428,7 +428,26 @@ When reading about this project, one might assume that privacy around facial rec
 # Validation and Verification
 Since this project is a proof of concept, unit tests and integration tests are not as favored as user tests and similar. Testing of this system relies on making sure that it is useful and understandable to those who need it. To accomplish these tests, we decided to get the opinions of some EventSafety security personnel about our project and their thoughts. 
 
-## EventSafety employee questionnaire
+## EventSafety presentation
+
+Based on the analysis, design and development of the crowd management system we were invited to present our project to more people from EventSafety. Based on this invitation it was decided to research how a proper focus group and the following questionnaire are presented.
+
+### Focus group
+
+"As a summative evaluation, focus groups can be used to assess the acceptance of a new campaign or gauge customer satisfaction levels" @designers_research_manual
+Based on research from @designers_research_manual we arrived at the following conclusion for our research group:
+
+- A group of 6-9 people is the preferred group size
+- A group of similarly experienced people is needed to encourage a proper discussion
+- If possible, have more groups with people different from the other
+
+### Questionaire
+
+Following the focus group, a questionnaire is conducted to gain further insight
+Normally, a questionnaire is used to gather information from a large group. For our presentation, we still felt a questionnaire was relevant to gather solid data for a project report and validation of the project as a whole.
+
+For the questionnaire we had the following questions: 
+
 
 **User interview nr 1:**
 Question 1 (Usefulness of provided video/heatmap/report)
