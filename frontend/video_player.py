@@ -21,9 +21,14 @@ class InfoWidget(QWidget):
         layout.addWidget(self.textEdit)
         self.setLayout(layout)
 
-    def update_info(self, pixel_sum_total, pixel_sum_masked):
-        info_text = f"Total Pixel Sum: {locale.format_string('%d', pixel_sum_total, grouping=True).replace(',', '.')}\n"
-        info_text += f"Masked Area Pixel Sum: {locale.format_string('%d', pixel_sum_masked, grouping=True).replace(',', '.')}\n"
+    def update_info(self, pixel_sum_total, pixel_sum_masked, time_in_ms):
+        frame_interval = 300
+        minutes = int(time_in_ms * frame_interval / 60000)
+        seconds = int((time_in_ms * frame_interval % 60000) / 1000)
+
+        info_text = f"Estimeret personantal i alt: {locale.format_string('%d', pixel_sum_total, grouping=True).replace(',', '.')}\n"
+        info_text += f"Estimeret personantal i valgt område: {locale.format_string('%d', pixel_sum_masked, grouping=True).replace(',', '.')}\n"
+        info_text += f"Tid siden start: {minutes:02d}:{seconds:02d}\n"
         self.textEdit.setText(info_text)
 
 
@@ -149,9 +154,6 @@ class VideoPlayer(QWidget):
 
         self.infoWidget = InfoWidget()
 
-        self.play_button = QPushButton("Play")
-        self.play_button.clicked.connect(self.toggle_play)
-
         self.progress_slider = QSlider(Qt.Horizontal)
         self.progress_slider.sliderMoved.connect(self.set_position)
 
@@ -160,9 +162,6 @@ class VideoPlayer(QWidget):
 
         self.clear_mask_button = QPushButton("Clear Mask")
         self.clear_mask_button.clicked.connect(self.clear_mask)
-
-        self.update_info_button = QPushButton("Update Info")
-        self.update_info_button.clicked.connect(self.update_info)
 
         self.dropdown_menu = QComboBox()
         self.dropdown_menu.addItems(colormaps.keys()) 
@@ -174,18 +173,21 @@ class VideoPlayer(QWidget):
         upload_layout.addWidget(self.upload_button)
 
         self.heatmap_scale_label = QLabel(self)
+        self.heatmap_description_label = QLabel("Est. mennesker pr. kvm", self)
+
+        heatmap_layout = QVBoxLayout()  
+        heatmap_layout.addWidget(self.heatmap_scale_label, 9)  
+        heatmap_layout.addWidget(self.heatmap_description_label, 1) 
 
         videoLayout = QHBoxLayout()
         videoLayout.addWidget(self.videoWidget, 6)
-        videoLayout.addWidget(self.heatmap_scale_label, 1)
-        # Use the upload_layout instead of adding the upload_button directly
+        videoLayout.addLayout(heatmap_layout, 1)  
+
         vlayout = QVBoxLayout()
         vlayout.addLayout(videoLayout)
-        vlayout.addWidget(self.play_button)
         vlayout.addWidget(self.progress_slider)
-        vlayout.addLayout(upload_layout)  # Add the combined layout of dropdown and button
+        vlayout.addLayout(upload_layout)
         vlayout.addWidget(self.clear_mask_button)
-        vlayout.addWidget(self.update_info_button)
 
         hlayout = QHBoxLayout()
         hlayout.addLayout(vlayout, 3)
@@ -240,7 +242,7 @@ class VideoPlayer(QWidget):
 
             cap.release()
 
-            self.infoWidget.update_info(pixel_sum, pixel_sum_masked)
+            self.infoWidget.update_info(pixel_sum, pixel_sum_masked, time_in_ms)
 
     def showEvent(self, event):
         super().showEvent(event)
@@ -265,15 +267,8 @@ class VideoPlayer(QWidget):
 
         self.overlay.setGeometry(global_position.x()-video_geometry.x(), global_position.y()-video_geometry.y(), video_geometry.width(), video_geometry.height())
 
-    def toggle_play(self):
-        if self.player.playbackState() == QMediaPlayer.PlaybackState.PlayingState:
-            self.player.pause()
-            self.play_button.setText("Play")
-        else:
-            self.player.play()
-            self.play_button.setText("Pause")
-
     def set_position(self, position):
+        self.update_info()
         new_position = position / 100 * self.player.duration()
         self.player.setPosition(new_position)
 
@@ -339,7 +334,7 @@ class VideoPlayer(QWidget):
 
         # Create a white canvas for the labels
         label_width = 100
-        full_img = 255 * np.ones((bar_height+label_width, bar_width + label_width, 3), dtype=np.uint8)
+        full_img = 50 * np.ones((bar_height+label_width, bar_width + label_width, 3), dtype=np.uint8)
         full_img[50:50+bar_height, :bar_width, :] = colorbar_img
 
         # Add labels
@@ -348,7 +343,7 @@ class VideoPlayer(QWidget):
         for i in range(0, bar_height+step, step):
             value = value_range[i]
             text = f"{value:.2f}"
-            cv2.putText(full_img, text, (bar_width + 10, i + 55), cv2.FONT_HERSHEY_DUPLEX, 0.5, (0, 0, 0), 1, cv2.LINE_AA)
+            cv2.putText(full_img, text, (bar_width + 10, i + 55), cv2.FONT_HERSHEY_DUPLEX, 0.5, (255, 255, 255), 1, cv2.LINE_AA)
 
         return full_img
     
