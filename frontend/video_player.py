@@ -16,18 +16,21 @@ class InfoWidget(QWidget):
     def __init__(self, parent=None):
         super().__init__(parent)
         self.textEdit = QTextEdit()
+        self.textEdit.setReadOnly(True)
 
         layout = QVBoxLayout()
         layout.addWidget(self.textEdit)
         self.setLayout(layout)
 
-    def update_info(self, pixel_sum_total, pixel_sum_masked, time_in_ms):
+    def update_info(self, pixel_sum_total, density, pixel_sum_masked, density_masked, time_in_ms):
         frame_interval = 300
         minutes = int(time_in_ms * frame_interval / 60000)
         seconds = int((time_in_ms * frame_interval % 60000) / 1000)
 
         info_text = f"Estimeret personantal i alt: {locale.format_string('%d', pixel_sum_total, grouping=True).replace(',', '.')}\n"
+        info_text += f"Estimeret densitet i alt: {locale.format_string('%.3g', density).replace('.', ',')} pr. kvm\n"
         info_text += f"Estimeret personantal i valgt område: {locale.format_string('%d', pixel_sum_masked, grouping=True).replace(',', '.')}\n"
+        info_text += f"Estimeret densitet i valgt område: {locale.format_string('%.3g', density_masked).replace('.', ',')} pr. kvm\n"
         info_text += f"Tid siden start: {minutes:02d}:{seconds:02d}\n"
         self.textEdit.setText(info_text)
 
@@ -51,6 +54,8 @@ class FloatingOverlay(QWidget):
                 # Calculate and store the relative position
                 relative_x, relative_y = self.getRelativePosition(event.pos())
                 self.relative_click_positions.append((relative_x, relative_y))
+
+                self.parent().update_info()
 
                 self.update()  # Request a repaint
 
@@ -149,7 +154,7 @@ class VideoPlayer(QWidget):
         self.videoWidget = QVideoWidget(self)
         self.videoWidget.setMinimumSize(QSize(1, 1))
 
-        self.overlay = FloatingOverlay(self.videoWidget)  # Pass the video widget reference
+        self.overlay = FloatingOverlay(self.videoWidget, self)  # Pass the video widget reference
         self.overlay.show()
 
         self.infoWidget = InfoWidget()
@@ -176,7 +181,7 @@ class VideoPlayer(QWidget):
         self.heatmap_description_label = QLabel("Est. mennesker pr. kvm", self)
 
         heatmap_layout = QVBoxLayout()  
-        heatmap_layout.addWidget(self.heatmap_scale_label, 9)  
+        heatmap_layout.addWidget(self.heatmap_scale_label, 12)  
         heatmap_layout.addWidget(self.heatmap_description_label, 1) 
 
         videoLayout = QHBoxLayout()
@@ -202,6 +207,7 @@ class VideoPlayer(QWidget):
     def update_info(self):
         if self.original_file_path:
             time_in_ms = self.player.position()
+            alpha = 50
 
             cap = cv2.VideoCapture(self.original_file_path, 0)
 
@@ -218,11 +224,12 @@ class VideoPlayer(QWidget):
                 cap.release()
                 return
             
-            if len(self.overlay.relative_click_positions) == 0:
+            height, width = frame.shape[:2]
+            
+            if len(self.overlay.relative_click_positions) < 3:
                 pixel_sum_masked = 0
+                density_masked = 0
             else:
-                height, width = frame.shape[:2]
-
                 # Get relative click positions and convert them to absolute positions
                 relative_positions = self.overlay.relative_click_positions
                 absolute_positions = [(int(x * width), int(y * height)) for x, y in relative_positions]
@@ -235,14 +242,20 @@ class VideoPlayer(QWidget):
                 cv2.fillPoly(mask, [polygon], (255, 255, 255))
 
                 masked_frame = cv2.bitwise_and(frame, mask)
+                
+                masked_area = mask.sum() / (255 * 3)
 
-                pixel_sum_masked = masked_frame.sum() / 1000
+                pixel_sum_masked = masked_frame.sum() / (3*alpha)
 
-            pixel_sum = frame.sum() / 1000
+                density_masked = pixel_sum_masked / masked_area
+
+            pixel_sum = frame.sum() / (3*alpha)
+
+            density = pixel_sum / (height * width)
 
             cap.release()
 
-            self.infoWidget.update_info(pixel_sum, pixel_sum_masked, time_in_ms)
+            self.infoWidget.update_info(pixel_sum, density, pixel_sum_masked, density_masked, time_in_ms)
 
     def showEvent(self, event):
         super().showEvent(event)
@@ -258,8 +271,8 @@ class VideoPlayer(QWidget):
         self.updateOverlayGeometry()
 
     def closeEvent(self, event):
-        self.overlay.close()  # Close the overlay when VideoPlayer is closed
-        super().closeEvent(event)  # Continue with the normal closing process
+        self.overlay.close()
+        super().closeEvent(event)  
 
     def updateOverlayGeometry(self):
         video_geometry = self.videoWidget.geometry()
@@ -376,10 +389,12 @@ class VideoPlayer(QWidget):
             self.player.pause()
 
         heatmap_scale_image = self.create_heatmap_scale()
+        self.update_info()
         self.heatmap_scale_label.setPixmap(self.convert_cv_qt(heatmap_scale_image))
 
 
     def clear_mask(self):
+        self.update_info()
         self.overlay.clear_mask()
 
 if __name__ == '__main__':
