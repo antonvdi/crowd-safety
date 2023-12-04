@@ -8,6 +8,19 @@ class CameraUtils:
     self.upsampling_factor: int = upsampling_factor
     self.color_map: int = color_map
 
+  def correct_fisheye_distortion(self, image: np.ndarray, distortionParameter: float) -> np.ndarray:
+    h, w = image.shape[:2]
+
+    camera_matrix = np.array([[w / 2.0, 0, w / 2.0],
+                              [0, w / 2.0, h / 2.0],
+                              [0, 0, 1]], dtype=np.float32)
+
+    dist_coeffs = np.array([distortionParameter, 0, 0, 0, 0], dtype=np.float32)
+
+    corrected_image = cv2.undistort(image, camera_matrix, dist_coeffs)
+
+    return corrected_image
+
   def correct_perspective(self, matrix: np.ndarray, corner_matrix: np.ndarray) -> np.ndarray:
     pt_A = corner_matrix[0]
     pt_B = corner_matrix[1]

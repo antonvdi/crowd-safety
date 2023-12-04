@@ -72,7 +72,12 @@ class Camera:
         # Extract the first channel (grayscale) from the density map
         grayscale_map = pred_map[i_img][0]
 
-        corrected_map = self.camera_utils.correct_perspective(grayscale_map, self.local_coordinates)
+        if self.distortion_parameters and len(self.distortion_parameters) > 0:
+          undistorted_map = self.camera_utils.correct_fisheye_distortion(grayscale_map, self.distortion_parameters[0])
+        else:
+          undistorted_map = grayscale_map
+
+        corrected_map = self.camera_utils.correct_perspective(undistorted_map, self.local_coordinates)
 
         width_after = self.global_coordinates[3][0] - self.global_coordinates[0][0]
         scale_factor = int(corrected_map.shape[1] / width_after)
