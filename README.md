@@ -16,3 +16,6 @@ Clone the git repository in a UCloud instance with access to CUDA. Run the "back
 git clone https://github.com/anirv20/crowd-safety.git
 bash backend/init.sh
 ```
+
+**local_coords** are the coordinates on the video frames (starting in upper left corner and going clockwise) in pixel value pairs (x,y) when resized to 1920x1080. 
+**global_coords** are the coordinates of the expected output video. One pixel here is equal to one unit (i.e. meters) in the real world domain.
