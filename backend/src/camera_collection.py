@@ -43,7 +43,7 @@ class CameraCollection:
     out = cv2.VideoWriter(file_path, fourcc, fps, frame_size)
 
     for frame_idx in range(len(self.cameras[0].images)):
-        base_frame = np.zeros((frame_size[0], frame_size[1], 3), dtype=np.uint8)
+        base_frame = np.zeros((frame_size[1], frame_size[0], 3), dtype=np.uint8)
 
         for cam in self.cameras:
             image = cam.images[frame_idx]
