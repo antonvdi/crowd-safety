@@ -439,7 +439,7 @@ Based on research from @designers_research_manual we arrived at the following co
 
 - A group of 6-9 people is the preferred group size
 - A group of similarly experienced people is needed to encourage a proper discussion
-- If possible, have more groups with people different from the other
+- If possible, have more groups with different people
 
 For the presentation, a group of 10 employees from Eventsafety attended the presentation with questions and feedback for us along the way. The employees all had major experience with crowd management and event planning. Most of them had heard of our project beforehand but had no further technical insight. 
 
@@ -471,6 +471,8 @@ Question 3 had the attendees evaluate 2 statements from 0 to 100% based on their
 
 1. What percentage of uncertainty would you prefer?
 2. How high of an uncertainty would you be willing to accept?
+
+Question 1 
 
 
 
