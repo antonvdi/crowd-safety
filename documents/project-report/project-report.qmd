@@ -417,11 +417,11 @@ One of the major error-handling implementations made is checking if the data upl
 
 ### Privacy
 
-Being citizens in and using data of people from an EU country means that we have to abide by the rules of GDPR. This means that security and privacy around the data that we have acquired is crucial. Practically, this means that we have a responsibility in making sure that we only upload the images and videos we need to run the model on when they need to be there and remove them when not needed. In a perfect world we would run our program locally as to limit the uploading and removal of sensitive data.
+Being citizens of and using the data of people from an EU country means that we have to abide by the rules of GDPR. This means that security and privacy around the data that we have acquired are crucial. Practically, this means that we have a responsibility to make sure that we only upload the images and videos we need to run the model on when they need to be there and remove them when not needed. In a perfect world, we would run our program locally to limit the uploading and removal of sensitive data.
 
 ### Facial recognition vs. Crowd Counting
 
-When reading about this project, one might assume that privacy around facial recognition would be an issue. However, as this is related to heatmaps and crowd density instead of direct recognition of people, the identity of people in our footage is not a major concern, and thus was not featured in our risk management section. The CSMS does not track individuals through time, which could be a privacy concern. 
+When reading about this project, one might assume that privacy around facial recognition would be an issue. However, as this is related to heatmaps and crowd density instead of direct recognition of people, the identity of people in our footage is not a major concern and thus was not featured in our risk management section. The CSMS does not track individuals through time, which could be a privacy concern. 
 
 {{< pagebreak >}}
 
@@ -430,7 +430,7 @@ Since this project is a proof of concept, unit tests and integration tests are n
 
 ## EventSafety presentation
 
-Based on the analysis, design and development of the crowd management system we were invited to present our project to more people from EventSafety. Based on this invitation it was decided to research how a proper focus group and the following questionnaire are presented.
+Based on the analysis, design and development of the crowd management system we were invited to present our project to more people from EventSafety. Based on this invitation it was decided to research how a proper focus group is structured and managed properly.
 
 ### Focus group
 
@@ -441,12 +441,14 @@ Based on research from @designers_research_manual we arrived at the following co
 - A group of similarly experienced people is needed to encourage a proper discussion
 - If possible, have more groups with people different from the other
 
+For the presentation, a group of 10 employees from Eventsafety attended the presentation with questions and feedback for us along the way. The employees all had major experience with crowd management and event planning. Most of them had heard of our project beforehand but had no further technical insight. 
+
 ### Questionaire
 
-Following the focus group, a questionnaire is conducted to gain further insight
+Following the focus group, a questionnaire is conducted to gain further insight.
 Normally, a questionnaire is used to gather information from a large group. For our presentation, we still felt a questionnaire was relevant to gather solid data for a project report and validation of the project as a whole.
 
-For the questionnaire we had the following questions: 
+The questionnaire was conducted using Mentimeter and consisted of scales, open-ended questions and rankings. All the questions and their results (in danish) are found in @sec-appendices
 
 
 **User interview nr 1:**
@@ -466,7 +468,7 @@ Question 5 (Other thoughts and notes from interviewee)
 ## Questionnaire evaluation
 
 ## Runtime and GPU usage
-While GPU usage is something already discussed in implementation, runtime and the optimization of this is still crucial to test. While we originally wanted this project to be able to run in real time, we quckly realised that this was close to impossible with our current setup and implementation. When running the model on a video, we originally ran it on a 3 minute clip with an image every 10 seconds being processed. This resulted in a 6 second video and a runtime of the program of around 15 minutes. Not great, not terrible. In the future, if we want to run this live, additional ressources are required. More about this in @sec-perspective
+While GPU usage is something already discussed in implementation, runtime and the optimization of this is still crucial to test. While we originally wanted this project to be able to run in real-time, we quickly realized that this was close to impossible with our current setup and implementation. When running the model on a video, we originally ran it on a 3-minute clip with an image every 10 seconds being processed. This resulted in a 6-second video and a runtime of the program of around 15 minutes. Not great, not terrible. In the future, if we want to run this live, additional resources are required. More about this in @sec-perspective
 
 {{< pagebreak >}}
 
@@ -487,4 +489,5 @@ TODO: Add section on possibilities with PhaseOne
 
 # Appendices {.appendix #sec-appendices}
 
+![Mentimeter presentation result](../appendices/MentimeterPresentation.pdf)(#fig-presentation-results)
 ![Technical specification document for cameras](../appendices/teknisk-specifikation.png){#fig-camera-specs width=100% height=100%}
