@@ -1,103 +1,59 @@
 ---
 title: "Using computer vision and AI techniques to improve crowd safety management"
-subtitle: "Project report - January 2024"
-code-repo: "Access the code, data, and analysis at github repo"
+subtitle: "Final report"
 authors:
   - name: Anton Irvold
+    custom-role: "Author"
     email: anirv20@student.sdu.dk
     affiliations: 
       - id: SDU
         name: University of Southern Denmark
-        department: Teknisk Fakultet
-        address: Campusvej 55
-        city: Odense M
-        country: Denmark
-        postal-code: 5230
+        department: Technical Faculty
   - name: Christoffer Krath
     email: chkra19@student.sdu.dk
-    affiliations:
-      - id: SDU
+    custom-role: "Author"
+    affiliations: 
+      - id: sdu
         name: University of Southern Denmark
-        department: Teknisk Fakultet
-        address: Campusvej 55
-        city: Odense M
-        country: Denmark
-        postal-code: 5230
+        department: Technical Faculty
+  - name: Sune Lundø Sørensen
+    email: slso@mmmi.sdu.dk
+    custom-role: "Supervisor"
+    affiliations: 
+      - id: sdu1
+        name: University of Southern Denmark
+        department: MMMI
+  - name: Mikkel Baun Kjærgaard
+    email: mbkj@mmmi.sdu.dk
+    custom-role: "Supervisor"
+    affiliations: 
+      - id: sdu1
+        name: University of Southern Denmark
+        department: MMMI
+  - name: Sofie Dahl
+    email: sofie@eventsafety.dk
+    custom-role: "Collaborator"
+    affiliations: 
+      - id: es
+        name: Event Safety
+  - name: Christian Sejlund
+    email: christian@eventsafety.dk
+    custom-role: "Collaborator"
+    affiliations: 
+      - id: es
+        name: Event Safety
+date: "2024 Jan. 02"
+abstract: |
+  Template abstract lorem ispum
 bibliography: citations.bib
 format:
-  hikmah-pdf: default
-  hikmah-manuscript-pdf: default 
-  pdf:
-    keep-tex: true
-    include-in-header: 
-       text: |
-         \usepackage{fvextra}
-         \DefineVerbatimEnvironment{Highlighting}{Verbatim}{breaklines,commandchars=\\\{\}}
-         \DefineVerbatimEnvironment{OutputCode}{Verbatim}{breaklines,commandchars=\\\{\}}
+  hikmah-pdf:
+    toc: true
+    number-sections: true
 ---
-
-# Administrative Info
-
-**Collaborators from Event Safety**
-
-* Sofie Dahl, sofie@eventsafety.dk
-
-* Christian Sejlund, christian@eventsafety.dk
-
-**SDU supervisor**
-
-* Sune Lundø Sørensen, slso@mmmi.sdu.dk
-
-![](../images/SDU_LOGO.png){height=50%}
-
 {{< pagebreak >}}
 
-# Context and Background
-
-![Fatalities in crowds graph [Figure from @FELICIANI2023106174]](../images/fatalities.jpg){#fig-fatalities}
-
-As seen from @fig-fatalities accidents, fatalities and injuries at festivals and concerts worldwide are on the rise, with just below 5,000 worldwide deaths in the decade of 2010-2019. This can be attributed to several causes, according to @inproceedings: First of all, an increase in the popularity of outdoor music festivals resulting in more and larger festivals with large crowds. Also, high-risk behavior among crowd attendants and the performing artist’s music, behavior, and stage show affects the crowd's safety. Cultural influence has also played a large part in the safety of outdoor musical events. This can be behavior such as crowd surfing, moshing, stage diving and the like. Sudden panic in a crowded place can thus affect the safety of the crowd. 
-
-It is worth mentioning that these figures and descriptions of situations are from media outlets. As such, it's not the full story. While these statistics might make it seem that general safety and incidents at festivals and the like have gotten worse, it is the opposite, It is generally incredibly safe to attend these events, but using newer technologies we will attempt to enhance it further.
-
-At the same time, festivals in Denmark and the rest of the world have had a focus on mitigating the safety risk in large crowds. This can be seen by the establishment of the [Event Safety Foundation](https://eventsafety.dk/historie) in 2015. This is a joint venture between the Skanderborg Festival Group (Smukfest) and Muskelsvindfonden (Grøn Koncert). This foundation has the purpose of securing the safety of the crowds at these two large Danish festivals, as well as many other events in Denmark. They do this through knowledge sharing, professionals and trained volunteers, courses and counseling. This is the company that this project will be done in collaboration with.
-
-To have the best possible outcome for this project, Event Safety invited us to Grøn Koncert and Smukfest in July and August to see how they work and gather security video footage of real crowds at festivals to use as training data. We will also use Event Safety for their practical and theoretical knowledge of crowd safety to use in the system, user feedback and user testing. 
-
-# Problem Statement
-
-Can computer vision software and AI techniques be leveraged to improve crowd overview for security guards, by receiving video feed from large crowds, and ultimately improve crowd safety?
-
-# Timeline
-
-| **Date** 	| **Activity** 	|
-|---	|---	|
-| July-August | Gathering data at attended festivals in collaboration with Event Safety |
-||
-| August 	| Drafting the project description 	|
-||
-| 31-08-2023 	| Delivering the project description 	|
-||
-| 09-09-2023 	| Final discussion with Event Safety regarding the proposed solutions, requirements and the project going forward 	|
-| September 	| In-depth analysis of use cases (with Event Safety) In-depth analysis of required technologies and methods used in academic literature.  Design of the system 	|
-||
-| 25-09-2023 	| Progress update with Event Safety regarding the design of the system 	|
-||
-| October 	| Implementation of proof of concept system (primarily backend) 	|
-||
-| 26-10-2023 	| Progress update with Event Safety and small-scale user testing 	|
-||
-| 31-10-2023 	| Attending Crowd Safety Course hosted by Event Safety in Copenhagen 	|
-||
-| November 	| Implementation of proof of concept system 	|
-||
-| December 	| Final implementation of the system Documentation of the system User testing and evaluation 	|    
-
-{{< pagebreak >}}
-
-# Analysis
-
-## Acronyms and definitions
+# Acronyms and definitions
 
 | **Acronyms**  | **Definition** |
 |--- |--- |
@@ -123,6 +79,28 @@ Can computer vision software and AI techniques be leveraged to improve crowd ove
 ||
 
 {{< pagebreak >}}
+
+# Introduction
+
+## Context
+
+![Fatalities in crowds graph [Figure from @FELICIANI2023106174]](../images/fatalities.jpg){#fig-fatalities}
+
+As seen from @fig-fatalities accidents, fatalities and injuries at festivals and concerts worldwide are on the rise, with just below 5,000 worldwide deaths in the decade of 2010-2019. This can be attributed to several causes, according to @inproceedings: First of all, an increase in the popularity of outdoor music festivals resulting in more and larger festivals with large crowds. Also, high-risk behavior among crowd attendants and the performing artist’s music, behavior, and stage show affects the crowd's safety. Cultural influence has also played a large part in the safety of outdoor musical events. This can be behavior such as crowd surfing, moshing, stage diving and the like. Sudden panic in a crowded place can thus affect the safety of the crowd. 
+
+It is worth mentioning that these figures and descriptions of situations are from media outlets. As such, it's not the full story. While these statistics might make it seem that general safety and incidents at festivals and the like have gotten worse, it is the opposite, It is generally incredibly safe to attend these events, but using newer technologies we will attempt to enhance it further.
+
+At the same time, festivals in Denmark and the rest of the world have had a focus on mitigating the safety risk in large crowds. This can be seen by the establishment of the [Event Safety Foundation](https://eventsafety.dk/historie) in 2015. This is a joint venture between the Skanderborg Festival Group (Smukfest) and Muskelsvindfonden (Grøn Koncert). This foundation has the purpose of securing the safety of the crowds at these two large Danish festivals, as well as many other events in Denmark. They do this through knowledge sharing, professionals and trained volunteers, courses and counseling. This is the company that this project will be done in collaboration with.
+
+To have the best possible outcome for this project, Event Safety invited us to Grøn Koncert and Smukfest in July and August to see how they work and gather security video footage of real crowds at festivals to use as training data. We will also use Event Safety for their practical and theoretical knowledge of crowd safety to use in the system, user feedback and user testing. 
+
+## Problem Statement
+
+Can computer vision software and AI techniques be leveraged to improve crowd overview for security guards, by receiving video feed from large crowds, and ultimately improve crowd safety?
+
+{{< pagebreak >}}
+
+# Analysis
 
 ## System specification
 
@@ -499,5 +477,32 @@ TODO: Add section on possibilities with PhaseOne
 
 # Appendices {.appendix #sec-appendices}
 
+## Mentimeter presentation result
 ![Mentimeter presentation result](../appendices/MentimeterPresentation.pdf)(#fig-presentation-results)
+## Technical specifications for camera
 ![Technical specification document for cameras](../appendices/teknisk-specifikation.png){#fig-camera-specs width=100% height=100%}
+
+## Timeline
+
+| **Date** 	| **Activity** 	|
+|---	|---	|
+| July-August | Gathering data at attended festivals in collaboration with Event Safety |
+||
+| August 	| Drafting the project description 	|
+||
+| 31-08-2023 	| Delivering the project description 	|
+||
+| 09-09-2023 	| Final discussion with Event Safety regarding the proposed solutions, requirements and the project going forward 	|
+| September 	| In-depth analysis of use cases (with Event Safety) In-depth analysis of required technologies and methods used in academic literature.  Design of the system 	|
+||
+| 25-09-2023 	| Progress update with Event Safety regarding the design of the system 	|
+||
+| October 	| Implementation of proof of concept system (primarily backend) 	|
+||
+| 26-10-2023 	| Progress update with Event Safety and small-scale user testing 	|
+||
+| 31-10-2023 	| Attending Crowd Safety Course hosted by Event Safety in Copenhagen 	|
+||
+| November 	| Implementation of proof of concept system 	|
+||
+| December 	| Final implementation of the system Documentation of the system User testing and evaluation 	|    
