@@ -448,24 +448,32 @@ For the presentation, a group of 10 employees from Eventsafety attended the pres
 Following the focus group, a questionnaire is conducted to gain further insight.
 Normally, a questionnaire is used to gather information from a large group. For our presentation, we still felt a questionnaire was relevant to gather solid data for a project report and validation of the project as a whole.
 
-The questionnaire was conducted using Mentimeter and consisted of scales, open-ended questions and rankings. All the questions and their results (in danish) are found in @sec-appendices
+The questionnaire was conducted using Mentimeter and consisted of scales, open-ended questions and rankings. This section will highlight some of the answers the attendees provided. All the questions and their results (in danish) are found in @sec-appendices.
+
+**Question 2**
+![Questionnaire question 2](../images/Evaluation_question2.png){#fig-evaluation_question_2}
+
+Question 2 had the attendees evaluate 3 statements on a scale of 1 to 5 and "strongly disagree" to "strongly agree". 1 being disagree and 5 being agree. The 3 statements were as follows:
+1. I find the usability of the platform adequate
+2. The data the program visualizes is easy to read and understand
+3. The data the program provides is credible compared to my own observations
+
+The first statement was evaluated to a score of 3.9, showing that while the platform in general seems intuitive and fulfills non-functional requirement #2, there is room for visual improvements.
+
+Statement 2 further validates the implementation of non-functional requirement 2# with a score of 4.3
+
+Statement 3 shows that the professional observations from our attendees align with the output of our program, showing that functional requirement #1 is fulfilled. An attendee also mentioned that the heatmap provided by the program gives more value than a precise count of individuals in a crowd. This comment was unfortunately not documented. 
+
+**Question 3**
+![Questionnaire question 3](../images/Evaluation_question3.png){#fig-evaluation_question_2}
+
+Question 3 had the attendees evaluate 2 statements from 0 to 100% based on their preferred uncertainty of the data provided. 
+
+1. What percentage of uncertainty would you prefer?
+2. How high of an uncertainty would you be willing to accept?
 
 
-**User interview nr 1:**
-Question 1 (Usefulness of provided video/heatmap/report)
-Question 2 (Likelihood of implementing this for post-event evaluation)
-Question 3 (How could data like this improve your post-event evaluations)
-Question 4 (Data readability)
-Question 5 (Other thoughts and notes from interviewee)
 
-**User interview nr 2:**
-Question 1 (Usefulness of provided video/heatmap/report)
-Question 2 (Likelihood of implementing this for post-event evaluation)
-Question 3 (How could data like this improve your post-event evaluations)
-Question 4 (Data readability)
-Question 5 (Other thoughts and notes from interviewee)
-
-## Questionnaire evaluation
 
 ## Runtime and GPU usage
 While GPU usage is something already discussed in implementation, runtime and the optimization of this is still crucial to test. While we originally wanted this project to be able to run in real-time, we quickly realized that this was close to impossible with our current setup and implementation. When running the model on a video, we originally ran it on a 3-minute clip with an image every 10 seconds being processed. This resulted in a 6-second video and a runtime of the program of around 15 minutes. Not great, not terrible. In the future, if we want to run this live, additional resources are required. More about this in @sec-perspective
