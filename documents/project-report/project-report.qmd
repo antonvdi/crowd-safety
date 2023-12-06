@@ -429,86 +429,90 @@ For the presentation, a group of 10 employees from Eventsafety attended the pres
 Following the focus group, a questionnaire is conducted to gain further insight.
 Normally, a questionnaire is used to gather information from a large group. For our presentation, we still felt a questionnaire was relevant to gather solid data for a project report and validation of the project as a whole.
 
-The questionnaire was conducted using Mentimeter and consisted of scales, open-ended questions and rankings. This section will highlight some of the answers the attendees provided. All the questions and their results (in danish) are found in @sec-appendices.
+The questionnaire was conducted using Mentimeter and consisted of scales, open-ended questions and rankings. This section will highlight some of the answers the attendees provided. All the questions and their results (in danish) are found in @sec-appendices.\
 
-**Question 2**
+**Question 2**\
 ![Questionnaire question 2](../images/Evaluation_question2.png){#fig-evaluation_question_2}
 
-Question 2 had the attendees evaluate 3 statements on a scale of 1 to 5 and "strongly disagree" to "strongly agree". 1 being disagree and 5 being agree. The 3 statements were as follows:
-1. I find the usability of the platform adequately simple
-2. The data the program visualizes is easy to read and understand
-3. The data the program provides is credible compared to my own observations
 
-The first statement was evaluated to a score of 3.9, showing that while the platform in general seems intuitive and fulfills non-functional requirement #2, there is room for visual improvements.
+Question 2 had the attendees evaluate 3 statements on a scale of 1 to 5 and "strongly disagree" to "strongly agree". 1 being disagree and 5 being agree.\
 
-Statement 2 further validates the implementation of non-functional requirement 2# with a score of 4.3
+The 3 statements were as follows:\
+1. I find the usability of the platform adequately simple\
+2. The data the program visualizes is easy to read and understand\
+3. The data the program provides is credible compared to my own observations\
+The first statement was evaluated to a score of 3.9, showing that while the platform in general seems intuitive and fulfills non-functional requirement #2, there is room for visual improvements.\
 
-Statement 3 shows that the professional observations from our attendees align with the output of our program, showing that functional requirement #1 is fulfilled. An attendee also mentioned that the heatmap provided by the program gives more value than a precise count of individuals in a crowd. This comment was unfortunately not documented. 
+Statement 2 further validates the implementation of non-functional requirement 2# with a score of 4.3\
 
-**Question 3**
+Statement 3 shows that the professional observations from our attendees align with the output of our program, showing that functional requirement #1 is fulfilled.\
+An attendee also mentioned that the heatmap provided by the program gives more value than a precise count of individuals in a crowd. This comment was unfortunately not documented. \
+
+**Question 3**\
 ![Questionnaire question 3](../images/Evaluation_question3.png){#fig-evaluation_question_2}
 
-Question 3 had the attendees evaluate 2 statements from 0 to 100% based on their preferred uncertainty of the data provided. 
+Question 3 had the attendees evaluate 2 statements from 0 to 100% based on their preferred uncertainty of the data provided.\ 
 
-1. What percentage of uncertainty would you prefer?
-2. How high of an uncertainty would you be willing to accept?
+1. What percentage of uncertainty would you prefer?\
+2. How high of an uncertainty would you be willing to accept?\
 
-Question 1 shows a score of 2.2, meaning an uncertainty of around 22% would be ideal for the crowd-counting values provided by the program. This aligns with functional requirement #1, showing that our initial idea of a precision of <100 MAE is way above what we initially thought would be useful. Question 2 shows a score of 3.7, meaning an uncertainty of around 37% would still be useful. This further ties into the comment made to question 2, that the precision of the counts is not as important as the visualized density maps - though these do rely on each other.
+Question 1 shows a score of 2.2, meaning an uncertainty of around 22% would be ideal for the crowd-counting values provided by the program. This aligns with functional requirement #1, showing that our initial idea of a precision of <100 MAE is way above what we initially thought would be useful.\
+Question 2 shows a score of 3.7, meaning an uncertainty of around 37% would still be useful. This further ties into the comment made to question 2, that the precision of the counts is not as important as the visualized density maps - though these do rely on each other.\
 
 ## Further evaluation of functional requirements {#sec-eval_functional_requirements}
 Based on the results and evaluation of our presentation for EventSafety personnel, we can say the following about our functional requirements
 
-1. The system **must** be able to count the number of people in the crowd with a precision of <100 MAE.
+1. The system **must** be able to count the number of people in the crowd with a precision of <100 MAE.\
 The system can use the model to count crowds of people where a human would be able to. When lighting conditions or materials from a concert(bright lights, confetti, fireworks etc.) are present, crowd counting precision is dramatically reduced. 
 
-2. The system **must** be able to segment the crowd into virtual sections for further processing.
+2. The system **must** be able to segment the crowd into virtual sections for further processing.\
 When the processed video is uploaded to our frontend, the user can select a polygon for further processing. The program provides a count and density value for the specified area.
 
-3. The system **must** be able to create a heatmap of the crowd density.
+3. The system **must** be able to create a heatmap of the crowd density.\
 The system creates a heatmap of the analyzed video to visualize crowd density. The user can select the color scheme of the heatmap themselves before uploading a video. 
 
-4. The system **should** be able to calculate the "real" density per area unit.
+4. The system **should** be able to calculate the "real" density per area unit.\
 The system can calculate and display the "real" density based on calculations that sum pixel values in a given area as each pixel value corresponds to a certain amount of people.
 
-5. The system **should** be able to detect the movement of crowd sections.
+5. The system **should** be able to detect the movement of crowd sections.\
 The system is not directly able to detect the movement of a crowd. However, the system does create a timelapse of the area in a video which can be used to manually follow certain crowd movements.
 
-6. The system **should** be able to correct for camera distortion, warp, and perspective.
+6. The system **should** be able to correct for camera distortion, warp, and perspective.\
 The system can correct for perspective and warp by providing ground measurements and image coordinates to the cv2.warpPerspective() method of the openCV library. 
 
 7. The system **should** be able to detect choke points in the crowd movements.
 The system is not able to detect chokepoints beyond manual observations of the users.
 
-8. The system **should** be able to generate a summarizing report of the concert with statistics of (crowd density, crowd count, risk factors, choke points, and other) relevant safety indicators after the event.
+8. The system **should** be able to generate a summarizing report of the concert with statistics of (crowd density, crowd count, risk factors, choke points, and other) relevant safety indicators after the event.\
 The System is not able to generate a report of every statistic provided here. The report is based on the current frame of the timelapse and shows crowd count and crowd density.
 
-9. The system **could** be able to estimate a numerical risk factor based on available factors.
+9. The system **could** be able to estimate a numerical risk factor based on available factors.\
 The system is not able to estimate a numerical risk factor. 
 
-10. The system **could** be able to generate a live, or delayed, video overlaid user interface.
+10. The system **could** be able to generate a live, or delayed, video overlaid user interface.\
 The system can generate a delayed video user interface based on the input. 
 
 
 ## Further evaluation of non-functional requirements
 
-1. The system **must** protect the privacy of personal data.
+1. The system **must** protect the privacy of personal data.\
 The system only handles sensitive when analyzing the surveillance footage. The only way the data is ever close to online is when it is processed on UCloud. However, as the only online part of the process is the usage of UCloud GPUs, the data is never compromised.
 
-2. The system **should** have a user-friendly interface that is easy to manage for both technical and non-technical users.
+2. The system **should** have a user-friendly interface that is easy to manage for both technical and non-technical users.\
 The system has a user-friendly interface that is easy to manage for both technical and non-technical users. This is based on the answers provided in @sec-focusgroup
 
-3. The system **should**  have adequate documentation / technical specifications for technical users.
+3. The system **should**  have adequate documentation /technical specifications for technical users.\
 TODO
 
-4. The system **should**  have adequate user manuals for non-technical users.
+4. The system **should**  have adequate user manuals for non-technical users.\
 TODO
-5. The system **could** have high reliability that is not based on the visual circumstances and environment (e.g. sunlight, stage light, audience flashlights, and other visual effects) or report confidence based on the environment.
+5. The system **could** have high reliability that is not based on the visual circumstances and environment (e.g. sunlight, stage light, audience flashlights, and other visual effects) or report confidence based on the environment.\
 See @sec-eval_functional_requirements
 
-6. The system **could** be scalable to simultaneous interoperability between multiple cameras.
+6. The system **could** be scalable to simultaneous interoperability between multiple cameras.\
 The system can provide output from multiple sources of input at the same time. 
 
-7. The system **could** integrate with existing CCTV software systems at venues.
+7. The system **could** integrate with existing CCTV software systems at venues.\
 The system is not able to integrate with existing CCTV beyond the footage provided to it.
 
 
