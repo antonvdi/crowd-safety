@@ -5,7 +5,7 @@ authors:
   - name: Anton Irvold
     custom-role: "Author"
     email: anirv20@student.sdu.dk
-    affiliations: 
+    affiliations:
       - id: SDU
         name: University of Southern Denmark
         department: Technical Faculty
@@ -404,13 +404,16 @@ When reading about this project, one might assume that privacy around facial rec
 {{< pagebreak >}}
 
 # Validation and Verification
-Since this project is a proof of concept, unit tests and integration tests are not as favored as user tests and similar. Testing of this system relies on making sure that it is useful and understandable to those who need it. To accomplish these tests, we decided to get the opinions of some EventSafety security personnel about our project and their thoughts. 
+Since this project is a proof of concept, unit tests and integration tests are not as favored as user tests and similar. Testing of this system relies on making sure that it is useful and understandable to those who need it. To accomplish these tests, we decided to get the opinions of some EventSafety security personnel and professionals about our project and its usefulness. 
+
+## Runtime and GPU usage
+While GPU usage is something already discussed in implementation, runtime and the optimization of this is still crucial to test. While we originally wanted this project to be able to run in real-time, we quickly realized that this was close to impossible with our current setup and implementation. When running the model on a video, we originally ran it on a 3-minute clip with an image every 10 seconds being processed. This resulted in a 6-second video and a runtime of the program of around 15 minutes. Not great, not terrible. In the future, if we want to run this live, additional resources are required. More about this in @sec-perspective
 
 ## EventSafety presentation
 
 Based on the analysis, design and development of the crowd management system we were invited to present our project to more people from EventSafety. Based on this invitation it was decided to research how a proper focus group is structured and managed properly.
 
-### Focus group
+### Focus group {#sec-focusgroup}
 
 "As a summative evaluation, focus groups can be used to assess the acceptance of a new campaign or gauge customer satisfaction levels" @designers_research_manual
 Based on research from @designers_research_manual we arrived at the following conclusion for our research group:
@@ -432,7 +435,7 @@ The questionnaire was conducted using Mentimeter and consisted of scales, open-e
 ![Questionnaire question 2](../images/Evaluation_question2.png){#fig-evaluation_question_2}
 
 Question 2 had the attendees evaluate 3 statements on a scale of 1 to 5 and "strongly disagree" to "strongly agree". 1 being disagree and 5 being agree. The 3 statements were as follows:
-1. I find the usability of the platform adequate
+1. I find the usability of the platform adequately simple
 2. The data the program visualizes is easy to read and understand
 3. The data the program provides is credible compared to my own observations
 
@@ -450,13 +453,67 @@ Question 3 had the attendees evaluate 2 statements from 0 to 100% based on their
 1. What percentage of uncertainty would you prefer?
 2. How high of an uncertainty would you be willing to accept?
 
-Question 1 
+Question 1 shows a score of 2.2, meaning an uncertainty of around 22% would be ideal for the crowd-counting values provided by the program. This aligns with functional requirement #1, showing that our initial idea of a precision of <100 MAE is way above what we initially thought would be useful. Question 2 shows a score of 3.7, meaning an uncertainty of around 37% would still be useful. This further ties into the comment made to question 2, that the precision of the counts is not as important as the visualized density maps - though these do rely on each other.
+
+## Further evaluation of functional requirements {#sec-eval_functional_requirements}
+Based on the results and evaluation of our presentation for EventSafety personnel, we can say the following about our functional requirements
+
+1. The system **must** be able to count the number of people in the crowd with a precision of <100 MAE.
+The system can use the model to count crowds of people where a human would be able to. When lighting conditions or materials from a concert(bright lights, confetti, fireworks etc.) are present, crowd counting precision is dramatically reduced. 
+
+2. The system **must** be able to segment the crowd into virtual sections for further processing.
+When the processed video is uploaded to our frontend, the user can select a polygon for further processing. The program provides a count and density value for the specified area.
+
+3. The system **must** be able to create a heatmap of the crowd density.
+The system creates a heatmap of the analyzed video to visualize crowd density. The user can select the color scheme of the heatmap themselves before uploading a video. 
+
+4. The system **should** be able to calculate the "real" density per area unit.
+The system can calculate and display the "real" density based on calculations that sum pixel values in a given area as each pixel value corresponds to a certain amount of people.
+
+5. The system **should** be able to detect the movement of crowd sections.
+The system is not directly able to detect the movement of a crowd. However, the system does create a timelapse of the area in a video which can be used to manually follow certain crowd movements.
+
+6. The system **should** be able to correct for camera distortion, warp, and perspective.
+The system can correct for perspective and warp by providing ground measurements and image coordinates to the cv2.warpPerspective() method of the openCV library. 
+
+7. The system **should** be able to detect choke points in the crowd movements.
+The system is not able to detect chokepoints beyond manual observations of the users.
+
+8. The system **should** be able to generate a summarizing report of the concert with statistics of (crowd density, crowd count, risk factors, choke points, and other) relevant safety indicators after the event.
+The System is not able to generate a report of every statistic provided here. The report is based on the current frame of the timelapse and shows crowd count and crowd density.
+
+9. The system **could** be able to estimate a numerical risk factor based on available factors.
+The system is not able to estimate a numerical risk factor. 
+
+10. The system **could** be able to generate a live, or delayed, video overlaid user interface.
+The system can generate a delayed video user interface based on the input. 
+
+
+## Further evaluation of non-functional requirements
+
+1. The system **must** protect the privacy of personal data.
+The system only handles sensitive when analyzing the surveillance footage. The only way the data is ever close to online is when it is processed on UCloud. However, as the only online part of the process is the usage of UCloud GPUs, the data is never compromised.
+
+2. The system **should** have a user-friendly interface that is easy to manage for both technical and non-technical users.
+The system has a user-friendly interface that is easy to manage for both technical and non-technical users. This is based on the answers provided in @sec-focusgroup
+
+3. The system **should**  have adequate documentation / technical specifications for technical users.
+TODO
+
+4. The system **should**  have adequate user manuals for non-technical users.
+TODO
+5. The system **could** have high reliability that is not based on the visual circumstances and environment (e.g. sunlight, stage light, audience flashlights, and other visual effects) or report confidence based on the environment.
+See @sec-eval_functional_requirements
+
+6. The system **could** be scalable to simultaneous interoperability between multiple cameras.
+The system can provide output from multiple sources of input at the same time. 
+
+7. The system **could** integrate with existing CCTV software systems at venues.
+The system is not able to integrate with existing CCTV beyond the footage provided to it.
 
 
 
 
-## Runtime and GPU usage
-While GPU usage is something already discussed in implementation, runtime and the optimization of this is still crucial to test. While we originally wanted this project to be able to run in real-time, we quickly realized that this was close to impossible with our current setup and implementation. When running the model on a video, we originally ran it on a 3-minute clip with an image every 10 seconds being processed. This resulted in a 6-second video and a runtime of the program of around 15 minutes. Not great, not terrible. In the future, if we want to run this live, additional resources are required. More about this in @sec-perspective
 
 {{< pagebreak >}}
 
