@@ -15,10 +15,10 @@ contributes:
       
       # Document styling
       geometry:
-        - top=10pc     # 10p0
-        - bottom=10pc  # 10p0
-        - left=11pc    # 11p0
-        - right=11pc   # 11p0
+        - top=8pc     # 10p0
+        - bottom=8pc  # 10p0
+        - left=9pc    # 11p0
+        - right=9pc   # 11p0
         - heightrounded
       
       # Citations and links
