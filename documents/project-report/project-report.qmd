@@ -252,10 +252,23 @@ For these reasons crowd counting is a method that can be used for many domains i
 
 For the reasons outlined here from @DBLP:journals/corr/OSheaN15 and @li2021approaches, this project will focus on the use of CNN based models for crowd counting.
 
-One of the useful datasets for crowd counting, "Shanghaitech" comes from the paper @Zhang_2016_CVPR. In this paper there are defined two datasets, "part a" and "part b". For the purposes of the CSMS test data, "Shanghaitech Part A" is a more representative dataset to use, since it contains more densely populated crowds from a birds eye view. The dataset is labeled with one dot representing roughly the middle of a person's head. This is the approach outlined in one of the founding papers of crowd counting @NIPS2010_fe73f687. In @NIPS2010_fe73f687, it is explained how their approach to crowd counting, which has become the primary method in the field, is to create a density function $F$ as a function of the pixels in an image $I$. This density function is analoguous to the physical idea of density, however not a direct representation of the same concept, as physical density is based on physical area. Integrating $F$ over the entire image $I$ will return the number of people in $I$. [@NIPS2010_fe73f687] Each object in the image I should be represented by a normalized 2D Gaussian kernel with the mean at the person's head. One disadvantage with this approach, is that the kernel for objects close to the edge of the image will not be counted as a whole object when summed. It is not assumed that this will pose a significant source of error for the purpose of the CSMS.
+One of the useful datasets for crowd counting, "Shanghaitech" comes from the paper @Zhang_2016_CVPR. In this paper there are defined two datasets, "part a" and "part b". For the purposes of the CSMS test data, "Shanghaitech Part A" is a more representative dataset to use, since it contains more densely populated crowds from a birds eye view. The dataset is labeled with one dot representing roughly the middle of a person's head. This is the approach outlined in one of the founding papers of crowd counting @NIPS2010_fe73f687. In @NIPS2010_fe73f687, it is explained how their approach to crowd counting, which has become the primary method in the field, is to create a density function $F$ as a function of the pixels in an image $I$. This density function is analoguous to the physical idea of density, however not a direct representation of the same concept, as physical density is based on physical area. Integrating $F$ over the entire image $I$ will return the number of people in $I$. [@NIPS2010_fe73f687] Each object in the image I should be represented by a normalized 2D Gaussian kernel with the mean at the person's head. One disadvantage with this approach, is that the kernel for objects close to the edge of the image will not be counted as a whole object when summed. It is not assumed that this will pose a significant source of error for the CSMS.
+
+## Security & privacy
+
+Being citizens of and using the data of people from an EU country, we have to abide by the rules of GDPR. This means that security and privacy around the data that we have acquired are crucial. Practically, this means that we have a responsibility to make sure that we only upload the images and videos we need to run the model on when they need to be there and remove them when not needed. In a perfect world, we would run our program locally to limit the uploading and removal of sensitive data.
+
+### Facial recognition vs. Crowd Counting
+
+When reading through this project, one might assume that privacy around facial recognition would be an issue. However, as this is related to heatmaps, crowd counting & crowd density of people, not facial recognition the identity of people in our footage is not a major concern and thus was not featured in our risk management section. The CSMS does not track individuals through time, which could be a primary privacy concern.\
+
+
+### UCloud data policy
+As mentioned, data handling and data privacy are very important for this project. Due to this, we had to research the policies of UCloud regarding data handling before implementing our software on the platform. According to @UCloud_Security, UCloud is ISO 27001 certified. This means that the platform lives up to an international standard for information security management systems @iso27001. Furthermore, according to @UCloud_Security, UCloud is hosted locally on SDU and not by a 3rd party operator. Using this information, we were able to conclude that UCloud as a platform is safe to use for our project and regulated to relevant standards.
+
 
 ## Regarding SAM model for Crowd Counting:  
-One of the original ideas for solving this problem was to use Meta's SAM model. During the preliminary research sessions, it was discovered that SAM was not adequate in counting people but better suited for object detection. The following citation from @ma2023sam highlights the problems well:
+One of the original ideas for solving this problem was to use Meta's SAM(Segment Anything Model) model. During the preliminary research sessions, it was discovered that SAM was not adequate in counting people but better suited for object detection. The following citation from @ma2023sam highlights the problems with using SAM:
 
 "Although the Segment Anything model (SAM) has shown impressive performance in many scenarios, it currently lags behind state-of-the-art few-shot counting methods, especially for small and congested objects. We believe that this is due to two main reasons. Firstly, SAM tends to segment congested objects of the same category with a single mask. Secondly, SAM is trained with masks that lack semantic class annotations, which could hinder its ability to differentiate between different objects. Nevertheless, further exploration of adapting SAM to the object counting task is still worth studying." [@ma2023sam]
 
@@ -311,9 +324,11 @@ For many purposes a video with a heatmap could be sufficient. However, in order 
 
 {{< pagebreak >}}
 
-# Implementation
+# Implementation {#sec-backend}
 
-## Data Collection and Preparation
+## Backend
+
+### Data Collection and Preparation
 To implement this project it was necessary to gather useful evaluation data. For the purposes of this project, that is video security footage and drone footage. Our collaborative partner EventSafety was very helpful in letting us gather this data at their 2 festivals, "Smukfest" and "Grøn". This was done 1-2 months before the project started since this is when the festivals were held. This means that we gathered the data before completing the research on crowd counting and computer vision. It did pose a challenge to collect the data before knowing exactly what type of data was needed. For these reasons, we collected many types of data, including:
 
 1. Drone footage from "Grøn" at an altitude of 25-50 meters from the entrance
@@ -330,7 +345,7 @@ What turned out to be most useful was option number 2 and option number 4. Havin
 
 While we, with the help of a certified drone pilot, collected the footage from "Grøn" ourselves, the security footage from "Smukfest" was collected by EventSafety. For this, we created a technical specification with our requirements for the footage at the time. This can be read in @fig-camera-specs in @sec-appendices. 
 
-## Environment
+### Environment
 
 Setting up an environment for machine learning in Python can pose a bit of a challenge. Is a requirement to have access to a NVIDIA GPU to take advantage of the CUDA toolkit in PyTorch. This opens up GPU acceleration which enables a performance boost rather than running the CNN models on the CPU. Furthermore, the SASNet open source project was built for Python 3.6.8 and PyTorch >= 1.5.0 @sasnet.
 
@@ -349,7 +364,7 @@ University of Southern Denmark provides a cloud computing service for faculty me
 * Installing Python package manager (PIP)
 * Installing all Python package dependencies
 
-## SASNet Model Adaption
+### SASNet Model Adaption
 The SASNet model is loaded using pre-trained weights and biases for the underlying vgg16_bn model trained on ImageNet. This allows SASNet to more efficiently identify image features with low memory usage. Furthermore, the SASNet weights and bias fine-tunings are loaded into the model which has been trained on the Shanghai Tech Part A dataset. A block size of 32 is being used here.
 
 TODO: Add explanation of how block_size is being used in SASNet
@@ -382,21 +397,6 @@ pred_map = pred_map.data.cpu().numpy()
 ```
 
 Here the image tensor is first sent to the NVIDIA GPU using img.cuda(). Gradient calculations are then disabled for the inference, and the model is set to eval mode. These two reduce the GPU memory usage. Finally, after the inference is run and the predicition_map is calculated, the tensor data is sent to the cpu and the tensor is converted to a numpy matrix (an image). This way limits the time that the tensor spends in the GPU greatly, as well as reducing the memory usage.
-
-## Error Handling, Security and Privacy
-
-### Error Handling
-One of the major error-handling implementations made is checking if the data uploaded to the model is present and valid. If either of these checks fail, the code is not run and the program shuts down.
-
-### Security
-
-### Privacy
-
-Being citizens of and using the data of people from an EU country means that we have to abide by the rules of GDPR. This means that security and privacy around the data that we have acquired are crucial. Practically, this means that we have a responsibility to make sure that we only upload the images and videos we need to run the model on when they need to be there and remove them when not needed. In a perfect world, we would run our program locally to limit the uploading and removal of sensitive data.
-
-### Facial recognition vs. Crowd Counting
-
-When reading about this project, one might assume that privacy around facial recognition would be an issue. However, as this is related to heatmaps and crowd density instead of direct recognition of people, the identity of people in our footage is not a major concern and thus was not featured in our risk management section. The CSMS does not track individuals through time, which could be a privacy concern. 
 
 {{< pagebreak >}}
 
@@ -490,7 +490,8 @@ The system is not able to estimate a numerical risk factor.
 The system can generate a delayed video user interface based on the input. 
 
 
-## Further evaluation of non-functional requirements
+## Further evaluation of non-functional requirements{#sec-eval_non_functional_requirements}
+Likewise, we can say the following about our non-functional requirements
 
 1. The system **must** protect the privacy of personal data.\
 The system only handles sensitive when analyzing the surveillance footage. The only way the data is ever close to online is when it is processed on UCloud. However, as the only online part of the process is the usage of UCloud GPUs, the data is never compromised.
@@ -512,18 +513,21 @@ The system can provide output from multiple sources of input at the same time.
 7. The system **could** integrate with existing CCTV software systems at venues.\
 The system is not able to integrate with existing CCTV beyond the footage provided to it.
 
+Based on 
 
 
 
 
 {{< pagebreak >}}
 
-# Discussion
+# Discussion {#sec-discussion}
+
+Privacy of crowd footage combined with other data
 
 TODO: Add section on possibilities with PhaseOne
 {{< pagebreak >}}
 
-# Conclusion
+# Conclusion {#sec-conclusion}
 
 {{< pagebreak >}}
 
