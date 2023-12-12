@@ -305,6 +305,9 @@ All of the crowd counting data is saved to a CSV filed and the images are stitch
 
 ![Activity diagram depicting flow in the solution](../images/activity-diagram-1.png){#fig-activity-diagram}
 
+## Design considerations regarding user experience
+TODO: Add reasoning behind downscaling of the map. And reasoning behind heatmaps. Counting in selected areas. 
+For many purposes a video with a heatmap could be sufficient. However, in order to make it possible to satisfy requirements such as functional requirement 2 and 8 as well as non-functional requirement 2, it was decided to create a simple user interface
 
 {{< pagebreak >}}
 
@@ -351,7 +354,12 @@ The SASNet model is loaded using pre-trained weights and biases for the underlyi
 
 TODO: Add explanation of how block_size is being used in SASNet
 
+## Downscaling 
+
 ## Frontend
+In order to create a flexible user interface, the output data was stripped of all post-processing artifacts (heatmap, scale, count and other text) as this would now be calculated in the frontend. The frontend is created using [Qt for Python](https://wiki.qt.io/Qt_for_Python) to allow for cross platform compatability, to have access to video playback components and have access to the Python OpenCV module to allow for preprocessing of the video. There are 3 main widgets in the frontend. The main VideoPlayer widget which has the buttons to upload the video, clear mask, change heatmap colorscheme. The InfoWidget which displays textual data such as the count, count in selection, density, density in selection and time passed. The FloatingOverlay which is an overlay that follows the size and position of the VideoPlayer where the user can draw a polygon to define an area on the video that should be counted. A simplified version of this structure can be seen in @fig-frontend-class-diagram and the full diagram with all methods and attributes can be seen in the appendix. 
+![Simplified class diagram depicting the structure of the frontend](../images/class-diagram-frontend.png){#fig-frontend-class-diagram}
+The VideoPlayer calls a preprocess function which adds the selected heatmap and upscales the downscaled video before sending it to the QVideoWidget. A density scale is also created after the video has been uploaded. All of this is done using OpenCV.
 
 ## Integeration
 Although a proper API between the frontend and backend was described in the component diagram, @fig-component-diagram, it has not been a priority of the project and thus not developed. For further development, it is still necessary to enable direct upload from the frontend. Currently, all video content must be uploaded to UCloud in order to processed which then produces an output .avi file that can be read and processed properly by the frontend.
@@ -531,6 +539,9 @@ TODO: Add section on possibilities with PhaseOne
 ![Mentimeter presentation result](../appendices/MentimeterPresentation.pdf)(#fig-presentation-results)
 ## Technical specifications for camera
 ![Technical specification document for cameras](../appendices/teknisk-specifikation.png){#fig-camera-specs width=100% height=100%}
+## Full class diagram for frontend
+![Class diagram for frontend](../images/class-diagram-frontend-full.png.png){#fig-frontend-class-diagram-full}
+
 
 ## Timeline
 

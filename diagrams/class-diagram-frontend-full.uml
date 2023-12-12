@@ -1,0 +1,59 @@
+@startuml
+
+class InfoWidget {
+    - textEdit: QTextEdit
+    + __init__(parent: QWidget)
+    + update_info(pixel_sum_total: int, density: float, pixel_sum_masked: int, density_masked: float, time_in_ms: int)
+}
+
+class FloatingOverlay {
+    - video_widget: QVideoWidget
+    - click_positions: list
+    - relative_click_positions: list
+    + __init__(video_widget: QVideoWidget, parent: QWidget)
+    + mousePressEvent(event: QMouseEvent)
+    + getAspectRatios(): tuple
+    + getRelativePosition(position: QPoint): tuple
+    + isClickWithinVideoArea(position: QPoint): bool
+    + updateClickPositions()
+    + paintEvent(event: QPaintEvent)
+    + clear_mask()
+}
+
+class VideoPlayer {
+    - player: QMediaPlayer
+    - videoWidget: QVideoWidget
+    - overlay: FloatingOverlay
+    - infoWidget: InfoWidget
+    - progress_slider: QSlider
+    - upload_button: QPushButton
+    - clear_mask_button: QPushButton
+    - dropdown_menu: QComboBox
+    - heatmap_scale_label: QLabel
+    - heatmap_description_label: QLabel
+    - original_file_path: str
+    - polygon_mask: list
+    + __init__(parent: QWidget)
+    + update_info()
+    + showEvent(event: QShowEvent)
+    + resizeEvent(event: QResizeEvent)
+    + moveEvent(event: QMoveEvent)
+    + closeEvent(event: QCloseEvent)
+    + updateOverlayGeometry()
+    + set_position(position: int)
+    + preprocess_frame(frame: np.ndarray, upscale_factor: float): np.ndarray
+    + preprocess_video(input_path: str, output_path: str, upscale_factor: float)
+    + create_heatmap_scale(): np.ndarray
+    + convert_cv_qt(cv_img: np.ndarray): QPixmap
+    + upload_video()
+    + clear_mask()
+}
+
+InfoWidget --|> QWidget
+FloatingOverlay --|> QWidget
+VideoPlayer --|> QWidget
+
+VideoPlayer "1" *-- "1" InfoWidget : Contains
+VideoPlayer "1" *-- "1" FloatingOverlay : Contains
+
+@enduml

@@ -1,0 +1,28 @@
+@startuml
+class InfoWidget {
+    - textEdit: QTextEdit
+    + update_info(pixel_sum_total: int, density: float, pixel_sum_masked: int, density_masked: float, time_in_ms: int)
+}
+
+class FloatingOverlay {
+    - video_widget: QVideoWidget
+    + mousePressEvent(event: QMouseEvent)
+    + clear_mask()
+}
+
+class VideoPlayer {
+    - player: QMediaPlayer
+    - videoWidget: QVideoWidget
+    - overlay: FloatingOverlay
+    - infoWidget: InfoWidget
+    + upload_video()
+    + clear_mask()
+}
+
+InfoWidget --|> QWidget
+FloatingOverlay --|> QWidget
+VideoPlayer --|> QWidget
+
+VideoPlayer "1" *-- "1" InfoWidget : Contains
+VideoPlayer "1" *-- "1" FloatingOverlay : Contains
+@enduml
