@@ -366,8 +366,29 @@ University of Southern Denmark provides a cloud computing service for faculty me
 
 ### SASNet Model Adaption
 The SASNet model is loaded using pre-trained weights and biases for the underlying vgg16_bn model trained on ImageNet. This allows SASNet to more efficiently identify image features with low memory usage. Furthermore, the SASNet weights and bias fine-tunings are loaded into the model which has been trained on the Shanghai Tech Part A dataset. A block size of 32 is being used here.
-
 TODO: Add explanation of how block_size is being used in SASNet
+
+**Block Size**
+When working with deep learning, block size is an important factor. Most deep learning model are unable to handle sequential input of variable length, this is where block size is relevant. Block size makes sure that the input is always the same regardless of original size. See example:
+
+The following input is not the same size
+
+```python
+hello world
+This is a cool project
+```
+With a block size of 10, the input would instead look like this: 
+
+```python
+hello world 0 0    0        0 0 0 0 0
+This  is    a cool project  0 0 0 0 0 
+```
+
+As such, a block size makes it significantly easier for the deep learning model to handle the input. 
+
+
+### Classes and their implementation
+
 
 ## Downscaling 
 
