@@ -367,12 +367,28 @@ The SASNet model is loaded using pre-trained weights and biases for the underlyi
 
 ### Classes and their implementation
 
+To create an efficient, manageable & scaleable backend, an Object Orient design in python was chosen. In this section, we will look at the responsibilities of each class and how they interact to fulfill these requirements. 
+
+**model_wrapper** \
+
+
+**video_frame_dataset**
+
+**camera**
+
+**camera_utils**
+
+**camera_collection**
+
+**main**
+
 ![Class diagram depicting the structure of the backend](../images/class-backend.png){#fig-class-backend}
+
 
 ### Downscaling 
 
 ## Frontend
-In order to create a flexible user interface, the output data was stripped of all post-processing artifacts (heatmap, scale, count and other text) as this would now be calculated in the frontend. The frontend is created using [Qt for Python](https://wiki.qt.io/Qt_for_Python) to allow for cross platform compatability, to have access to video playback components and have access to the Python OpenCV module to allow for preprocessing of the video. There are 3 main widgets in the frontend. The main VideoPlayer widget which has the buttons to upload the video, clear mask, change heatmap colorscheme. The InfoWidget which displays textual data such as the count, count in selection, density, density in selection and time passed. The FloatingOverlay which is an overlay that follows the size and position of the VideoPlayer where the user can draw a polygon to define an area on the video that should be counted.
+To create a flexible user interface, the output data was stripped of all post-processing artifacts (heatmap, scale, count and other text) as this would now be calculated in the frontend. The frontend is created using [Qt for Python](https://wiki.qt.io/Qt_for_Python) to allow for cross platform compatability, to have access to video playback components and have access to the Python OpenCV module to allow for preprocessing of the video. There are 3 main widgets in the frontend. The main VideoPlayer widget which has the buttons to upload the video, clear mask, change heatmap colorscheme. The InfoWidget which displays textual data such as the count, count in selection, density, density in selection and time passed. The FloatingOverlay which is an overlay that follows the size and position of the VideoPlayer where the user can draw a polygon to define an area on the video that should be counted.
 
 ![Simplified class diagram depicting the structure of the frontend](../images/class-diagram-frontend.png){#fig-fcd}
 
@@ -427,7 +443,7 @@ For the presentation, a group of 8 employees from Event Safety attended the pres
 
 Following the focus group, a questionnaire is conducted to gain further insight. Normally, a questionnaire is used to gather information from a large group. For our presentation, we still felt a questionnaire was relevant in order for us to be able to document their answers in a written format.
 
-The questionnaire was conducted using Mentimeter and consisted of scales, open-ended questions and rankings. This section will highlight some of the answers the attendees provided. All the questions and their results (in Danish) are found in @sec-appendices.\
+The questionnaire was conducted using Mentimeter and consisted of scales, open-ended questions and rankings. This section will highlight some of the answers the attendees provided. All the questions and their results (in Danish) can be found in @sec-appendices.\
 
 **Question 2**\
 
