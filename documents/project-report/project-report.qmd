@@ -30,18 +30,18 @@ authors:
       - id: sdu1
         name: University of Southern Denmark
         department: MMMI
-  - name: Sofie Dahl
-    email: sofie@eventsafety.dk
-    custom-role: "Collaborator"
-    affiliations: 
-      - id: es
-        name: Event Safety
   - name: Christian Sejlund
     email: christian@eventsafety.dk
-    custom-role: "Collaborator"
+    custom-role: "Company Collaborator"
     affiliations: 
       - id: es
-        name: Event Safety
+        name: Event Safety (Smukfest & Muskelsvindfonden)
+  - name: Sofie Dahl
+    email: sofie@eventsafety.dk
+    custom-role: "Company Collaborator"
+    affiliations: 
+      - id: es
+        name: Event Safety (Smukfest & Muskelsvindfonden)
 date: "2024 Jan. 02"
 abstract: |
   Template abstract lorem ispum
@@ -78,6 +78,8 @@ format:
 ||
 | SASNet      | Scale-adaptive selection network @sasnet           |
 ||
+| CUDA      | Compute Unified Device Architecture (NVIDIA GPU API)           |
+||
 
 {{< pagebreak >}}
 
@@ -113,7 +115,8 @@ Scale variation is one of the main challenges with crowd counting, since perspec
 
 ![Architecture of the SASNet model [Diagram from @sasnet]](../images/sasnet-architechture.png){#fig-sasnet}
 
-As it can be seen from the diagram, SASNet uses the first 13 convolutional layers from VGG-16 [@simonyan2014very] in the encoder. SASNet then produces 5 feature levels with 5 levels of downsampling ($V_n$). It produces 5 levels of predictions ($P_n$). This is what is referred to as the "U-shaped backbone". These are then fed to a confidence branch and a density branch that produces a confidence map and density map for each of the 5 levels. The complete density map is a product of the sum of the individual density and confidence branches using a softmax function for the confidence. 
+As it can be seen from the diagram, SASNet uses the first 13 convolutional layers from VGG-16 [@simonyan2014very] in the encoder. SASNet then produces 5 feature levels with 5 levels of downsampling ($V_n$). It produces 5 levels of predictions ($P_n$). This is what is referred to as the "U-shaped backbone". These are then fed to a confidence branch and a density branch that produces a confidence map and density map for each of the 5 levels. The complete density map is a product of the sum of the individual density and confidence branches using a softmax function for the confidence.
+
 
 # Analysis
 
@@ -135,18 +138,18 @@ The system would consist of the following:
 
 ![Component diagram of the system](../images/component-diagram-1.png){height=50% #fig-component-diagram}
 
-An initial component diagram that maps this described system can be seen in @fig-component-diagram.
+An initial component diagram that maps this described system and is subject to change can be seen in @fig-component-diagram.
 
 ## Functional Requirements
 | **ID**   | **MoSCoW**   | **Requirement**  |
 | --- | -------------- | ----------------------------------------------------- |
-| 1   | M        | The system **must** be able to count the amount of people in the crowd with a precision of <100 MAE|
+| 1   | M        | The system **must** be able to count the amount of people in the crowd with a precision required by the user base |
 |     |          |                                                             |
 | 2   | M        | The system **must** be able to segment the crowd into virtual sections for further processing |
 |     |          |                                                             |
 | 3   | M        | The system **must** be able to create a heatmap of the crowd density |
 |     |          |                                                             |
-| 4   | S        | The system **should** be able to calculate the "real" density pr. area unit |
+| 4   | S        | The system **should** be able to calculate the physical density of humans pr. area unit |
 |     |          | 
 | 5   | S        | The system **should** be able to detect the movement of crowd sections |
 |     |          |                                                             |
@@ -225,9 +228,7 @@ The probablity and severity is given each given a score between 1 and 5. 1 being
 |   	|   	|   	|   	|                           	|
 | R05 	| 1 	| 5 	| 5 	| Severity would depend on when in the process EventSafety would cancel our collaboration.  	|
 
-# Method and theory
-TODO: should we keep this?
-## CUDA
+
 
 {{< pagebreak >}}
 
@@ -267,13 +268,12 @@ When reading through this project, one might assume that privacy around facial r
 As mentioned, data handling and data privacy are very important for this project. Due to this, we had to research the policies of UCloud regarding data handling before implementing our software on the platform. According to @UCloud_Security, UCloud is ISO 27001 certified. This means that the platform lives up to an international standard for information security management systems @iso27001. Furthermore, according to @UCloud_Security, UCloud is hosted locally on SDU and not by a 3rd party operator. Using this information, we were able to conclude that UCloud as a platform is safe to use for our project and regulated to relevant standards.
 
 
-## Regarding SAM model for Crowd Counting:  
-One of the original ideas for solving this problem was to use Meta's SAM(Segment Anything Model) model. During the preliminary research sessions, it was discovered that SAM was not adequate in counting people but better suited for object detection. The following citation from @ma2023sam highlights the problems with using SAM:
+## Choosing a technology for Crowd Counting
+One of the original ideas for solving this problem was to use Meta's SAM model. During the preliminary research sessions, it was discovered that SAM was not adequate in counting people but better suited for object detection. The following citation from @ma2023sam highlights the problems well:
 
 "Although the Segment Anything model (SAM) has shown impressive performance in many scenarios, it currently lags behind state-of-the-art few-shot counting methods, especially for small and congested objects. We believe that this is due to two main reasons. Firstly, SAM tends to segment congested objects of the same category with a single mask. Secondly, SAM is trained with masks that lack semantic class annotations, which could hinder its ability to differentiate between different objects. Nevertheless, further exploration of adapting SAM to the object counting task is still worth studying." [@ma2023sam]
 
-## The choice of SASNet
-The choice of using SASNet was based on three different factors:
+There are many open source implementations of crowd counting models, many of which can be seen in the [Awesome Crowd Counting](https://github.com/gjy3035/Awesome-Crowd-Counting) repository by @gjy3035_awesome_crowd_counting along with research papers and benchmarks. After careful consideration, the choice of using SASNet was based on three different factors:
 
 1. SASNets fits our need to solve the problem of scale variation in the video material. It was not possible to obtain video material from an approximate orthographic perspective. However, future endeavors for this project might include cameras like those from one of our collaborators [PhaseOne](https://www.phaseone.com/) who produces approximate orthographic perspectives using high pixel density cameras from high altitudes. SASNet, however, fulfills the requirement to produce relatively high accuracy on an image with perspective for now.
 
@@ -284,7 +284,7 @@ The choice of using SASNet was based on three different factors:
 Finally, SASNet publishes the model weights from the training on either ShanghaiTech part A or part B. For this project, it is deemed more useful to use the images from part A. While the labeled dataset is smaller in part A than part B, it more closely represents the data (i.e. amount of people, density and perspectives) that will be used in this project.
 
 
-## Activity diagram
+## Backend behavior
 
 @fig-activity-diagram illustrates the flow of the program through an activity diagram. The diagram was created to obtain a deeper understanding of the general flow and processes the program goes through during its runtime. The diagram is split into 2 "swimlanes", one lane for our CSMS system and one lane for the implementation of the SASNet model. In broad terms, this can also be specified as a CPU and a GPU lane where our CSMS system handles CPU processing and SASNet focuses on GPU processing.
 
@@ -320,7 +320,7 @@ All of the crowd counting data is saved to a CSV filed and the images are stitch
 
 ## Design considerations regarding user experience
 TODO: Add reasoning behind downscaling of the map. And reasoning behind heatmaps. Counting in selected areas. 
-For many purposes a video with a heatmap could be sufficient. However, in order to make it possible to satisfy requirements such as functional requirement 2 and 8 as well as non-functional requirement 2, it was decided to create a simple user interface
+For many purposes a video with a heatmap could be sufficient. However, in order to make it possible to satisfy requirements such as functional requirement 2 and 8 as well as non-functional requirement 2, it was decided to create a simple user interface.
 
 {{< pagebreak >}}
 
@@ -349,19 +349,17 @@ While we, with the help of a certified drone pilot, collected the footage from "
 
 Setting up an environment for machine learning in Python can pose a bit of a challenge. Is a requirement to have access to a NVIDIA GPU to take advantage of the CUDA toolkit in PyTorch. This opens up GPU acceleration which enables a performance boost rather than running the CNN models on the CPU. Furthermore, the SASNet open source project was built for Python 3.6.8 and PyTorch >= 1.5.0 @sasnet.
 
-### Google Colab
-TODO: Could be deleted
-
-Because of these strict software and hardware requirements, we decided to use the virtual environment in [Google Colab](https://research.google.com/colaboratory/faq.html). Google Colab provides a preconfigured Python environment with (free but not unlimited) access to a NVIDIA GPU. Doing this project in the cloud removes the software and hardware limitations on both the users and developers of the project. However, Google Colab has some feature limitations such as it being disallowed to use it for the purpose of hosting web services. Google Drive can then be volume mounted inside the virtual environment making it possible to use and make persisted files. 
-
-The Python version in Google Colab is downgraded to match the version needed for SASNet and both PyTorch and the required PIP packages are installed. 
-
 ### UCloud
 University of Southern Denmark provides a cloud computing service for faculty members through [eScience](https://escience.sdu.dk/index.php/national-hpc-systems/). Our supervisor applied through this site for a cloud computing resource with 50 GPU hours. The project was granted 100 GB storage and the "u1-gpu @ DeiC Interactive HPC (SDU)" server. In UCloud we used the application "Coder CUDA" to run the project. We created a bash script (crowd-safety/backend/init.py) with the following responsibilities to initiate the environment:
+
 * Initiating and cloning Git submodules
+
 * Installing necessary Ubuntu packages
+
 * Installing necessary Python installation
+
 * Installing Python package manager (PIP)
+
 * Installing all Python package dependencies
 
 ### SASNet Model Adaption
@@ -555,7 +553,7 @@ TODO: Add section on possibilities with PhaseOne
 
 {{< pagebreak >}}
 
-# Perspective {#sec-perspective}
+# Future Perspectives {#sec-perspective}
 
 {{< pagebreak >}}
 
@@ -568,7 +566,7 @@ TODO: Add section on possibilities with PhaseOne
 ## Technical specifications for camera
 ![Technical specification document for cameras](../appendices/teknisk-specifikation.png){#fig-camera-specs width=100% height=100%}
 ## Full class diagram for frontend
-![Class diagram for frontend](../images/class-diagram-frontend-full.png.png){#fig-frontend-class-diagram-full}
+![Class diagram for frontend](../images/class-diagram-frontend-full.png){#fig-frontend-class-diagram-full}
 
 
 ## Timeline
