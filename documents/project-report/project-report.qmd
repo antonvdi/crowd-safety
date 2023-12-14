@@ -365,10 +365,13 @@ University of Southern Denmark provides a cloud computing service for faculty me
 * Installing all Python package dependencies
 
 ### SASNet Model Adaption
+
 The SASNet model is loaded using pre-trained weights and biases for the underlying vgg16_bn model trained on ImageNet. This allows SASNet to more efficiently identify image features with low memory usage. Furthermore, the SASNet weights and bias fine-tunings are loaded into the model which has been trained on the Shanghai Tech Part A dataset. A block size of 32 is being used here.
 TODO: Add explanation of how block_size is being used in SASNet
 
 **Block Size**
+Might be wrong or uneeded
+
 When working with deep learning, block size is an important factor. Most deep learning model are unable to handle sequential input of variable length, this is where block size is relevant. Block size makes sure that the input is always the same regardless of original size. See example:
 
 The following input is not the same size
@@ -480,8 +483,8 @@ Question 2 shows a score of 3.7, meaning an uncertainty of around 37% would stil
 ## Further evaluation of functional requirements {#sec-eval_functional_requirements}
 Based on the results and evaluation of our presentation for EventSafety personnel, we can say the following about our functional requirements
 
-1. The system **must** be able to count the number of people in the crowd with a precision of <100 MAE.\
-The system can use the model to count crowds of people where a human would be able to. When lighting conditions or materials from a concert(bright lights, confetti, fireworks etc.) are present, crowd counting precision is dramatically reduced. 
+1. The system **must** be able to count the number of people in the crowd with a precision required by the user base\
+The system can use the model to count crowds of people where a human would be able to. When lighting conditions or materials from a concert (bright lights, confetti, fireworks etc.) are present, crowd counting precision is dramatically reduced. Based on answers in question 3 and previous conversations with Event Safety, we learned that a higher precision is not as desirable as a proper heatmap. This meant that focus was put on perspective warping and generating a proper heatmap of density in favor of *very* precise crowd counting.
 
 2. The system **must** be able to segment the crowd into virtual sections for further processing.\
 When the processed video is uploaded to our frontend, the user can select a polygon for further processing. The program provides a count and density value for the specified area.
@@ -489,8 +492,8 @@ When the processed video is uploaded to our frontend, the user can select a poly
 3. The system **must** be able to create a heatmap of the crowd density.\
 The system creates a heatmap of the analyzed video to visualize crowd density. The user can select the color scheme of the heatmap themselves before uploading a video. 
 
-4. The system **should** be able to calculate the "real" density per area unit.\
-The system can calculate and display the "real" density based on calculations that sum pixel values in a given area as each pixel value corresponds to a certain amount of people.
+4. The system **should** be able to calculate the physical density of humans per area unit.\
+The system can calculate and display the physical density based on the sum of pixel values in a given area, as each pixel value corresponds to a certain amount of people.
 
 5. The system **should** be able to detect the movement of crowd sections.\
 The system is not directly able to detect the movement of a crowd. However, the system does create a timelapse of the area in a video which can be used to manually follow certain crowd movements.
