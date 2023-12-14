@@ -189,7 +189,6 @@ An initial component diagram that maps this described system and is subject to c
 
 {{< pagebreak >}}
 
-## Detailed Requirements
 
 ## Risks
 More often that not a project will encounter problems that can hinder the progress or outcome. By being well prepared we are able to mitigate some of these risks. The following table describes some of the risks we might encounter in this project.
@@ -343,7 +342,7 @@ To implement this project it was necessary to gather useful evaluation data. For
 
 What turned out to be most useful was option number 2 and option number 4. Having a perspective from a higher altitude means that more people are clearly visible and also minimizes distortion when warping for perspective correction. Having an even higher resolution from a higher altitude could also increase the accuracy of the predictions. The resolution of the drone footage was 1080p. Having a higher resolution could limit the video compression artifacts. The camera options were discussed with our secondary partner PhaseOne. They have experience with ultra-high-resolution top-down drone footage. This could be an option for future endeavors, which will be discussed in @sec-perspective section of this report.
 
-While we, with the help of a certified drone pilot, collected the footage from "Grøn" ourselves, the security footage from "Smukfest" was collected by EventSafety. For this, we created a technical specification with our requirements for the footage at the time. This can be read in @fig-camera-specs in @sec-appendices. 
+While we, with the help of a certified drone pilot, collected the footage from "Grøn" ourselves, the security footage from "Smukfest" was collected by EventSafety. For this, we created a technical specification with our requirements for the footage at the time. This can be read in @sec-appendices. 
 
 ### Environment
 
@@ -368,13 +367,16 @@ The SASNet model is loaded using pre-trained weights and biases for the underlyi
 
 ### Classes and their implementation
 
+![Class diagram depicting the structure of the backend](../images/class-backend.png){#fig-class-backend}
 
-## Downscaling 
+### Downscaling 
 
 ## Frontend
-In order to create a flexible user interface, the output data was stripped of all post-processing artifacts (heatmap, scale, count and other text) as this would now be calculated in the frontend. The frontend is created using [Qt for Python](https://wiki.qt.io/Qt_for_Python) to allow for cross platform compatability, to have access to video playback components and have access to the Python OpenCV module to allow for preprocessing of the video. There are 3 main widgets in the frontend. The main VideoPlayer widget which has the buttons to upload the video, clear mask, change heatmap colorscheme. The InfoWidget which displays textual data such as the count, count in selection, density, density in selection and time passed. The FloatingOverlay which is an overlay that follows the size and position of the VideoPlayer where the user can draw a polygon to define an area on the video that should be counted. A simplified version of this structure can be seen in @fig-frontend-class-diagram and the full diagram with all methods and attributes can be seen in the appendix. 
-![Simplified class diagram depicting the structure of the frontend](../images/class-diagram-frontend.png){#fig-frontend-class-diagram}
-The VideoPlayer calls a preprocess function which adds the selected heatmap and upscales the downscaled video before sending it to the QVideoWidget. A density scale is also created after the video has been uploaded. All of this is done using OpenCV.
+In order to create a flexible user interface, the output data was stripped of all post-processing artifacts (heatmap, scale, count and other text) as this would now be calculated in the frontend. The frontend is created using [Qt for Python](https://wiki.qt.io/Qt_for_Python) to allow for cross platform compatability, to have access to video playback components and have access to the Python OpenCV module to allow for preprocessing of the video. There are 3 main widgets in the frontend. The main VideoPlayer widget which has the buttons to upload the video, clear mask, change heatmap colorscheme. The InfoWidget which displays textual data such as the count, count in selection, density, density in selection and time passed. The FloatingOverlay which is an overlay that follows the size and position of the VideoPlayer where the user can draw a polygon to define an area on the video that should be counted.
+
+![Simplified class diagram depicting the structure of the frontend](../images/class-diagram-frontend.png){#fig-fcd}
+
+A simplified version of this structure can be seen in @fig-fcd and the full diagram with all methods and attributes can be seen in the appendix. The VideoPlayer calls a preprocess function which adds the selected heatmap and upscales the downscaled video before sending it to the QVideoWidget. A density scale is also created after the video has been uploaded. All of this is done using OpenCV.
 
 ## Integeration
 Although a proper API between the frontend and backend was described in the component diagram, @fig-component-diagram, it has not been a priority of the project and thus not developed. For further development, it is still necessary to enable direct upload from the frontend. Currently, all video content must be uploaded to UCloud in order to processed which then produces an output .avi file that can be read and processed properly by the frontend.
@@ -412,41 +414,42 @@ Based on the analysis, design and development of the crowd management system we 
 
 ### Focus group {#sec-focusgroup}
 
-"As a summative evaluation, focus groups can be used to assess the acceptance of a new campaign or gauge customer satisfaction levels" @designers_research_manual
+"As a summative evaluation, focus groups can be used to assess the acceptance of a new campaign or gauge customer satisfaction levels" @designers_research_manual.
 Based on research from @designers_research_manual we arrived at the following conclusion for our research group:
 
 - A group of 6-9 people is the preferred group size
 - A group of similarly experienced people is needed to encourage a proper discussion
 - If possible, have more groups with different people
 
-For the presentation, a group of 10 employees from Eventsafety attended the presentation with questions and feedback for us along the way. The employees all had major experience with crowd management and event planning. Most of them had heard of our project beforehand but had no further technical insight. 
+For the presentation, a group of 8 employees from Event Safety attended the presentation with questions and feedback for us along the way. The employees all had major experience with crowd management and event planning. Most of them had heard of our project beforehand but had no further technical insight. 
 
-### Questionaire
+### Focus Group Questionaire
 
-Following the focus group, a questionnaire is conducted to gain further insight.
-Normally, a questionnaire is used to gather information from a large group. For our presentation, we still felt a questionnaire was relevant to gather solid data for a project report and validation of the project as a whole.
+Following the focus group, a questionnaire is conducted to gain further insight. Normally, a questionnaire is used to gather information from a large group. For our presentation, we still felt a questionnaire was relevant in order for us to be able to document their answers in a written format.
 
-The questionnaire was conducted using Mentimeter and consisted of scales, open-ended questions and rankings. This section will highlight some of the answers the attendees provided. All the questions and their results (in danish) are found in @sec-appendices.\
+The questionnaire was conducted using Mentimeter and consisted of scales, open-ended questions and rankings. This section will highlight some of the answers the attendees provided. All the questions and their results (in Danish) are found in @sec-appendices.\
 
 **Question 2**\
+
 ![Questionnaire question 2](../images/Evaluation_question2.png){#fig-evaluation_question_2}
 
 
 Question 2 had the attendees evaluate 3 statements on a scale of 1 to 5 and "strongly disagree" to "strongly agree". 1 being disagree and 5 being agree.\
 
 The 3 statements were as follows:\
-1. I find the usability of the platform adequately simple\
-2. The data the program visualizes is easy to read and understand\
-3. The data the program provides is credible compared to my own observations\
+1. I find the usability of the platform adequately simple.\
+2. The data the program visualizes is easy to read and understand.\
+3. The data the program provides is credible compared to my own observations.\
 The first statement was evaluated to a score of 3.9, showing that while the platform in general seems intuitive and fulfills non-functional requirement #2, there is room for visual improvements.\
 
-Statement 2 further validates the implementation of non-functional requirement 2# with a score of 4.3\
+Statement 2 further validates the implementation of non-functional requirement #2 with a score of 4.3.\
 
 Statement 3 shows that the professional observations from our attendees align with the output of our program, showing that functional requirement #1 is fulfilled.\
 An attendee also mentioned that the heatmap provided by the program gives more value than a precise count of individuals in a crowd. This comment was unfortunately not documented. \
 
 **Question 3**\
-![Questionnaire question 3](../images/Evaluation_question3.png){#fig-evaluation_question_2}
+
+![Questionnaire question 3](../images/Evaluation_question3.png){#fig-evaluation_question_3}
 
 Question 3 had the attendees evaluate 2 statements from 0 to 100% based on their preferred uncertainty of the data provided.\ 
 
@@ -455,6 +458,7 @@ Question 3 had the attendees evaluate 2 statements from 0 to 100% based on their
 
 Question 1 shows a score of 2.2, meaning an uncertainty of around 22% would be ideal for the crowd-counting values provided by the program. This aligns with functional requirement #1, showing that our initial idea of a precision of <100 MAE is way above what we initially thought would be useful.\
 Question 2 shows a score of 3.7, meaning an uncertainty of around 37% would still be useful. This further ties into the comment made to question 2, that the precision of the counts is not as important as the visualized density maps - though these do rely on each other.\
+It is also important to note that the required uncertainty percentages varies depending on the total size of the crowd. A 
 
 ## Further evaluation of functional requirements {#sec-eval_functional_requirements}
 Based on the results and evaluation of our presentation for EventSafety personnel, we can say the following about our functional requirements
@@ -540,9 +544,9 @@ TODO: Add section on possibilities with PhaseOne
 # Appendices {.appendix #sec-appendices}
 
 ## Mentimeter presentation result
-![Mentimeter presentation result](../appendices/MentimeterPresentation.pdf)(#fig-presentation-results)
+![Mentimeter presentation result](../appendices/MentimeterPresentation.pdf){#fig-presentation-results}
 ## Technical specifications for camera
-![Technical specification document for cameras](../appendices/teknisk-specifikation.png){#fig-camera-specs width=100% height=100%}
+![Technical specification document for cameras](../appendices/teknisk-specifikation.png){#fig-camera-specs}
 ## Full class diagram for frontend
 ![Class diagram for frontend](../images/class-diagram-frontend-full.png){#fig-frontend-class-diagram-full}
 
