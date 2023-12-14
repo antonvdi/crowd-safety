@@ -50,6 +50,7 @@ format:
   hikmah-pdf:
     toc: true
     number-sections: true
+    tbl-cap-location: bottom
 
 ---
 {{< pagebreak >}}
@@ -80,6 +81,7 @@ format:
 ||
 | CUDA      | Compute Unified Device Architecture (NVIDIA GPU API)           |
 ||
+: Table of acronyms and definitions used throughout the report {#tbl-acronyms}
 
 {{< pagebreak >}}
 
@@ -166,6 +168,8 @@ An initial component diagram that maps this described system and is subject to c
 | 11  | W        | The system **will not** be able to identify dangerous situations that might call for cautionary actions such as crowd surge, mosh pits, falls, blocked exits, etc. |
 |     |          |                                                             |
 | 12  | W        | The system **will not** be able to use data gathered elsewhere at a concert such as alcohol sales, average crowd age, sound, artists, etc. to give a more precise crowd profile and thus risk factor |
+: Table of functional requirements {#tbl-functional-reqs}
+
 
 {{< pagebreak >}}
 
@@ -186,6 +190,8 @@ An initial component diagram that maps this described system and is subject to c
 | 6   | C        | The system **could** be scalable to simultaneous interoperability between multiple cameras |
 |     |          |                                                             |
 | 7   | C        | The system **could** integrate with existing CCTV software systems at venues |
+: Table of non-functional requirements {#tbl-nonfunctional-reqs}
+
 
 {{< pagebreak >}}
 
@@ -204,6 +210,8 @@ More often that not a project will encounter problems that can hinder the progre
 | R04 	| Unusable data 	| Project, Product 	| If the data provided by the drone or from EventSafety turns out to be unusable due to one or more factors: Resolution, perspective, Distortion etc. 	| Making sure that provided data is on par regarding the requirements of our project. Some data might be fixed by using mathematics but in general a proper standard for data is preferred 	|
 |       	|         	|             	|                   |                   	|
 | R05 	| Company collaboration ends 	| Project 	| If EventSafety or the group decides to end the collaboration around the project early.  	| Making sure that we listen to and adapt to feedback from EventSafety to keep our good relationship with them	|
+: Table of risks {#tbl-risks}
+
 
 ## Risk assessment
 
@@ -226,8 +234,7 @@ The probablity and severity is given each given a score between 1 and 5. 1 being
 | R04 	| 4 	| 3 	| 12 	| The severity really depends on how bad the data is and how well we are able to adapt to it 	|
 |   	|   	|   	|   	|                           	|
 | R05 	| 1 	| 5 	| 5 	| Severity would depend on when in the process EventSafety would cancel our collaboration.  	|
-
-
+: Table of risk assesment {#tbl-risk-assesment}
 
 {{< pagebreak >}}
 
@@ -384,15 +391,14 @@ To create an efficient, manageable & scaleable backend, an Object Orient design 
 
 ![Class diagram depicting the structure of the backend](../images/class-backend.png){#fig-class-backend}
 
-
-### Downscaling 
+### Downscaling & Pespective Correction
 
 ## Frontend
-To create a flexible user interface, the output data was stripped of all post-processing artifacts (heatmap, scale, count and other text) as this would now be calculated in the frontend. The frontend is created using [Qt for Python](https://wiki.qt.io/Qt_for_Python) to allow for cross platform compatability, to have access to video playback components and have access to the Python OpenCV module to allow for preprocessing of the video. There are 3 main widgets in the frontend. The main VideoPlayer widget which has the buttons to upload the video, clear mask, change heatmap colorscheme. The InfoWidget which displays textual data such as the count, count in selection, density, density in selection and time passed. The FloatingOverlay which is an overlay that follows the size and position of the VideoPlayer where the user can draw a polygon to define an area on the video that should be counted.
+To create a flexible user interface, the output data was stripped of all post-processing artifacts (heatmap, scale, count and other text) as this would now be calculated in the frontend. The frontend is created using [Qt for Python](https://wiki.qt.io/Qt_for_Python) to allow for cross platform compatability, to have access to video playback components and have access to the Python OpenCV module to allow for preprocessing of the video. There are 3 main widgets in the frontend. The main VideoPlayer widget which has the buttons to upload the video, clear mask and change heatmap colorscheme. The InfoWidget which displays textual data such as the count, count in selection, density, density in selection and time passed. The FloatingOverlay which is an overlay that follows the size and position of the VideoPlayer where the user can draw a polygon to define an area on the video that should be counted, as defined in functional requirement 2 in @tbl-functional-reqs. 
 
 ![Simplified class diagram depicting the structure of the frontend](../images/class-diagram-frontend.png){#fig-fcd}
 
-A simplified version of this structure can be seen in @fig-fcd and the full diagram with all methods and attributes can be seen in the appendix. The VideoPlayer calls a preprocess function which adds the selected heatmap and upscales the downscaled video before sending it to the QVideoWidget. A density scale is also created after the video has been uploaded. All of this is done using OpenCV.
+A simplified version of this structure can be seen in @fig-fcd and the full diagram with all methods and attributes can be seen in the appendix. The VideoPlayer calls a preprocess function which adds the selected heatmap and upscales the downscaled video before sending it to the QVideoWidget. A density scale is also created after the video has been uploaded. All of this is done using OpenCV. This is done in accordance with functional requirement 3 in @tbl-functional-reqs.
 
 ## Integeration
 Although a proper API between the frontend and backend was described in the component diagram, @fig-component-diagram, it has not been a priority of the project and thus not developed. For further development, it is still necessary to enable direct upload from the frontend. Currently, all video content must be uploaded to UCloud in order to processed which then produces an output .avi file that can be read and processed properly by the frontend.
@@ -404,7 +410,7 @@ For two main reasons, it is necessary to limit the compute resource usage:
 
 2. For the CSMS to be scalable to (near) real-time evaluation performance, it makes sense to limit the use of computing power as much as possible.
 
-According to @pytorch, [disabling gradient calculation](https://pytorch.org/docs/stable/generated/torch.no_grad.html) is useful for lowering memory usage when using a model for inference. This fits the use case and greatly reduced the memory usage. This was done using the following way:
+According to @pytorch, [disabling gradient calculation](https://pytorch.org/docs/stable/generated/torch.no_grad.html) is useful for lowering memory usage when using a model for inference. This fits the use case and greatly reduced the memory usage. This was done in the following way:
 
 ```python
 img = img.cuda()
@@ -544,7 +550,6 @@ Based on
 
 Privacy of crowd footage combined with other data
 
-TODO: Add section on possibilities with PhaseOne
 {{< pagebreak >}}
 
 # Conclusion {#sec-conclusion}
@@ -552,6 +557,7 @@ TODO: Add section on possibilities with PhaseOne
 {{< pagebreak >}}
 
 # Future Perspectives {#sec-perspective}
+TODO: Add section on possibilities with PhaseOne
 
 {{< pagebreak >}}
 
@@ -565,7 +571,6 @@ TODO: Add section on possibilities with PhaseOne
 ![Technical specification document for cameras](../appendices/teknisk-specifikation.png){#fig-camera-specs}
 ## Full class diagram for frontend
 ![Class diagram for frontend](../images/class-diagram-frontend-full.png){#fig-frontend-class-diagram-full}
-
 
 ## Timeline
 
