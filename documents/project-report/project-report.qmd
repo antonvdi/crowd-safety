@@ -142,7 +142,7 @@ The system would consist of the following:
 
 An initial component diagram that maps this described system and is subject to change can be seen in @fig-component-diagram.
 
-## Functional Requirements
+## Functional Requirements {#sec-functional-requirements}
 | **ID**   | **MoSCoW**   | **Requirement**  |
 | --- | -------------- | ----------------------------------------------------- |
 | 1   | M        | The system **must** be able to count the amount of people in the crowd with a precision required by the user base |
@@ -173,7 +173,7 @@ An initial component diagram that maps this described system and is subject to c
 
 {{< pagebreak >}}
 
-## Non-functional requirements
+## Non-functional requirements{#sec-non-functional-requirements}
 
 | **ID**   | **MoSCoW**   | **Requirement**  |
 | --- | -------------- | ----------------------------------------------------- |
@@ -196,8 +196,8 @@ An initial component diagram that maps this described system and is subject to c
 {{< pagebreak >}}
 
 
-## Risks
-More often that not a project will encounter problems that can hinder the progress or outcome. By being well prepared we are able to mitigate some of these risks. The following table describes some of the risks we might encounter in this project.
+## Risks {#sec-risks}
+More often than not a project will encounter problems that can hinder the progress or outcome. By being well prepared we are able to mitigate some of these risks. The following table describes some of the risks we might encounter in this project.
 
 | **ID** 	| **Name** 	| **Affects** 	| **Description** 	| **Mitigation** 	|
 |---	|---	|---	|---	|---	|
@@ -238,7 +238,7 @@ The probablity and severity is given each given a score between 1 and 5. 1 being
 
 {{< pagebreak >}}
 
-# Design
+# Design{#sec-design}
 
 ## About Crowd Counting
 Crowd counting is a field of computer vision research that has developed quickly in recent years. It is a technique that aims to count the instances of any object in an image, no matter the context, density or type of object. [@sasnet] This differentiates it from object detection which is usually trained on one specific type of object by extracting certain visual features. The benefits from using crowd counting rather than object detection is: 
@@ -274,7 +274,7 @@ When reading through this project, one might assume that privacy around facial r
 As mentioned, data handling and data privacy are very important for this project. Due to this, we had to research the policies of UCloud regarding data handling before implementing our software on the platform. According to @UCloud_Security, UCloud is ISO 27001 certified. This means that the platform lives up to an international standard for information security management systems @iso27001. Furthermore, according to @UCloud_Security, UCloud is hosted locally on SDU and not by a 3rd party operator. Using this information, we were able to conclude that UCloud as a platform is safe to use for our project and regulated to relevant standards.
 
 
-## Choosing a technology for Crowd Counting
+## Choosing a technology for Crowd Counting {#sec-model-selection}
 One of the original ideas for solving this problem was to use Meta's SAM model. During the preliminary research sessions, it was discovered that SAM was not adequate in counting people but better suited for object detection. The following citation from @ma2023sam highlights the problems well:
 
 "Although the Segment Anything model (SAM) has shown impressive performance in many scenarios, it currently lags behind state-of-the-art few-shot counting methods, especially for small and congested objects. We believe that this is due to two main reasons. Firstly, SAM tends to segment congested objects of the same category with a single mask. Secondly, SAM is trained with masks that lack semantic class annotations, which could hinder its ability to differentiate between different objects. Nevertheless, further exploration of adapting SAM to the object counting task is still worth studying." [@ma2023sam]
@@ -326,13 +326,18 @@ All of the crowd counting data is saved to a CSV filed and the images are stitch
 
 ## Design considerations regarding user experience
 TODO: Add reasoning behind downscaling of the map. And reasoning behind heatmaps. Counting in selected areas. 
-For many purposes a video with a heatmap could be sufficient. However, in order to make it possible to satisfy requirements such as functional requirement 2 and 8 as well as non-functional requirement 2, it was decided to create a simple user interface.
+For many purposes, a video with a heatmap could be sufficient. However, in order to make it possible to satisfy requirements such as functional requirements 2 and 8 as well as non-functional requirement 2, it was decided to create a simple user interface.
 
 {{< pagebreak >}}
 
-# Implementation {#sec-backend}
+# Implementation {#sec-implementation}
 
-## Backend
+## Backend {#sec-backend}
+To create an efficient, manageable & scaleable backend, an Object Orient design in python was chosen. In this section, we will look at the responsibilities of each class and how they interact to fulfill these requirements. A class diagram of the backend is shown below:
+
+![Class diagram depicting the structure of the backend](../images/class-backend.png){#fig-class-backend}
+
+In this section, we will refer back to @sec-functional-requirements to show implementation of a few requirements.
 
 ### Data Collection and Preparation
 To implement this project it was necessary to gather useful evaluation data. For the purposes of this project, that is video security footage and drone footage. Our collaborative partner EventSafety was very helpful in letting us gather this data at their 2 festivals, "Smukfest" and "Grøn". This was done 1-2 months before the project started since this is when the festivals were held. This means that we gathered the data before completing the research on crowd counting and computer vision. It did pose a challenge to collect the data before knowing exactly what type of data was needed. For these reasons, we collected many types of data, including:
@@ -372,24 +377,21 @@ University of Southern Denmark provides a cloud computing service for faculty me
 
 The SASNet model is loaded using pre-trained weights and biases for the underlying vgg16_bn model trained on ImageNet. This allows SASNet to more efficiently identify image features with low memory usage. Furthermore, the SASNet weights and bias fine-tunings are loaded into the model which has been trained on the Shanghai Tech Part A dataset. A block size of 32 is being used here.
 
-### Classes and their implementation
+### Implementation of requirements{#sec-req-imp}
 
-To create an efficient, manageable & scaleable backend, an Object Orient design in python was chosen. In this section, we will look at the responsibilities of each class and how they interact to fulfill these requirements. 
+This section about the backend implementation will take a closer look at how Functional requirements 1 & 4 were implemented\
 
-**model_wrapper** \
+**Nr1 The system must be able to count the amount of people in the crowd with a precision required by the user base**\
+
+To count the people in a crowd, the SASNet crowd counting model mentioned in @sec-model-selection  was implemented. This is done in the model_wrapper.py class. The model_wrapper class has a get_model class that returns the model for use in the camera class.
+Before we can use the model on our data, we have to preprocess it. As the SASNet model is made for singular images, we needed to convert our videos to a proper format, this is done using torch.utils.dataset library. This iterable dataset allows for loading a frame interval from a video into an array of images using cv2. Using cv2, we are also able to resize the video to a specified resolution for easier handling later on.\
+Once we have a specified frame interval from the video ready for processing, we continue to the camera class. \
+
+In the camera class we use both the model, dataset from before and the CameraUtils class.
 
 
-**video_frame_dataset**
 
-**camera**
-
-**camera_utils**
-
-**camera_collection**
-
-**main**
-
-![Class diagram depicting the structure of the backend](../images/class-backend.png){#fig-class-backend}
+**Nr 4 The system should be able to calculate the physical density of humans pr. area unit**\
 
 ### Downscaling & Pespective Correction
 
