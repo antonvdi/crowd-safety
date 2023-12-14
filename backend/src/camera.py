@@ -28,7 +28,7 @@ class Camera:
     self.local_coordinates: List[Tuple[int, int]] = local_coordinates
     self.global_coordinates: List[Tuple[int, int]] = global_coordinates
     self.distortion_parameters: Optional[float] = distortion_parameters
-    self.model: torch.nn.Model = model  # Use specific model type if known
+    self.model: torch.nn.Model = model
     self.log_parameter: int = log_parameter
     self.camera_utils: CameraUtils = camera_utils
 
