@@ -119,11 +119,9 @@ To have the best possible outcome for this project, Event Safety invited us to G
 
 Can computer vision software and AI techniques be leveraged to improve crowd overview for security guards, by receiving video feed from large crowds, and ultimately improve crowd safety?
 
-{{< pagebreak >}}
-
 # State of the art
 
-This section will describe the state of the art technologies regarding computer vision and crowd counting that will be used in this project.
+This section will describe the state of the art technologies from academic litterature regarding computer vision and crowd counting that will be used in this project.
 
 ## Convolutional Neural Network (CNN) for Computer Vision
 
@@ -258,7 +256,7 @@ The probablity and severity is given each given a score between 1 and 5. 1 being
 
 {{< pagebreak >}}
 
-# Design{#sec-design}
+# Design {#sec-design}
 
 This section is going to describe the design choices made for the system as a whole in regards to the analysis of the problem in general and requirement specification. 
 
@@ -286,17 +284,15 @@ One of the useful datasets for crowd counting, "Shanghaitech" comes from the pap
 
 ## Security & privacy
 
-Being citizens of and using the data of people from an EU country, we have to abide by the rules of GDPR. This means that security and privacy around the data that we have acquired are crucial. Practically, this means that we have a responsibility to make sure that we only upload the images and videos we need to run the model on when they need to be there and remove them when not needed. In a perfect world, we would run our program locally to limit the uploading and removal of sensitive data.
+Being citizens of and using the data of people from an EU country, we have to abide by the rules of GDPR. This means that security and privacy around the data that we have acquired are crucial. Practically, this means that we have a responsibility to make sure that we only upload the images and videos we need to run the model on when they need to be there and remove them when not needed. In a perfect world, we would run our program locally to limit the uploading and removal of sensitive data. It is of course also necessary to consider the business considerations of how using CCTV more extensively can affect some peoples' sense of privacy when attending a festival. 
 
 ### Facial recognition vs. Crowd Counting
 
 When reading through this project, one might assume that privacy around facial recognition would be an issue. However, as this is related to heatmaps, crowd counting & crowd density of people, not facial recognition the identity of people in our footage is not a major concern and thus was not featured in our risk management section. The CSMS anonymises the output data and does not track individuals through time, which could be a privacy concern.\
 
-
 ### UCloud data policy
 
 As mentioned, data handling and data privacy are very important for this project. Due to this, we had to research the policies of UCloud regarding data handling before implementing our software on the platform. According to @UCloud_Security, UCloud is ISO 27001 certified. This means that the platform lives up to an international standard for information security management systems [@iso27001]. Furthermore, according to @UCloud_Security, UCloud is hosted locally on SDU and not by a 3rd party operator. Using this information, we were able to conclude that UCloud as a platform is safe to use for our project and regulated to relevant standards.
-
 
 ## Choosing a technology for Crowd Counting {#sec-model-selection}
 One of the original ideas for solving this problem was to use Meta's SAM model. During the preliminary research sessions, it was discovered that SAM was not adequate in counting people but better suited for object detection. The following citation from @ma2023sam highlights the problems well:
@@ -412,11 +408,11 @@ University of Southern Denmark provides a cloud computing service for faculty me
 
 * Installing all Python package dependencies
 
-### SASNet Model Adaption
+### SASNet Model Adaptation
 
-The SASNet model is loaded using pre-trained weights and biases for the underlying vgg16_bn model trained on ImageNet. This allows SASNet to more efficiently identify image features with low memory usage. Furthermore, the SASNet weights and bias fine-tunings are loaded into the model which has been trained on the Shanghai Tech Part A dataset. A block size of 32 is being used here.
+The SASNet model is loaded using pre-trained weights and biases for the underlying vgg16_bn model trained on ImageNet [@sasnet]. This allows SASNet to more efficiently identify image features with low memory usage. Furthermore, the SASNet weights and bias fine-tunings are loaded into the model which has been trained on the Shanghai Tech Part A dataset.
 
-### Implementation of requirements{#sec-req-imp}
+### Implementation of requirements {#sec-req-imp}
 
 This section about the backend implementation will take a closer look at how Functional requirements 1 & 4 were implemented\
 
@@ -444,7 +440,7 @@ A simplified version of this structure can be seen in @fig-fcd and the full diag
 
 ## Integeration
 
-Although a proper API between the frontend and backend was described in the component diagram, @fig-component-diagram, it has not been a priority of the project and thus not developed. For further development, it is still necessary to enable direct upload from the frontend. Currently, all video content must be uploaded to UCloud in order to processed which then produces an output .avi file that can be read and processed properly by the frontend.
+Although a proper API between the frontend and backend was described in the component diagram, @fig-component-diagram, it has not been a priority of the project and thus not developed. Further development could allow for direct upload to the backend processing unit from the frontend. Instead as of right now, all video content must be uploaded to UCloud in order to processed which then produces an output video file in the .avi file format that can be read and processed properly by the frontend. Pairing this file with a metadata file containing the input parameters to the backend such as frame sampling interval could also be useful so these parameters become dynamic in the frontend. The metadata file could also contain total counts and average densities over time, so these expensive operations do not have to be unnecessarily recalculated in the frontend.
 
 ## Optimization and Performance
 
@@ -472,24 +468,25 @@ Here the image tensor is first sent to the NVIDIA GPU using img.cuda(). Gradient
 
 Since this project is a proof of concept, unit tests and integration tests are not as favored as user tests and similar. Testing of this system relies on making sure that it is useful and understandable to those who need it. To accomplish these tests, we decided to get the opinions of some EventSafety security personnel and professionals about our project and its usefulness. 
 
-## Runtime and GPU usage
+## Accuracy of Crowd Count
+TODO: Count a small section and compare with model output. Compare differences during high and low density. Do it under good circumstances (good lighting, few compression artifacts and low noise, low amount of "stage noise"). Note limitations on bad circumstances. 
 
-While GPU usage is something already discussed in implementation, runtime and the optimization of this is still crucial to test. While we originally wanted this project to be able to run in real-time, we quickly realized that this was close to impossible with our current setup and implementation. When running the model on a video, we originally ran it on a 3-minute clip with an image every 10 seconds being processed. This resulted in a 6-second video and a runtime of the program of around 15 minutes. Not great, not terrible. In the future, if we want to run this live, additional resources are required. More about this in @sec-perspective
+## Runtime and GPU usage {#sec-runtime}
+
+While GPU usage is something already discussed in implementation, runtime and the optimization of this is still crucial to test. While we originally wanted this project to be able to run in real-time, we quickly realized that this was close to impossible with our current setup and implementation. When running the model on a video, we originally ran it on a 3-minute clip with an image every 30 frames being processed. This resulted in a 6-second video and a runtime of the program of around 15 minutes. Not great, not terrible. In the future, if we want to run this live, additional resources are required. Alternatively the frame sampling interval could be adjusted to match the speed of the inference process, which would result in a very low frame rate, but likely still useful. More about this in @sec-perspective.
 
 ## EventSafety presentation
 
-Based on the analysis, design and development of the crowd management system we were invited to present our project to more people from EventSafety. Based on this invitation it was decided to research how a proper focus group is structured and managed properly.
+Based on the analysis, design and development of the crowd management system we were invited to present our project to more people from EventSafety. Based on this invitation it was decided to research how a proper focus group is structured and managed properly, to give the best possible feedback and evaluation on the project.
 
 ### Focus group {#sec-focusgroup}
-
-"As a summative evaluation, focus groups can be used to assess the acceptance of a new campaign or gauge customer satisfaction levels" [@designers_research_manual].
-Based on research from @designers_research_manual we arrived at the following conclusion for our research group:
+A focus group's purpose is described as: "As a summative evaluation, focus groups can be used to assess the acceptance of a new campaign or gauge customer satisfaction levels" [@designers_research_manual]. This fits the need and possibilities for this evaluation. Based on research from this book we arrived at the following conclusion for our focus group:
 
 - A group of 6-9 people is the preferred group size
 - A group of similarly experienced people is needed to encourage a proper discussion
 - If possible, have more groups with different people
 
-For the presentation, a group of 8 employees from Event Safety attended the presentation with questions and feedback for us along the way. The employees all had major experience with crowd management and event planning. Most of them had heard of our project beforehand but had no further technical insight. 
+For the presentation, a group of 8 employees from Event Safety attended the presentation with questions and feedback for us along the way. The employees all had major experience with crowd management and event planning. Most of them had heard of our project beforehand but had no further technical insight. The presentation consisted of a short presentation on the background, context and process, a live demonstration of the CSMS containing real examples of situations and concerts they know about, followed by a questionnaire that gives quantitative and qualitative data on the evaluation.
 
 ### Focus Group Questionaire
 
@@ -601,8 +598,18 @@ Privacy of crowd footage combined with other data
 {{< pagebreak >}}
 
 # Future Perspectives {#sec-perspective}
-TODO: Add section on possibilities with PhaseOne
-TODO: Automated control mechanisms in regards to Cyber Physical System. Also IoT
+
+There are many opportunities for further development of this project in collaboration with the company collaborators, under the assumption that the ethical considerations in @sec-discussion are kept in mind.
+
+The current implementation is mostly suitable for post-event evaluations. This was decided during the design phase, as this would produce a usable product that was possible to implement. It is, however, also a possibility to adjust the implementation to allow for a live feed of the heatmaps, with as little delay as 4-5 seconds on each frame with the current performance described in @sec-runtime. Seeing the heatmaps could open up for completely new use cases for the users and possibly change the workflows of the crowd safety managers and security camera operators.  
+
+The system's use cases are not limited to festivals and concerts. This can of course be used by any authority or organization in charge of large gatherings people. This could be other users like police, defence authorities, emergency management agencies, transportation authorities, sport stadium managers, retail and shopping malls, theme park managers, for handling events like protests, public national celebrations (eg. sport celebrations, royal birthdays), sport events, special days resulting in high density gatherings like Black Friday, New Years and Christmas. The only requirement is the ability to collect usable video input data from a high altitude view point, and a group of people with the necessary knowledge on crowd safety willing to use the information provided by the CSMS in a meaningful way to make decisions.
+
+During the design and implementation phase a multi-camera setup was briefly investigated as a way of improving the output from venus with many smaller corridors and no possibility for aerial top down views (such as Smukfest). While the collected data was not ideal for this idea, the current implementation is setup to allow for this, by defining multiple cameras and their physical bounds.
+
+It could be an interesting perspective to cooperate more cyber-physical or IoT aspects this system. Currently the system consists of a sensor system with video as input that helps crowd safety managers in their decision making. The system could implement an automated control system for adjusting density imbalances by controlling entrance flow, affecting the human behavior by pushing information through an app, stage LED screens or public address systems. The sensor system could also be improved by incorporating more data sources into the algorithms and predict the crowd behavior, so decisions could be made in due time. This could be done by implementing an IoT system with a network of sensor devices such as data from bar sales, turnstiles, crowd profiles, data from cellphones, etc. and integrating the data into an AI prediction algorithm. 
+
+During our discussions with the drone company PhaseOne, they demonstrated some interesting technologies regarding drone and camera technology where this system could be applied. The company provides software and hardware for extremely high resolution imagery on drones. Using this technology it could be possible to cover a very large geographical area using only one or few drones from a high altitude, making it possible to cover multiple or spread out gatherings at once while requiring almost no setup time. Their technology can also allow for approximate orthographic projections, reducing or completely removing the need for perspective warp. This technology could be very useful for open air festivals with many stages at once, protests and urban gatherings that are often spread out and high density.
 
 {{< pagebreak >}}
 
@@ -610,12 +617,17 @@ TODO: Automated control mechanisms in regards to Cyber Physical System. Also IoT
 
 # Appendices {.appendix #sec-appendices}
 
-## Mentimeter presentation result
-![Mentimeter presentation result](../appendices/MentimeterPresentation.pdf){#fig-presentation-results}
 ## Technical specifications for camera
+
 ![Technical specification document for cameras](../appendices/teknisk-specifikation.png){#fig-camera-specs}
+
+{{< pagebreak >}}
+
 ## Full class diagram for frontend
+
 ![Class diagram for frontend](../images/class-diagram-frontend-full.png){#fig-frontend-class-diagram-full}
+
+{{< pagebreak >}}
 
 ## Timeline
 
@@ -641,3 +653,11 @@ TODO: Automated control mechanisms in regards to Cyber Physical System. Also IoT
 | November 	| Implementation of proof of concept system 	|
 ||
 | December 	| Final implementation of the system Documentation of the system User testing and evaluation 	|    
+
+{{< pagebreak >}}
+
+## Mentimeter presentation result
+
+![Mentimeter presentation result](../appendices/MentimeterPresentation.pdf){#fig-presentation-results}
+
+{{< pagebreak >}}
