@@ -260,7 +260,7 @@ The probablity and severity is given each given a score between 1 and 5. 1 being
 
 This section is going to describe the design choices made for the system as a whole in regards to the analysis of the problem in general and requirement specification. 
 
-## About Crowd Counting
+## About Crowd Counting{#sec-design-crowdcounting}
 
 Crowd counting is a field of computer vision research that has developed quickly in recent years. It is a technique that aims to count the instances of any object in an image, no matter the context, density or type of object. [@sasnet] This differentiates it from object detection which is usually trained on one specific type of object by extracting certain visual features. The benefits from using crowd counting rather than object detection is: 
 
@@ -418,17 +418,88 @@ This section about the backend implementation will take a closer look at how Fun
 
 **Nr1 The system must be able to count the amount of people in the crowd with a precision required by the user base**\
 
-To count the people in a crowd, the SASNet crowd counting model mentioned in @sec-model-selection  was implemented. This is done in the model_wrapper.py class. The model_wrapper class has a get_model class that returns the model for use in the camera class.
-Before we can use the model on our data, we have to preprocess it. As the SASNet model is made for singular images, we needed to convert our videos to a proper format, this is done using torch.utils.dataset library. This iterable dataset allows for loading a frame interval from a video into an array of images using cv2. Using cv2, we are also able to resize the video to a specified resolution for easier handling later on.\
-Once we have a specified frame interval from the video ready for processing, we continue to the camera class. \
+To count the people in a crowd, the SASNet crowd counting model mentioned in @sec-model-selection  was implemented. This is done in the model_wrapper.py class. The model_wrapper class has a get_model() method that returns the model for use in the camera class.
+Before we can use the model on our data, it needs to be preprocessed. As the SASNet model is made for singular images, converting the input videos to a proper format is needed. This is done using torch.utils.dataset library. This iterable dataset allows for loading a frame interval from a video into an array of images using cv2. Using cv2, we are also able to resize the video to a specified resolution for easier handling. Once a specified frame interval, resolution and other parameters for the video are defined, it is ready for processing and gets loaded by the camera class. \
 
-In the camera class we use both the model, dataset from before and the CameraUtils class.
+```python
+def predict(self) -> None:
+    torch.cuda.empty_cache()
+    gc.collect()
+
+    dataloader = self.get_video_dataloader()
+
+    for img in dataloader:
+      img = img.cuda()
+
+      with torch.no_grad():
+        self.model.eval()
+        pred_map = self.model(img)
+      pred_map = pred_map.data.cpu().numpy()
+
+      for i_img in range(pred_map.shape[0]):
+        pred_cnt = np.sum(pred_map[i_img]) / self.log_parameter
+        self.predicted_counts.append(pred_cnt)
+        print(f'Predicted Count: {pred_cnt}')
+
+        # Extract the first channel (grayscale) from the density map
+        grayscale_map = pred_map[i_img][0]
+
+        if self.distortion_parameters and len(self.distortion_parameters) > 0:
+          undistorted_map = self.camera_utils.correct_fisheye_distortion(grayscale_map, self.distortion_parameters[0])
+        else:
+          undistorted_map = grayscale_map
+
+        corrected_map = self.camera_utils.correct_perspective(undistorted_map, self.local_coordinates)
+
+        width_after = self.global_coordinates[3][0] - self.global_coordinates[0][0]
+        scale_factor = int(corrected_map.shape[1] / width_after)
+
+        downsampled_map = self.camera_utils.downsample_image(corrected_map, scale_factor)
+
+        upsampled_map = self.camera_utils.upsample_image(downsampled_map)
+
+        heatmap = self.camera_utils.make_heatmap(upsampled_map)
+
+        self.images.append(heatmap)
+
+```
+
+In the camera class, after loading both the model and dataset, the predict() method seen above is called is called. The predict method first empties garbage left behind by cuda and leftover memory usage. Each image in the dataset is then iterated over and assigned to PyTorch.Cuda, sending it to be processed by the GPU.
+Each image is then run through by the model and the resulting densitymap is assigned to the pred_map variable. 
+After assigning the density maps several post-processing steps happen. First, the predicted count is calculated by the SASnet model. How this works is explained in simple terms in @sec-design-crowdcounting.\
+Secondly, the method checks if parameters for fisheye correction are passed. If true, the program applies fisheye correction from cv2 and continues, otherwise, this part is skipped.\
+Third, the first color channel (grayscale) is extracted to be used for the heatmap in the backend. Following this, perspective correction and upscaling are also applied based on local coordinates, more on this in @sec-correction. It is important to note that crowd counting is done BEFORE perspective correction, as the model is unable to count accurately on the warped image.\
+
+Finally, the corrected map is converted into a heatmap using the make_heatmap() method from camera.utils and the resulting heatmap is returned for further use. 
+In camera.utils we also find the add_graphics() method, simply adding a small graphic to the image with the predicted count if wanted. 
+
+### Downscaling & Pespective Correction {#sec-correction}
+Before explaining how functional requirement nr 4 is implemented, a look at how downscaling and perspective correction work in our system is needed.\
+
+When a camera is instantiated in the main class, a set of local and global coordinates are passed with it, as seen below: 
+```python
+local_coords = [(797, 293), (287, 653), (1761, 1040), (1734, 411)]
+global_coords = [(0, 0), (0, 80), (100, 80), (100, 0)]
+```
+The local coordinates are taken from the frame of the video, depicting the area we want to analyze and correct. The global coordinates are the real-world distances between points, taken from various land surveys of the different festivals provided by our partner at EventSafety. Using these coordinates are measurements we can correct the perspective of each frame for more accurate density heatmaps.
+
+Perspective correction is done using the cv2 method which takes the extracted grayscale map from earlier and the local coordinates from the frame. First, the transformation matrix M is calculated using the original input coordinates and the desired output coordinates. See below: 
+
+![Depiction of transformation matrix and scale factor from @cv2-warpperspective](../images/perspective-transformation-M.jpg){#fig-transformation-matrix}\
+The scale factor will be mentioned later on in this section
+
+After finding the transformation matrix, this operation is performed using the warpPerspective() method from cv2.
+
+![Depiction of perspective correction from @cv2-warpperspective](../images/perspective-transformation-visual.jpg)
+
+When the perspective of the frame is corrected, the image is then downsampled to reduce information overload and have each "pixel" of the frame account for 1m2 in real life based on the global coordinates. After this, the image is then upsampled again so the data is still readable but not overwhelming. 
+
 
 
 
 **Nr 4 The system should be able to calculate the physical density of humans pr. area unit**\
 
-### Downscaling & Pespective Correction
+
 
 ## Frontend
 

@@ -289,7 +289,7 @@ class VideoPlayer(QWidget):
         # Convert frame to grayscale
         gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
 
-        # Apply the JET colormap
+        # Apply the selected colormap
         processed_frame = cv2.applyColorMap(gray, colormaps[self.dropdown_menu.currentText()])
 
         # Determine the new dimensions
