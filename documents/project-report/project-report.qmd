@@ -473,7 +473,11 @@ Third, the first color channel (grayscale) is extracted to be used for the heatm
 Finally, the corrected map is converted into a heatmap using the make_heatmap() method from camera.utils and the resulting heatmap is returned for further use. 
 In camera.utils we also find the add_graphics() method, simply adding a small graphic to the image with the predicted count if wanted. 
 
-### Downscaling & Pespective Correction {#sec-correction}
+Måske billede af processen som billedet gennemgår her???
+
+
+**Nr 4 The system should be able to calculate the physical density of humans pr. area unit**\
+
 Before explaining how functional requirement nr 4 is implemented, a look at how downscaling and perspective correction work in our system is needed.\
 
 When a camera is instantiated in the main class, a set of local and global coordinates are passed with it, as seen below: 
@@ -494,12 +498,15 @@ After finding the transformation matrix, this operation is performed using the w
 
 When the perspective of the frame is corrected, the image is then downsampled to reduce information overload and have each "pixel" of the frame account for 1m2 in real life based on the global coordinates. After this, the image is then upsampled again so the data is still readable but not overwhelming. 
 
+This leaves us with the steps condensed into:
 
+1. Correct the perspective of the heatmap based on global coordinates 
+2. Downsample the corrected greyscale heatmap to ensure that each "pixel" in a given frame corresponds to area units - square meters in this case
+3. Upsample the downsampled image for better readability while still maintaining a linear relationship between pixels and area units
 
+After the complete image processing and the steps above are complete, the greyscale heatmap is uploaded to the frontend. Here the pixel sum of the entire image is divided by the amount of pixels to find the density. This is due to the density of people being represented by pixel density as explained in @sec-design-crowdcounting.
 
-**Nr 4 The system should be able to calculate the physical density of humans pr. area unit**\
-
-
+{{< pagebreak >}}
 
 ## Frontend
 
