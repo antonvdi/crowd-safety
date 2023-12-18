@@ -544,10 +544,23 @@ Here the image tensor is first sent to the NVIDIA GPU using img.cuda(). Gradient
 
 # Validation and Verification
 
-Since this project is a proof of concept, unit tests and integration tests are not as favored as user tests and similar. Testing of this system relies on making sure that it is useful and understandable to those who need it. To accomplish these tests, we decided to get the opinions of some EventSafety security personnel and professionals about our project and its usefulness. 
+Since this project is a proof of concept, unit tests and integration tests are not as favored as user tests and similar. Testing of this system relies on making sure that it is useful and understandable to those who need it. To accomplish these tests, we decided to perform both manual count comparisons & get the opinions of some EventSafety security personnel and professionals about our project and its usefulness. 
 
 ## Accuracy of Crowd Count
-TODO: Count a small section and compare with model output. Compare differences during high and low density. Do it under good circumstances (good lighting, few compression artifacts and low noise, low amount of "stage noise"). Note limitations on bad circumstances. 
+To test the accuracy of the model, a manual test was conducted on a small area of the video./
+
+In the image below, a section of the queue to a bar towards the end of a concert. 
+
+![Small section of bar after concert - Manual count](../images/manual-count1.png){#fig-manual-count1}
+In the image, a rough manual count of the visible people was conducted. This resulted in a count of ~120 people 
+
+Now, the same area is highlighted in the frontend to count the people using the model
+![Small section of bar after concert - Model count](../images/count-comparison.png){#fig-count-comparison}
+By looking at the data in the infobox, we see that the model predicted the area to contain 119 people. Using this result, we can conclude that in areas where a human is able to somewhat accurately count a crowd, the model is able to do the same fulfilling functional requirement 1 - The system **must** be able to count the amount of people in the crowd with a precision required by the user base. 
+
+
+
+TODO: Count a small section and compare with model output. Compare differences between high and low density. Do it under good circumstances (good lighting, few compression artifacts and low noise, low amount of "stage noise"). Note limitations on bad circumstances. 
 
 ## Runtime and GPU usage {#sec-runtime}
 
