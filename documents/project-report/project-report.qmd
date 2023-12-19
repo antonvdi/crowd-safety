@@ -416,7 +416,11 @@ The SASNet model is loaded using pre-trained weights and biases for the underlyi
 
 This section about the backend implementation will take a closer look at how Functional requirements 1 & 4 were implemented\
 
-**Nr1 The system must be able to count the amount of people in the crowd with a precision required by the user base**\
+
+#### Implementing crowd counting 
+
+This section describes the implementation of functional requirement 1:
+"*The system must be able to count the amount of people in the crowd with a precision required by the user base*"
 
 To count the people in a crowd, the SASNet crowd counting model mentioned in @sec-model-selection  was implemented. This is done in the model_wrapper.py class. The model_wrapper class has a get_model() method that returns the model for use in the camera class.
 Before we can use the model on our data, it needs to be preprocessed. As the SASNet model is made for singular images, converting the input videos to a proper format is needed. This is done using torch.utils.dataset library. This iterable dataset allows for loading a frame interval from a video into an array of images using cv2. Using cv2, we are also able to resize the video to a specified resolution for easier handling. Once a specified frame interval, resolution and other parameters for the video are defined, it is ready for processing and gets loaded by the camera class. \
@@ -475,8 +479,9 @@ In camera.utils we also find the add_graphics() method, simply adding a small gr
 
 Måske billede af processen som billedet gennemgår her???
 
-
-**Nr 4 The system should be able to calculate the physical density of humans pr. area unit**\
+#### Implementing the functions to create heatmaps {#sec-correction}
+This section describes the implementation of functional requirement 4: 
+"*The system should be able to calculate the physical density of humans pr. area unit*"
 
 Before explaining how functional requirement nr 4 is implemented, a look at how downscaling and perspective correction work in our system is needed.\
 
@@ -489,7 +494,9 @@ The local coordinates are taken from the frame of the video, depicting the area 
 
 Perspective correction is done using the cv2 method which takes the extracted grayscale map from earlier and the local coordinates from the frame. First, the transformation matrix M is calculated using the original input coordinates and the desired output coordinates. See below: 
 
-![Depiction of transformation matrix and scale factor from @cv2-warpperspective](../images/perspective-transformation-M.jpg){#fig-transformation-matrix}\
+![Depiction of transformation matrix and scale factor [From @cv2-warpperspective]](../images/perspec-trans-matrix.jpg){#fig-transformation-matrix}
+
+
 The scale factor will be mentioned later on in this section
 
 After finding the transformation matrix, this operation is performed using the warpPerspective() method from cv2.
@@ -546,7 +553,7 @@ Here the image tensor is first sent to the NVIDIA GPU using img.cuda(). Gradient
 
 Since this project is a proof of concept, unit tests and integration tests are not as favored as user tests and similar. Testing of this system relies on making sure that it is useful and understandable to those who need it. To accomplish these tests, we decided to perform both manual count comparisons & get the opinions of some EventSafety security personnel and professionals about our project and its usefulness. 
 
-## Accuracy of Crowd Count
+## Accuracy of Crowd Count {#sec-accuracy}
 To test the accuracy of the model, a manual test was conducted on a small area of the video./
 
 In the image below, a section of the queue to a bar towards the end of a concert. 
@@ -579,7 +586,7 @@ A focus group's purpose is described as: "As a summative evaluation, focus group
 
 For the presentation, a group of 8 employees from Event Safety attended the presentation with questions and feedback for us along the way. The employees all had major experience with crowd management and event planning. Most of them had heard of our project beforehand but had no further technical insight. The presentation consisted of a short presentation on the background, context and process, a live demonstration of the CSMS containing real examples of situations and concerts they know about, followed by a questionnaire that gives quantitative and qualitative data on the evaluation.
 
-### Focus Group Questionaire
+### Focus Group Questionaire {#sec-questionnaire}
 
 Following the focus group, a questionnaire is conducted to gain further insight. Normally, a questionnaire is used to gather information from a large group. For our presentation, we still felt a questionnaire was relevant in order for us to be able to document their answers in a written format.
 
@@ -680,7 +687,25 @@ Based on
 
 # Discussion {#sec-discussion}
 
-Privacy of crowd footage combined with other data
+This section will discuss our results including the accuracy of the CSMS and qualitative user feedback from our partners. It will also describe how this systems could affect the crowd safety flow. It will also discuss the current system's shortcomings and what can be done in the future to prevent this. Then it will discuss how this system is an improvement from the status quo. It will discuss the privacy and ethical concerns that might be with a system that deals with personal data. Finally it will also evaluate the process of developing this system and on the choice of technologies.
+
+In order to evaluate on the accuracy of the developed system we first look at the quantitative benchmark of SASNet. Here it stated that SASNet performs better or on par with several other state of the art crowd counting models. On the Shanghai Tech part A specifically, which the model weights used in the CSMS is trained on, SASNet performs with a mean average error of 53.59 [@sasnet]. According to @modolo2021understanding, the Shanghai Tect Part A has an average of 500 people in each image, meaning the average error percentage is 10.6% on this dataset. This is the dataset that most closely matches our spread and density distributions in the collected data. When doing our own testing as described in @sec-accuracy we achieve a similar, good accuracy. The required accuracy according to our user research in @sec-sec-focusgroup is that an accuracy of less than 10-20% is ideal, but 20-40% might still be useful. This is well within the bounds of the accuracy of the CSMS.
+
+However, our accuracy is limited by the important factor that is our system as a whole aims to calculate the actual crowd count of the physical space and not just the crowd count of the countable crowd members on the video footage. As an example, we would likely achieve a 0% error if the camera was low enough to only count a handful of members, but this is useless in regards to the overall problem statement of improving the crowd overview for security guards. It is uncertain how prevalent this type of uncertainty is in our data, as we do not have this real ground truth. The limiting factors on achieving this goal are: 
+
+1. The cameras must have a high point of view so the maximum amoumt of crowd members are visible. 
+
+1. The lighting must be good enough to distinguish members of the crowd.
+
+1. Stage effects (smoke, confetti) must not cover members of the crowd.
+
+1. Video compression artifacts must not be too prominent.
+
+1. The camera must be in focus. 
+
+While the collected data for these purposes is a good starting point, it is important to have these factors in mind when collecting data in the future. Some of these factors are difficult to affect because of other circumstances. Number 1 is limited by drone law regulations or the height of the stage or nearby masts. Number 2 is difficult during night concerts. It could be affected by night vision or infrared cameras, but is is uncertain how SASNet would perform with this kind of input data. Number 3 is not possible to affect directly, but camera angles could affect how stage effects affect the input data. It might also be useful to sample frames from moments without many stage effects. Number 4 and 5 should be manageable by using proper camera setups.
+
+
 
 {{< pagebreak >}}
 
