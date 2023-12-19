@@ -20,16 +20,27 @@ $if(title)$
 \maketitle
 $endif$
 
+\pagebreak
 \begin{abstract} 
 \\ \\
-In spring 2023 we reached out to EventSafety A/S regarding the possibility of a collaboration with them regarding our final project.
+In spring 2023 we reached out to EventSafety A/S regarding the possibility of a collaboration with them regarding our final project.\\
 The idea was a crowd management system using Aritifical intelligence and computer vision to help improve crowd safety management.
 Following an agreement to collaborate and various festival invitations by EventSafety to collect data,
 a problem statement was produced: \textit{Can computer vision software and AI techniques be leveraged to improve crowd overview for security guards,
 by receiving video feed from large crowds, and ultimately improve crowd safety?}
-Following this, research was conducted into existing crowd counting methods and their papers leading to the usage of the SASNet crowd counting deep learning model.
-The project followed a simple use of scrum with small discussion each morning about the day before and the day ahead.
-Throughout the project, several meetings with predefined dates were held with EventSafety to showcase progress and gather feedback for further development
+\\ \\
+The projects structure and planning followed a waterfall model for the purposes of development.
+Along with this, we had predefined meetings arranged with our collaborators from EventSafety to showcase progress and gather feedback for further development.
+When we needed supervision for our project we turned to our supervisor and scheduled a meeting, usually within a couple of days to quickly move on.
+\\ \\
+Research was conducted into existing crowd counting methods and their papers leading to the usage of the SASNet crowd counting deep learning model.
+After implementing the model successfully, the focus of the project shifted to image manipulation for better results. This includes, but is not limited to,
+perspective correction, distortion correction, image upsampling \& downsampling. Backend implementation of the model was run on UCloud - a cloud computing service hosted by SDU - and a frontend
+developed in python for application of heatmaps and the ability to segment the crowd based on user drawn polygons.
+When development of the project had completed, manual count comparisons, a thourough user test and questionnaire and presentation was held for other employees at Event Safety to gather final feedback and perspectives on the project and its usability.
+Based on the presentation and feedback, we are able to conclude that we succeeded in implementing computer vision and AI techiques in a crowd management system. The system has precision that makes it useable to the inteded customer while allowing for further development of more functionality.
+The system can successfully be leveraged to leverage and improve crowd safety and crowd safety management
+
 \end{abstract}
 \vskip 3em
 
