@@ -736,8 +736,6 @@ During our discussions with the drone company PhaseOne, they demonstrated some i
 
 {{< pagebreak >}}
 
-# References
-
 # Appendices {.appendix #sec-appendices}
 
 ## Technical specifications for camera
