@@ -113,7 +113,7 @@ At the same time, festivals in Denmark and the rest of the world have had a focu
 
 To have the best possible outcome for this project, Event Safety invited us to Grøn Koncert and Smukfest in July and August to see how they work and gather security video footage of real crowds at festivals to use as training data. We will also use Event Safety for their practical and theoretical knowledge of crowd safety to use in the system, user feedback and user testing.
 
-## Problem Statement
+## Problem Statement {#sec-problem-statement}
 
 Can computer vision software and AI techniques be leveraged to improve crowd overview for security guards, by receiving video feed from large crowds, and ultimately improve crowd safety?
 
@@ -717,6 +717,24 @@ The planned timeline of the project was followed and did not prove to be too tig
 {{< pagebreak >}}
 
 # Conclusion {#sec-conclusion}
+
+In conclusion of this project on the Crowd Safety Management System (CSMS) that uses SASNet for crowd counting and density estimation at festival events, we look back at what was achieved and the challenges faced. This is done with regards to the original problem statement from @sec-problem-statement that is: "Can computer vision software and AI techniques be leveraged to improve crowd overview for security guards, by receiving video feed from large crowds, and ultimately improve crowd safety?"
+
+The main success of the project was incorporating a crowd counting model, specifically SASNet, effectively for density estimation. This method was very accurate in many crowd situations, which was crucial for the system's reliability at the festivals Grøn and Smukfest. We tested the system at these different festivals and under different densitites and circumstances and found succes in most common scenarios.
+
+A key part of our work was following GDPR, data privacy and ethical considerations. This was important because we were dealing with sensitive video data. We used the counting by regression method to keep individual identities private and instead using aggregate sums of people per square meter, showing our commitment to ethical data handling.
+
+Creating a user-friendly interface was a non-functional requirement. We wanted the system to be easy to use for both technical and non-technical users. The interface we developed helped users easily understand complex data, like heat maps and crowd density figures. It was found from the focus group session that the heat map is very useful in improving crowd overview for security guards at post-event evaluations.
+
+We chose to use regression-based methods for crowd counting to avoid more intrusive methods like tracking individual people. This decision was important to respect individual privacy and align with ethical standards in surveillance technology. The technology also proved to be useful when considering the needed computing power for the alternative.
+
+The project also expectedly faced challenges. Environmental factors like poor lighting and stage effects sometimes affected how accurately the system worked. These are common issues at festivals and made maintaining consistent performance difficult.
+
+There were also technical challenges. The system did not fully develop some features that could be interesting for managing crowds, like detecting crowd movements and identifying potential choke points. However, during user testing and discussions it was not features that were missing for achieving the overall goal. Integrating the system with existing CCTV systems was also a requirement that was not developed because it would not be able to be tested.
+
+Handling and processing a lot of high-resolution video data was challenging. We had to balance the need for powerful processing and storage with the requirement for real-time or near-real-time data processing. This was a tough task given the amount and type of data we were dealing with. The delay showed to be around 4-5 seconds for each frame which is a low enough delay for the use case.
+
+Overall, this project has succesfully proved the usefulness of AI and computer vision techniques for crowd safety management to our company collaborators. We faced and overcame many challenges and complexities, creating a system that improves crowd safety at festivals. The experiences and knowledge gained from this project provide a solid base for future developments and improvements in crowd management and safety systems. These will be summarized in section @sec-perspective.
 
 {{< pagebreak >}}
 
