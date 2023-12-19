@@ -43,8 +43,6 @@ authors:
       - id: es
         name: Event Safety (Smukfest & Muskelsvindfonden)
 date: "2024 Jan. 02"
-abstract: |
-  Template abstract lorem ispum
 bibliography: citations.bib
 format:
   hikmah-pdf:
