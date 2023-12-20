@@ -540,7 +540,7 @@ Although a proper API between the frontend and backend was described in the comp
 
 For two main reasons, it is necessary to limit the compute resource usage:
 
-1. This project is using free and limited GPU and compute resources. Computer vision and CNN's can be very GPU intensive, so it is in the project's to limit the GPU memory consumption as this was found to be the largest resource bottle neck.
+1. This project is using free and limited GPU and compute resources provided by UCloud. Computer vision and CNN's can be very GPU intensive, so it is in the project's to limit the GPU memory consumption as this was found to be the largest resource bottle neck.
 
 2. For the CSMS to be scalable to (near) real-time evaluation performance, it makes sense to limit the use of computing power as much as possible.
 
