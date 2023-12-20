@@ -23,4 +23,3 @@ python3 -m pip install --upgrade pip
 # Install packages from the requirements file
 pip install -r CrowdCounting-SASNet/requirements.txt
 pip install -r requirements.txt
-#pip uninstall -y opencv-python
