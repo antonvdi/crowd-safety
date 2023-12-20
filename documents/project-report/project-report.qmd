@@ -53,6 +53,31 @@ format:
 ---
 {{< pagebreak >}}
 
+# List of figures {.unnumbered .unlisted}
+This report is structured chronologically and is therefore meant to be read that way. This being said, it is possible to read the abstract & conclusion and still understand most of the project. It is expected that the reader possesses basic programming knowledge - specifically Python - to understand what makes up the program.\ \
+
+Chapter 1 - Acronyms and definitions, a basic overview of terms that will be used throughout this report\ 
+
+Chapter 2 - Introduction, will provide background and context for the project\ 
+
+Chapter 3 - State of the art, will provide insight into what technologies currently exist in the field of crowd management and counting\ 
+
+Chapter 4 - Analysis, highlights the scope, requirements & risks of this system\ 
+
+Chapter 5 - Design, goes in-depth with the major design choices made for this project\ 
+
+Chapter 6 - Implementation, describes and explains the implementation and development of the project itself.\
+
+Chapter 7 - Validation and Verification, validates and verifies that the requirements previously set for this project are fulfilled.\
+
+Chapter 8 - Discussion, discusses our results in relation to the problem statement\
+
+Chapter 9 - Conclusion, concludes the project and our results in relation to our problem statement\ 
+
+Chapter 10 - Future perspectives, goes through why, what & how things could have been done differently throughout the project
+
+{{< pagebreak >}}
+
 # Acronyms and definitions
 
 | **Acronyms**  | **Definition** |
