@@ -235,7 +235,7 @@ More often than not a project will encounter problems that can hinder the progre
 
 ## Risk assessment{#sec-riskass}
 
-To fully assess the risks described above it is absolutely vital that the probabality and severity of each individual risk is assessed. This results in the following formula: 
+To fully assess the risks described above it is vital that the probability and severity of each risk is assessed. This results in the following formula: 
 
 $$
 Effect = Probabilty * Severity
@@ -256,11 +256,13 @@ The probability and severity are given each given a score between 1 and 5. 1 bei
 | R05 	| 1 	| 5 	| 5 	| Severity would depend on when in the process EventSafety would cancel our collaboration.  	|
 : Table of risk assesment {#tbl-risk-assesment}
 
+Based on the table above, we can deduce that the major risk we should be aware of is R04. How we handle the possibility of unusable data is crucial to the success of this project. While other risks also have high effects, their probability is too low to be considered threatening to the project. However, having measurements in place to counteract every risk is still important. 
+
 {{< pagebreak >}}
 
 # Design {#sec-design}
 
-This section is going to describe the design choices made for the system as a whole in regard to the analysis of the problem in general and requirement specification. 
+This chapter is going to describe the design choices made for the system as a whole regarding the analysis of the problem in general and requirement specification. This chapter will talk about approaches to crowd counting and how crowd counting differs from object detection. Following this, the chapter talks about the selection process for a cloud computing service and why we decided to go with SASNet as the model for this project
 
 ## About Crowd Counting{#sec-design-crowdcounting}
 
@@ -292,9 +294,15 @@ Being citizens of and using the data of people from an EU country, we have to ab
 
 When reading through this project, one might assume that privacy around facial recognition would be an issue. However, as this is related to heatmaps, crowd counting & crowd density of people, not facial recognition the identity of people in our footage is not a major concern and thus was not featured in our risk management section. The CSMS anonymizes the output data and does not track individuals through time, which could be a privacy concern.\
 
-### UCloud data policy
+### Selecting a cloud computing service
 
-As mentioned, data handling and data privacy are very important for this project. Due to this, we had to research the policies of UCloud regarding data handling before implementing our software on the platform. According to @UCloud_Security, UCloud is ISO 27001 certified. This means that the platform lives up to an international standard for information security management systems [@iso27001]. Furthermore, according to @UCloud_Security, UCloud is hosted locally on SDU and not by a 3rd party operator. Using this information, we were able to conclude that UCloud as a platform is safe to use for our project and regulated to relevant standards.
+Initially, the backend of this project was run on a paid but still limited version of google collab - a Jupyter Notebook collaboration space with access to cloud computing CPU and GPUs. However, it was decided to research possible alternatives for easier scalability and maintainability. When talking about renting cloud computing GPU, the main factor is cost, as with enough money you can rent almost unlimited cloud processing power. However, for our project the amount of processing power available was not the primary concern - data security was. This brought our attention away from international services like google cloud/vertex and Amazon AWS to a local service: UCloud. UCloud is a capable cloud computing service hosted locally on SDU. Through our supervisor, we took action and applied for resources for this project which were quickly granted. This allowed us to move our initial backend to UCloud, which was a major progression for the following reasons: 
+
+1. UCloud is "free" for students and approved projects. You apply for a set amount of currency to use on the platform.
+
+1. UCloud processing power is only limited by the amount of currency available to us on the platform, unlike google collab which was limited based on current global usage.
+
+As mentioned, data handling and data privacy are very important for this project. With this in mind, we decided to research the policies of UCloud regarding data handling before implementing our software on the platform. According to @UCloud_Security, UCloud is ISO 27001 certified. This means that the platform lives up to an international standard for information security management systems [@iso27001]. Furthermore, according to @UCloud_Security, UCloud is hosted locally on SDU and not by a 3rd party operator. Using this information, we can conclude that UCloud as a platform is safe to use for our project and regulated to relevant standards.
 
 ## Choosing a technology for Crowd Counting {#sec-model-selection}
 One of the original ideas for solving this problem was to use Meta's SAM model. During the preliminary research sessions, it was discovered that SAM was not adequate in counting people but better suited for object detection. The following citation from @ma2023sam highlights the problems well:
