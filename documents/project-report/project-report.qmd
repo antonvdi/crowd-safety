@@ -574,9 +574,7 @@ Now, the same area is highlighted in the frontend to count the people using the 
 ![Small section of bar after concert - Model count](../images/count-comparison.png){#fig-count-comparison}
 By looking at the data in the infobox, we see that the model predicted the area to contain 119 people. Using this result, we can conclude that in areas where a human is able to somewhat accurately count a crowd, the model is able to do the same fulfilling functional requirement 1 - The system **must** be able to count the amount of people in the crowd with a precision required by the user base. 
 
-
-
-TODO: Count a small section and compare with model output. Compare differences between high and low density. Do it under good circumstances (good lighting, few compression artifacts and low noise, low amount of "stage noise"). Note limitations on bad circumstances. 
+While this test shows that the model is precise in optimal circumstances, there are of course limitations. The model can only count as well as a human would be able to. This means that under circumstances where lighting, stage artifacts (Confetti, fireworks etc.) or bad image quality is present, the model is unable to count precisely. More on this in @sec-discussion
 
 ## Runtime and GPU usage {#sec-runtime}
 
@@ -604,6 +602,7 @@ Following the focus group, a questionnaire is conducted to gain further insight.
 The questionnaire was conducted using Mentimeter and consisted of scales, open-ended questions and rankings. This section will highlight some of the answers the attendees provided. All the questions and their results (in Danish) can be found in @sec-appendices.\
 
 **Question 1**\
+
 In question 1 the particpants are asked to verify the need for the product and the system as a whole. They are asked what they think the usefulness of the system is as a whole for post event evaluations (4.6 / 5) and as a live system (4.4 / 5). This verifies that their is a need for the product, and that it has been a correct prioritisation to focus on a post event evaluation tool while still having a use case in making the process live in the future. 
 
 **Question 2**\
