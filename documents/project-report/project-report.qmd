@@ -314,6 +314,7 @@ More often than not a project will encounter problems that can hinder the progre
 | R05 	| Company collaboration ends 	| Project 	| If Event Safety or the group decides to end the collaboration around the project early.  	| Making sure that we listen to and adapt to feedback from Event Safety to keep our good relationship with them.	|
 : Table of risks and their impact {#tbl-risks}
 
+{{< pagebreak >}}
 
 ## Risk assessment{#sec-riskass}
 
@@ -489,6 +490,33 @@ To create an efficient, manageable and scaleable backend, an object oriented des
 
 In this section, we will refer back to @sec-functional-requirements to show implementation of a few requirements.
 
+### Backend class structure {#sec-classes}
+Referring to @fig-class-backend, we see that the backend mainly consists of 5 classes:
+
+1. video_frame_dataset
+1. model_wrapper
+1. Camera
+1. camera_utls
+1. camera_collection
+
+The system is built on the OOP paradigm for easier scalability to additional cameras in the future. The 5 following subsections each describe the main responsibility of that class\
+
+#### video_frame_dataset
+video_frame_data takes the video input and converts it to the type of Dataset. This allows us to segment the video based on a frame interval for easier manipulation later on. Here, the size of the video is also set to a specific resolution based on passed parameters and resized using the cv2.resize() function. The class returns the frames of the video in a Dataset.\
+
+#### model_wrapper
+model_wrapper loads the model from the SASNet repository into a Model object with relevant parameters. The class contains a get_model() method for fetching the model in the other classes.\
+
+#### camera
+The camera class contains the main predict() method. This method is explained in @sec-crowdcount-implement. Beyond the predict() method, the class gets the Dataset from earlier and passes it to a Dataloader which the predict method fetches. When the predict() method has run, it returns a heatmap for processing in the frontend.\
+
+#### camera_utils
+The camera_utils class is a large collection of methods used in the camera and camera_collection classes. These methods include, but are not limited to: correct_fisheye_distortion(), correct_perspective(), downsample_image(), upsample_image() & make_heatmap(). All of these methods are used in the predict() method in the camera class and aid in the manipulating the frames of the video for better and more accurate crowd counting.\
+
+#### camera_collection
+As the main goal of this project is to help improve crowd safety management, the implementation of software that can handle multiple cameras at once is important. The camera_collection class does just that. The other main responsibility of this class is the conversion from frames in a Dataset back to a video timelapse. The class takes all of the frames and combines them to a video with a set amount of frames per second(FPS) and then saves the video to the .avi format.\
+
+
 ### Environment setup {#sec-environment}
 
 Setting up an environment for machine learning in Python is not trivial. It is a requirement to have access to a NVIDIA GPU to take advantage of the CUDA toolkit in PyTorch. This opens up GPU acceleration which enables a performance boost rather than running the CNN models on the CPU. Furthermore, the SASNet open source project was built for Python 3.6.8 and PyTorch >= 1.5.0 [@sasnet]. All of this has to taken in to account when setting up the environment. We created a bash script which can be seen in @sec-appendices with the following responsibilities to initiate the environment:
@@ -515,7 +543,7 @@ The SASNet model is loaded using pre-trained weights and biases for the underlyi
 
 This section about the backend implementation will take a closer look at how functional requirements 1 and 4 were implemented.
 
-#### Implementing crowd counting
+#### Implementing crowd counting{#sec-crowdcount-implement}
 
 This section describes the implementation of functional requirement 1:
 "*The system must be able to count the amount of people in the crowd with a precision required by the user base.*"
@@ -526,42 +554,42 @@ Before we can use the model on our data, it needs to be preprocessed. As the SAS
 
 ```python
 def predict(self) -> None:
-    torch.cuda.empty_cache()
-    gc.collect()
+torch.cuda.empty_cache()
+gc.collect()
 
-    dataloader = self.get_video_dataloader()
+dataloader = self.get_video_dataloader()
 
-    for img in dataloader:
-      img = img.cuda()
+for img in dataloader:
+  img = img.cuda()
 
-      with torch.no_grad():
-        self.model.eval()
-        pred_map = self.model(img)
-      pred_map = pred_map.data.cpu().numpy()
+  with torch.no_grad():
+    self.model.eval()
+    pred_map = self.model(img)
+  pred_map = pred_map.data.cpu().numpy()
 
-      for i_img in range(pred_map.shape[0]):
-        pred_cnt = np.sum(pred_map[i_img]) / self.log_parameter
-        self.predicted_counts.append(pred_cnt)
+  for i_img in range(pred_map.shape[0]):
+    pred_cnt = np.sum(pred_map[i_img]) / self.log_parameter
+    self.predicted_counts.append(pred_cnt)
 
-        grayscale_map = pred_map[i_img][0] # Extract the first channel (grayscale) from the density map
+    grayscale_map = pred_map[i_img][0] # Extract the first channel (grayscale) from the density map
 
-        if self.distortion_parameters and len(self.distortion_parameters) > 0:
-          undistorted_map = self.camera_utils.correct_fisheye_distortion(grayscale_map, self.distortion_parameters[0])
-        else:
-          undistorted_map = grayscale_map
+    if self.distortion_parameters and len(self.distortion_parameters) > 0:
+      undistorted_map = self.camera_utils.correct_fisheye_distortion(grayscale_map, self.distortion_parameters[0])
+    else:
+      undistorted_map = grayscale_map
 
-        corrected_map = self.camera_utils.correct_perspective(undistorted_map, self.local_coordinates)
+    corrected_map = self.camera_utils.correct_perspective(undistorted_map, self.local_coordinates)
 
-        width_after = self.global_coordinates[3][0] - self.global_coordinates[0][0]
-        scale_factor = int(corrected_map.shape[1] / width_after)
+    width_after = self.global_coordinates[3][0] - self.global_coordinates[0][0]
+    scale_factor = int(corrected_map.shape[1] / width_after)
 
-        downsampled_map = self.camera_utils.downsample_image(corrected_map, scale_factor)
+    downsampled_map = self.camera_utils.downsample_image(corrected_map, scale_factor)
 
-        upsampled_map = self.camera_utils.upsample_image(downsampled_map)
+    upsampled_map = self.camera_utils.upsample_image(downsampled_map)
 
-        heatmap = self.camera_utils.make_heatmap(upsampled_map)
+    heatmap = self.camera_utils.make_heatmap(upsampled_map)
 
-        self.images.append(heatmap)
+    self.images.append(heatmap)
 ```
 
 After loading both the model and dataset, the Camera.predict() method seen above is called. The predict method first clears the garbage collector and empties cached GPU memory. Each image in the dataset is then iterated over and assigned to PyTorch.Cuda, sending it to be processed by the GPU. The model now infers the image and the resulting density map is assigned to the pred_map variable. 
