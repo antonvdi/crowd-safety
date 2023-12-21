@@ -718,7 +718,7 @@ Following the focus group, a questionnaire is conducted to gain further insight.
 The questionnaire was conducted using Mentimeter and consisted of scales, open-ended questions and rankings. This section will highlight some of the answers the attendees provided. All the questions and their results (in Danish) can be found in @sec-appendices.\
 
 **1: To which degree can you see the usefulness in this system for live events and for post-event evaluations?**\
-In question 1 the particpants are asked to verify the need for the product and the system as a whole. They are asked what they think the usefulness of the system is as a whole for post event evaluations (4,6 / 5) and as a live system (4,4 / 5). This verifies that their is a need for the product, and that it has been a correct prioritisation to focus on a post event evaluation tool while still having a use case in making the process live in the future. 
+In question 1 the particpants are asked to verify the need for the product and the system as a whole. They are asked what they think the usefulness of the system is as a whole for post event evaluations (4,6 / 5) and as a live system (4,4 / 5). This verifies that there is a need for the product, and that it has been a correct prioritisation to focus on a post event evaluation tool while still having a use case in making the process live in the future. 
 
 **2: Non-functional system properties**\
 
@@ -827,6 +827,12 @@ The system can provide output from multiple sources of input at the same time. W
 
 7. The system **could** integrate with existing CCTV software systems at venues.\
 The system is not able to integrate with existing CCTV beyond the footage provided to it.
+
+
+{{< pagebreak >}}
+
+# Operation {#sec-operation}
+
 
 
 {{< pagebreak >}}
