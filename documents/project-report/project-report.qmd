@@ -55,6 +55,8 @@ format:
 
 # Acronyms and definitions
 
+This section describes the acronyms and definitions used in the report.
+
 | **Acronyms**  | **Definition** |
 |--- |--- |
 | CSMS              | Crowd Safety Management System |
@@ -91,17 +93,18 @@ This section is going to give an introduction to the domain, reasoning and conte
 ## Preface
 A special thanks to our collaborators on this project for making this project possible.
 
-Sune Lundø and Mikkel Kjærgaard for excellent guidance on the project.
+Sune Lundø and Mikkel Kjærgaard for excellent guidance on the project. The expertise has been well informed and useful throughout the whole semester and helped us navigate the final project.
 
-Event Safety, Sofie Dahl and Christian Sejlund for their time, expertise and knowledge during the analysis, design and implementation phases. Also a big thanks to the rest of Event Safety, Smukfest and Muskelsvindfonden employees for all feedback.
+Event Safety, Sofie Dahl and Christian Sejlund for their time, expertise and knowledge during all phases of the project as well as taking time to teach us about theory and practice of crowd safety. We would also like to give a big thanks to the rest of Event Safety, Smukfest and Muskelsvindfonden employees for all the feedback we have received.
 
 Smukfest and Muskelsvindfonden for inviting us and allowing us to collect data necessary for our project during their festivals and concerts.
 
-Certified drone pilot Mathias Engmark for helping us collect aerial videos during Grøn Koncert.
+Certified drone pilot Mathias Engmark for helping us collect excellent aerial videos during Grøn Koncert.
 
-PhaseOne for giving expert feedback on creating products that use drone footage. 
+PhaseOne for giving expert feedback on creating useful products that use drone footage. 
 
 SDU and TEK for access to camera resources and cloud computing resources.
+
 
 ## Context
 
@@ -119,10 +122,43 @@ To have the best possible outcome for this project, Event Safety invited us to G
 
 Can computer vision software and AI techniques be leveraged to improve crowd overview for security guards, by receiving video feed from large crowds, and ultimately improve crowd safety?
 
-## Planning
+## Planning and method
 
-The project is going to follow a waterfall method because of the group size and timeframe. The exact timeline can be seen in @sec-appendices. The official project start is in september. Before this we will have prepared the project description, company collaboration, and collected data. September will focus on analysis and design of the system, October and November will contain the implementation phase and the testing will be done in the beginning of December. The project report will be written continuously.
+In the context of developing a software system for our final project, the Waterfall method is adopted as the project management approach. This decision is informed by the specific requirements of the project, including the size of the development group and the constrained timeframe. The Waterfall model, characterized by its linear, sequential and plan-driven approach, offers a structured framework that aligns well with the project’s objectives and constraints.
 
+The Waterfall model follows the following approach [@sommerville2011software]:
+
+1. Requirement analysis and definition.
+
+1. System and software design.
+
+1. Implementation and unit testing.
+
+1. Integration and system testing.
+
+1. Operation and maintenance: Not part of the scope. The project does, however, deliver documentation and user guides for future use.
+
+This project will largely follow this approach. There are however some exceptions, including the types of tests performed in implementation and integration phases and the absence of the operation and maintenance phase. These phases would be necessary for the use of our product after the project, but is not part of our project scope.
+
+The Waterfall method was chosen for its clear, manageable workflow suitable for a small two-member team compared to an agile Scrum approach, its alignment with the project's timeline for delivering a complex computer vision system, and its structured phases that ensure thorough analysis, design, implementation, and testing.
+
+The project timeline is structured into phases, each aligning with the traditional stages of the Waterfall model as described above by @sommerville2011software. A description of the planning of the project timeline can be seen here as well as in @sec-appendices. The following also includes a description of the deliverables that are part of the Sommerville's theory behind the Waterfall method. These will be toned down to reduce the documentation load and make up for the small group size.
+
+1. Preparation Phase (Pre-September): In this initial phase, the groundwork for the project is laid. This includes finalizing the project description, establishing company collaborations, and collecting the necessary data. This phase is critical for ensuring that the project starts with a clear direction and the resources required for success.
+
+1. Analysis and Design (September): The focus in September will be on analyzing the collected data and designing the computer vision system. This stage involves understanding the requirements for crowd safety management and translating these into a viable software design. This phase delivers a requirement specification for the analysis and a software architecture design diagram for the design phase.
+
+1. Implementation (October and November): During these months, the actual development of the software takes place. This phase involves coding the designed system, ensuring that the software components are implemented correctly to achieve the desired functionality. This phase delivers an implemented system.
+
+1. Testing (Early December): In the beginning of December, the system will undergo testing. This phase is crucial for identifying and rectifying any flaws or inefficiencies in the software. The testing phase ensures that the final product is reliable and meets the project’s standards. This phase delivers a documented user test review.
+
+1. Documentation and Reporting: Parallel to the other phases, the project report will be written continuously. This documentation will capture the development process, challenges, solutions, and the overall learning from the project. The continuous nature of this task ensures that all aspects of the project are accurately and comprehensively recorded. 
+
+Adopting the Waterfall method in this project provides a systematic and predictable framework, crucial for managing the task of integrating computer vision into crowd safety management and being able to deliver a finished product. The structured phases of the Waterfall model align well with the project's timelines and resource allocation, ensuring a cohesive and efficient approach to achieving the project's objectives.
+
+## Stakeholders
+
+"Event Safety A/S" is a key stakeholder in the project. The company and it's employees and volunteers specializes in crowd safety management at large-scale events like festivals, concerts, sporting events and more. Their collaboration includes sharing expertise in crowd safety, assisting in data collection through festival access, and offering feedback for user testing. Event Safety will also provide theoretical and practical insight into crowd safety and invite us to courses where we can learn. Event Safety has an interest in the project's outcome, as it directly aligns with their objective of improving event safety and using new technology to fulfill this need better. The project team is committed to fulfilling the project to Event Safety's needs by integrating their insights, adhering to the responsible use of the data collected on their festivals and ensuring the software system is properly aligned with their interests, practically applicable and effective in actual event scenarios. 
 
 # State of the art
 
@@ -141,6 +177,14 @@ Scale variation is one of the main challenges with crowd counting, since perspec
 ![Architecture of the SASNet model [Diagram from @sasnet]](../images/sasnet-architechture.png){#fig-sasnet}
 
 As it can be seen from the diagram, SASNet uses the first 13 convolutional layers from VGG-16 [@simonyan2014very] in the encoder. SASNet then produces 5 feature levels with 5 levels of downsampling ($V_n$). It produces 5 levels of predictions ($P_n$). This is what is referred to as the "U-shaped backbone". These are then fed to a confidence branch and a density branch that produces a confidence map and density map for each of the 5 levels. The complete density map is a product of the sum of the individual density and confidence branches using a softmax function for the confidence.
+
+## Leading practical projects of the state-of-the-art
+
+While there are a few academic research projects on crowd counting, the practical implementations of this technology is hard to find. In practice, the leading method of crowd counting is a variation of using turnstiles and expertise in knowing what certain densities of people look like and multiplying it with the area of the space. [@dahl2023crowd], [@Still2014CrowdScience]
+
+According to the best of our collaborators at Event Safety's knowledge, there have not been any real projects that aim to use technology for crowd counting and density estimations at festivals and concerts in Denmark or Europe. The only example they know of was a project at Roskilde Festival that tried to use cell data to generate a heatmap of crowd densitites and crowd size. This project was abandoned because of it's inaccuracy.
+
+Commercial applications for object detection based cameras are implemented at some places like airports, malls, sidewalks and supermarkets to manage queues, flows and count small numbers of people. This is products like [Hikvision](https://www.hikvision.com/en/solutions/solutions-by-function/people-counting/), [TeraBee](https://www.terabee.com/products/people-counting/), [Haltian](https://haltian.com/products/people-counting/), [FootfallCam](https://www.footfallcam.com/). We have not been able to find projects that use cameras to create a detailed heatmap of densities and total crowd counts in a large area, with high density and using existing surveillance camera infrastructure that do not necessarily have to be high resolution.
 
 # Analysis {#sec-analysis}
 
