@@ -609,10 +609,10 @@ Following the focus group, a questionnaire is conducted to gain further insight.
 
 The questionnaire was conducted using Mentimeter and consisted of scales, open-ended questions and rankings. This section will highlight some of the answers the attendees provided. All the questions and their results (in Danish) can be found in @sec-appendices.\
 
-**Question 1**\
+**1: To which degree can you see the usefulness in this system for live events and for post-event evaluations?**\
 In question 1 the particpants are asked to verify the need for the product and the system as a whole. They are asked what they think the usefulness of the system is as a whole for post event evaluations (4,6 / 5) and as a live system (4,4 / 5). This verifies that their is a need for the product, and that it has been a correct prioritisation to focus on a post event evaluation tool while still having a use case in making the process live in the future. 
 
-**Question 2**\
+**2: Non-functional system properties**\
 
 ![Questionnaire question 2](../images/Evaluation_question2.png){#fig-evaluation_question_2}
 
@@ -635,7 +635,7 @@ Statement 3 shows that the professional observations from our attendees align wi
 
 An attendee also mentioned that the heatmap provided by the program gives more value than a precise count of individuals in a crowd. This comment was unfortunately not documented.
 
-**Question 3**\
+**3: Accuracy and uncertainty of the system**\
 
 ![Questionnaire question 3](../images/Evaluation_question3.png){#fig-evaluation_question_3}
 
@@ -669,15 +669,15 @@ The system creates a heatmap of the analyzed video to visualize crowd density. T
 
 4. The system **should** be able to calculate the physical density of humans per area unit.
 
-The system can calculate and display the physical density based on the sum of pixel values in a given area, as each pixel value corresponds to a certain amount of people.
+The system can calculate and display the physical density based on the sum of pixel values in a given area, as each pixel value corresponds to a certain amount of people. This is dependent on a land survey.
 
 5. The system **should** be able to detect the movement of crowd sections.
 
-The system is not directly able to detect the movement of a crowd. However, the system does create a timelapse of the area in a video which can be used to manually follow certain crowd movements.
+The system is not directly able to detect the movement of a crowd. However, the system does create a timelapse of the area in a video which can be used to manually follow certain crowd movements. According to the focus group evaluation, it is a desired feature to be able to follow the flow in and out of a selected area.
 
 6. The system **should** be able to correct for camera distortion, warp, and perspective.
 
-The system can correct for perspective by providing ground measurements and image coordinates to the cv2.warpPerspective() method of the openCV library. The system cannot currently correct for fish eye distortion.
+The system can correct for perspective by providing ground measurements and image coordinates to the cv2.warpPerspective() method of the OpenCV library. The system cannot currently correct for fish eye distortion.
 
 7. The system **should** be able to detect choke points in the crowd movements.
 
@@ -685,7 +685,7 @@ The system is not able to detect chokepoints beyond manual observations of the u
 
 8. The system **should** be able to generate a summarizing report of the concert with statistics of (crowd density, crowd count, risk factors, choke points, and other) relevant safety indicators after the event.
 
-The System is not able to generate a report of every statistic provided here. The report is based on the current frame of the timelapse and shows crowd count and crowd density.
+The system is not able to generate a report of every statistic provided here. The report is based on the current frame of the timelapse and shows crowd count and crowd density.
 
 9. The system **could** be able to estimate a numerical risk factor based on available factors.
 
@@ -703,19 +703,19 @@ Likewise, we can say the following about our non-functional requirements
 The system only handles sensitive when analyzing the surveillance footage. The only way the data is ever close to online is when it is processed on UCloud. However, as the only online part of the process is the usage of UCloud GPUs, the data is never compromised.
 
 2. The system **should** have a user-friendly interface that is easy to manage for both technical and non-technical users.\
-The system has a user-friendly interface that is easy to manage for both technical and non-technical users. This is based on the answers provided in @sec-focusgroup. With an average score of 3.9 there is still room for improvement. 
+The system has a user-friendly interface that is easy to manage for both technical and non-technical users. This is based on the answers provided in @sec-focusgroup. With an average score of 3,9 there is still room for improvement. 
 
-3. The system **should**  have adequate documentation /technical specifications for technical users.\
-TODO
+3. The system **should** have adequate documentation/technical specifications for technical users.\
+The backend has a README.md file which instructs technical users on how to run the backend as well as system requirements. This can be seen in the backend/README.md and in @sec-appendices.
 
-4. The system **should**  have adequate user manuals for non-technical users.\
-TODO
+4. The system **should** have adequate user manuals for non-technical users.\
+The frontend has a user guide with instructions on how to use the frontend CSMS and the videos produced by the technical users in the backend. This can be seen in @sec-appendices.
 
 5. The system **could** have high reliability that is not based on the visual circumstances and environment (e.g. sunlight, stage light, audience flashlights, and other visual effects) or report confidence based on the environment.\
 See @sec-eval_functional_requirements
 
 6. The system **could** be scalable to simultaneous interoperability between multiple cameras.\
-The system can provide output from multiple sources of input at the same time. While this should also be a functional requirement for it to be fully satisfied, the system has been implemented with this in mind, making it easily scalable to multiple cameras. The focus group evaluation showed that this is the most wanted property of the system. 
+The system can provide output from multiple sources of input at the same time. While this should also be a functional requirement for it to be fully satisfied, the system has been implemented with this in mind, making it easily scalable to multiple cameras. The focus group evaluation showed that this is one of the most wanted property of the system. 
 
 7. The system **could** integrate with existing CCTV software systems at venues.\
 The system is not able to integrate with existing CCTV beyond the footage provided to it.
@@ -725,9 +725,9 @@ The system is not able to integrate with existing CCTV beyond the footage provid
 
 # Discussion {#sec-discussion}
 
-This section will discuss our results including the accuracy of the CSMS and qualitative user feedback from our partners. It will describe how this systems could affect the crowd safety flow. It will also discuss the current system's shortcomings and what can be done in the future to prevent this. Then it will discuss how this system is an improvement from the status quo. It will discuss the privacy and ethical concerns that might be with a system that deals with personal data. Finally it will also evaluate the process of developing this system and on the choice of technologies.
+This section will discuss our results including the accuracy of the CSMS and qualitative user feedback from our partners. It will describe how this systems could affect the crowd safety management flow. It will also discuss the current system's shortcomings and what can be done in the future to prevent this. Then it will discuss how this system is an improvement from the status quo. It will discuss the privacy and ethical concerns that might be with a system that deals with personal data. Finally, it will also evaluate the process of developing this system and on the choice of technologies.
 
-In order to evaluate on the accuracy of the developed system we first look at the quantitative benchmark of SASNet. Here it stated that SASNet performs better or on par with several other state of the art crowd counting models. On the ShanghaiTech part A specifically, which the model weights used in the CSMS is trained on, SASNet performs with a mean average error of 53.59 [@sasnet]. According to @modolo2021understanding, the Shanghai Tect Part A has an average of 500 people in each image, meaning the average error percentage is 10.6% on this dataset. This is the dataset that most closely matches our spread and density distributions in the collected data. When doing our own testing as described in @sec-accuracy we achieve a similar, good accuracy. The required accuracy according to our user research in @sec-focusgroup is that an accuracy of less than 10-20% is ideal, but 20-40% might still be useful. This is well within the bounds of the accuracy of the CSMS.
+In order to evaluate on the accuracy of the developed system we first look at the quantitative benchmark of SASNet. Here it was stated that SASNet performs better or on par with several other state of the art crowd counting models. On the ShanghaiTech part A specifically, which the model weights used in the CSMS is trained on, SASNet performs with a mean average error of 53.59 [@sasnet]. According to @modolo2021understanding, the Shanghai Tect Part A has an average of 500 people in each image, meaning the average error percentage is 10.6% on this dataset. This is the dataset that most closely matches our spread and density distributions in the collected data. When doing our own testing as described in @sec-accuracy we achieve a similar, good accuracy. The required accuracy according to our user research in @sec-focusgroup is that an accuracy of less than 10-20% is ideal, but 20-40% might still be useful. This is well within the bounds of the accuracy of the CSMS.
 
 However, our accuracy is limited by the important factor that is our system as a whole aims to calculate the actual crowd count of the physical space and not just the crowd count of the countable crowd members on the video footage. As an example, we would likely achieve a 0% error if the camera was low enough to only count a handful of members, but this is useless in regards to the overall problem statement of improving the crowd overview for security guards. It is uncertain how prevalent this type of uncertainty is in our data, as we do not have this real ground truth. The limiting factors on achieving this goal are: 
 
@@ -743,7 +743,7 @@ However, our accuracy is limited by the important factor that is our system as a
 
 While the collected data for these purposes is a good starting point, it is important to have these factors in mind when collecting data in the future. Some of these factors are difficult to affect because of other circumstances. Number 1 is limited by drone law regulations or the height of the stage or nearby masts. Number 2 is difficult during night concerts. It could be possible by installing night vision or infrared cameras, but is is uncertain how SASNet would perform with this kind of input data. Number 3 is not possible to affect directly, but camera angles could affect how stage effects affect the input data. It might also be useful to sample frames from moments without many stage effects. Number 4 and 5 should be manageable by using proper camera setups.
 
-Based on the section @sec-eval_functional_requirements the CSMS at this point fully satisfies all the "must have" functional requirements and 1 "should have" requirement (requirement 4). It also satisfies most of functional requirement 6 and 8, while functional requirements 5 and 7 are not directly implemented. The "could have" requirements 9 and 10 have not been implemented. In regards to our evaluation on the non function requirements in @sec-eval_non_functional_requirements, the "must have" requirement is fully satisfied, and the "should have" requirements are partly satisfied. Particularly "could have" requirement 6 regarding "interoperability between multiple cameras" was paid attention during the implementation, as this was found to be more important for the company than the "should have" requirements considering documentation. According to our focus group results in @sec-focusgroup, the good feedback on the trustworthiness of the output data and the usefulness of the heatmap validates the implementation of a large part of the functional and non functional requirements. The qualitative feedback from the focus group also verifies the need of the problem statement and the usefulness of a system like this in general compared to the status quo, which is manual estimates of crowd count and densities. According to @sec-validation-verification The CSMS is both faster and more accurate than manual estimates.
+Based on the section @sec-eval_functional_requirements the CSMS at this point fully satisfies all the "must have" functional requirements and 1 "should have" requirement (requirement 4). It also satisfies most of functional requirement 6 and 8, while functional requirements 5 and 7 are not directly implemented. The "could have" requirements 9 and 10 have not been implemented. In regards to our evaluation on the non function requirements in @sec-eval_non_functional_requirements, the "must have" and "should have" requirement are fulfilled. The "could have" requirements are partly fulfilled. Particularly the "could have" requirement 6 regarding "interoperability between multiple cameras" was paid attention during the implementation as this was found to be important for the company. According to our focus group results in @sec-focusgroup, the good feedback on the trustworthiness of the output data and the usefulness of the heatmap validates the implementation of a large part of the functional and non functional requirements. The qualitative feedback from the focus group also verifies the need of the problem statement and the usefulness of a system like this in general compared to the status quo, which is manual estimates of crowd count and densities. According to @sec-validation-verification The CSMS is both faster and more accurate than manual estimates.
 
 The project's collaborators did not have many ethical concerns when asked. However, it is still our responsibility as the experts, to have these considerations. That is why we researched the data policy of the cloud provider UCloud which satisfied the need for data privacy and responsible use. The ethical considerations was also one of the reasons why we decided to use the CNN based crowd counting method of SASnet rather than "crowd count by detection". The crowd count based methods remove the detection of individuals as each output pixel could be an aggregate of many gaussian kernels, as described in @sec-design-crowdcounting. The extend of discriminatory biases in the dataset and algorithms such as racial, gender or handicap has not been tested. Using a crowd count algorithm should be less biased than a counting by detection algorithm, making it unlikely that it has a large impact on the final result. However the choice of crowd counting method made the implementation of some functional requirements, in regards to movement of crowd members, more difficult to implement which resulted in them not being implemented. A work around could be implemented while still using SASNet by looking at delta changes in densities over time periods, but it is not trivial to infer the average paths of crowd members (functional requirement 5).
 
@@ -868,3 +868,41 @@ pip install -r CrowdCounting-SASNet/requirements.txt
 pip install -r requirements.txt
 
 ```
+
+## CROWD COUNTING DOCUMENTATION (technical users)
+
+### System requirements
+
+* Debian-based Unix system like Ubuntu.
+
+* Able to execute Bash scripts with root access.
+
+* Git installed.
+
+* Internet access.
+
+### Step-by-step guide
+
+1. Clone the repository at [https://github.com/anirv20/crowd-safety](https://github.com/anirv20/crowd-safety).
+
+1. Run the init.sh using `bash backend/init.sh`.
+
+1. Download the SHHA.pth model weights from [SASNet](https://drive.google.com/drive/folders/1uTkJLQOn-jQg81yNAluBpGpIJ-XaZaGI).
+
+1. In main.py: Configure the path to the SHHA.pth model weights. (MODEL_PATH)
+
+1. In main.py: Configure the output directory. (OUTPUT_DIR)
+
+1. In main.py: Configure the frame sampling interval. (FRAME_INTERVAL)
+
+1. In main.py: If the intended use is with the frontend: Set UPSAMPLING_FACTOR to 1 and COLOR_MAP to None.
+
+1. In main.py: Define the corners of the cropped area on the video in (x, y) pairs in local_coordinates for each Camera instance. 
+
+1. In main.py: Define the global coordinates based on the land survey for each Camera instance.
+
+1. In main.py: Define the path to the camera video for each Camera instance.
+
+1. In main.py: Add the Camera instance to the same or different Camera collections.
+
+1. Run main.py and download the output video from the specified OUTPUT_DIR. This can now be uploaded to the frontend if step 7 was followed. 
