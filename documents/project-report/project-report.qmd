@@ -53,6 +53,31 @@ format:
 ---
 {{< pagebreak >}}
 
+# List of figures {.unnumbered .unlisted}
+This report is structured chronologically and is therefore meant to be read that way. This being said, it is possible to read the abstract & conclusion and still understand most of the project. It is expected that the reader possesses basic programming knowledge - specifically Python - to understand what makes up the program.\ \
+
+Chapter 1 - Acronyms and definitions, a basic overview of terms that will be used throughout this report\ \
+
+Chapter 2 - Introduction, will provide background and context for the project\ \
+
+Chapter 3 - State of the art, will provide insight into what technologies currently exist in the field of crowd management and counting\ \
+
+Chapter 4 - Analysis, highlights the scope, requirements & risks of this system\ \
+
+Chapter 5 - Design, goes in-depth with the major design choices made for this project\ \
+
+Chapter 6 - Implementation, describes and explains the implementation and development of the project itself\ \
+
+Chapter 7 - Validation and Verification, validates and verifies that the requirements previously set for this project are fulfilled\ \
+
+Chapter 8 - Discussion, discusses our results in relation to the problem statement\ \
+
+Chapter 9 - Conclusion, concludes the project and our results in relation to our problem statement\ \
+
+Chapter 10 - Future perspectives, goes through why, what & how things could have been done differently throughout the project
+
+{{< pagebreak >}}
+
 # Acronyms and definitions
 
 This section describes the acronyms and definitions used in the report.
@@ -69,7 +94,7 @@ This section describes the acronyms and definitions used in the report.
 ||
 | Crowd Surges     | A dangerous crowd situation where your movement is controlled by the crowd and not your own actions. |
 ||
-| Mosh pit         | A crowd situation where people vacate an area in the crowd followed by violent or aggressive dancing. Sizes of Mosh pits vary greatly. |
+| Mosh pit         | A crowd situation where people vacate an area in the crowd followed by violent or aggressive dancing. The sizes of Mosh pits vary greatly. |
 ||
 | Technical user   | A developer or technician that can implement the CSMS in the technical setup of a concert or venue |
 ||
@@ -88,7 +113,7 @@ This section describes the acronyms and definitions used in the report.
 {{< pagebreak >}}
 
 # Introduction
-This section is going to give an introduction to the domain, reasoning and context to the problem and an introduction to the project collaborators.
+This section is going to give an introduction to the domain, reasoning and context of the problem and an introduction to the project collaborators.
 
 ## Preface
 A special thanks to our collaborators on this project for making this project possible.
@@ -160,23 +185,25 @@ Adopting the Waterfall method in this project provides a systematic and predicta
 
 "Event Safety A/S" is a key stakeholder in the project. The company and it's employees and volunteers specializes in crowd safety management at large-scale events like festivals, concerts, sporting events and more. Their collaboration includes sharing expertise in crowd safety, assisting in data collection through festival access, and offering feedback for user testing. Event Safety will also provide theoretical and practical insight into crowd safety and invite us to courses where we can learn. Event Safety has an interest in the project's outcome, as it directly aligns with their objective of improving event safety and using new technology to fulfill this need better. The project team is committed to fulfilling the project to Event Safety's needs by integrating their insights, adhering to the responsible use of the data collected on their festivals and ensuring the software system is properly aligned with their interests, practically applicable and effective in actual event scenarios. 
 
-# State of the art
+# State of the art {#sec-softa}
 
-This section will describe the state of the art technologies from academic litterature regarding computer vision and crowd counting that will be used in this project.
+This section will describe the state of the art technologies from academic literature regarding computer vision and crowd counting that will be used in this project.
 
 ## Convolutional Neural Network (CNN) for Computer Vision
 
-Convolutional Neural Networks (CNN) are a type of Artificial Neural Networks (ANN) that are used to "solve difficult image-driven pattern recognition tasks." [@DBLP:journals/corr/OSheaN15] ANN's use input in the form of a multi-dimensional vector, which will be distributed to a number of hidden layers. The hidden layers will be weighted by evaluating how a stochastic change within itself affects the final output (backpropagation). Deep learning is an ANN with multiple hidden layers. ANN's can be either supervised: Being trained on a set of labeled training data, or unsupervised: Having no labeled training data, but instead minimizing the result of the cost function. According to @DBLP:journals/corr/OSheaN15 and @NIPS2010_fe73f687, supervised learning is usually necessary for image-focused pattern recognition tasks.
+Convolutional Neural Networks (CNN) are a type of Artificial Neural Networks (ANN) that are used to "solve difficult image-driven pattern recognition tasks." [@DBLP:journals/corr/OSheaN15] ANN's use input in the form of a multi-dimensional vector, which will be distributed to several hidden layers. The hidden layers will be weighted by evaluating how a stochastic change within itself affects the final output (backpropagation). Deep learning is an ANN with multiple hidden layers. ANN's can be either supervised: Being trained on a set of labeled training data, or unsupervised: Having no labeled training data, but instead minimizing the result of the cost function. According to @DBLP:journals/corr/OSheaN15 and @NIPS2010_fe73f687, supervised learning is usually necessary for image-focused pattern recognition tasks.
 
-CNN's are similar to ANN's in almost every way, with the only difference being that CNN's allow to encode image specific features such as edges, textures, color patterns and shape features. This reduces the complexity of a traditional ANN trained on image data, where a vector representation grows in size exponentially depending on the image size. Reducing the feature vector also reduces the risk of overfitting the model. This is done through the process of convolution. In the convolution layer, local regions of the image vector are scanned for image relevant features. Usually the features are run through a pooling layer, reducing its computational complexity by sampling and down-scaling the features. This feature map is then fed to a traditional ANN, with a given amount of hidden layers. 
+CNNs are similar to ANNs in almost every way, with the only difference being that CNNs allow encoding image-specific features such as edges, textures, color patterns and shape features. This reduces the complexity of a traditional ANN trained on image data, where a vector representation grows in size exponentially depending on the image size. Reducing the feature vector also reduces the risk of overfitting the model. This is done through the process of convolution. In the convolution layer, local regions of the image vector are scanned for image-relevant features. Usually, the features are run through a pooling layer, reducing its computational complexity by sampling and down-scaling the features. This feature map is then fed to a traditional ANN, with a given amount of hidden layers. 
 
 ## Solving Scale-Variation with SASNet
 
-Scale variation is one of the main challenges with crowd counting, since perspective in the image will lead to different sizes of heads. One solution to this is proposed by @sasnet. SASNet relies on the fact that heads in a local path share roughly the same scale. It is currently not a common approach to solve scale variation on a continuous scale. SASNet solves it in 5 discrete steps using a weighted average. This bridges the gap between discrete feature extraction and continuous feature extraction. This architecture can be seen in @fig-sasnet.
+Scale variation is one of the main challenges with crowd counting since perspective in the image will lead to different sizes of heads. One solution to this is proposed by @sasnet. SASNet relies on the fact that heads in a local path share roughly the same scale. It is currently not a common approach to solve scale variation on a continuous scale. SASNet solves it in 5 discrete steps using a weighted average. This bridges the gap between discrete feature extraction and continuous feature extraction. This architecture can be seen in @fig-sasnet.
 
 ![Architecture of the SASNet model [Diagram from @sasnet]](../images/sasnet-architechture.png){#fig-sasnet}
 
-As it can be seen from the diagram, SASNet uses the first 13 convolutional layers from VGG-16 [@simonyan2014very] in the encoder. SASNet then produces 5 feature levels with 5 levels of downsampling ($V_n$). It produces 5 levels of predictions ($P_n$). This is what is referred to as the "U-shaped backbone". These are then fed to a confidence branch and a density branch that produces a confidence map and density map for each of the 5 levels. The complete density map is a product of the sum of the individual density and confidence branches using a softmax function for the confidence.
+As can be seen from the diagram, SASNet uses the first 13 convolutional layers from VGG-16 [@simonyan2014very] in the encoder. SASNet then produces 5 feature levels with 5 levels of downsampling ($V_n$). It produces 5 levels of predictions ($P_n$). This is what is referred to as the "U-shaped backbone". These are then fed to a confidence branch and a density branch that produces a confidence map and density map for each of the 5 levels. The complete density map is a product of the sum of the individual density and confidence branches using a softmax function for the confidence.
+
+{{< pagebreak >}}
 
 ## Leading practical projects of the state-of-the-art
 
@@ -285,15 +312,15 @@ More often than not a project will encounter problems that can hinder the progre
 : Table of risks and their impact {#tbl-risks}
 
 
-## Risk assessment
+## Risk assessment{#sec-riskass}
 
-To fully assess the risks described above it is absolutely vital that the probabality and severity of each individual risk is assessed. This is done by using the following formula: 
+To fully assess the risks described above it is vital that the probability and severity of each risk is assessed. This is done by using the following formula: 
 
 $$
 Effect = Probabilty * Severity
 $$
 
-The probablity and severity is each given a score between 1 and 5. 1 being a low probabilty/severity and 5 being a very high probabilty/severity. The effect is then calculated based on these numbers. This can be seen in @tbl-risk-assesment.
+The probability and severity are given each given a score between 1 and 5. 1 being a low probability/severity and 5 being a very high probability/severity. The effect is then calculated based on these numbers.  This can be seen in @tbl-risk-assesment.
 
 | **ID** 	| **Probablity** 	| **Severity** 	| **Effect** 	| **Notes** 	|
 |---	|---	|---	|---	|---	|
@@ -308,11 +335,13 @@ The probablity and severity is each given a score between 1 and 5. 1 being a low
 | R05 	| 1 	| 5 	| 5 	| Severity would depend on when in the process Event Safety would cancel our collaboration.  	|
 : Table of risk assesment {#tbl-risk-assesment}
 
+Based on the table above, we can deduce that the major risk we should be aware of is R04. How we handle the possibility of unusable data is crucial to the success of this project. While other risks also have high effects, their probability is too low to be considered threatening to the project. However, having measurements in place to counteract every risk is still important. 
+
 {{< pagebreak >}}
 
 # Design {#sec-design}
 
-This section is going to describe the design choices made for the system described in the analysis of the problem and specified in the requirement specification. 
+This chapter is going to describe the design choices made for the system as a whole regarding the analysis of the problem in general and requirement specification. This chapter will talk about approaches to crowd counting and how crowd counting differs from object detection. Following this, the chapter talks about the selection process for a cloud computing service and why we decided to go with SASNet as the model for this project
 
 ## About the choice of crowd counting {#sec-design-crowdcounting}
 
@@ -328,17 +357,17 @@ SAM and other object detection methods (sometimes described as "crowd counting b
 
 * Crowd counting performs better in crowded scenes with varying scales of objects and overlapping objects.
 
-* Crowd counting is more robust in environments with changes in light, without the need of specific training data.
+* Crowd counting is more robust in environments with changes in light, without the need for specific training data.
 
-* Crowd counting is not as exposed to the risk of over fitting the model. [@li2021approaches]
+* Crowd counting is not as exposed to the risk of overfitting the model. [@li2021approaches]
 
 * Crowd counting does not single out individuals, but looks at the crowd holistically. [@chan2008]
 
-For these reasons crowd counting is a method that can be used for many domains including traffic and parking analysis, pedestrian crowds, corn and crop counting, and much more. This project will use crowd counting methods to analyse, count and estimate density of concert crowds.
+For these reasons, crowd counting is a method that can be used for many domains including traffic and parking analysis, pedestrian crowds, corn and crop counting, and much more. This project will use crowd-counting methods to analyze, count and estimate the density of concert crowds.
 
-The paper @li2021approaches says the current leading approach to crowd counting is the use of a CNN. This paper, contrary to our definiton of crowd counting, includes object detection as a method of crowd counting. It also includes regression based methods and, of course, CNN's. The main challenge with CNN's for crowd counting is to differentiate between the large scale variations in the countable human heads. @li2021approaches discuss several categories of approaches for CNN based models to solve the scale variation problems, one of which is multi-scale fusion. This approach is the category that this paper proposes for further research, as it shows promising results in the balance between performance and accuracy.
+[@li2021approaches] says the current leading approach to crowd counting is the use of a CNN. This paper, contrary to our definition of crowd counting, includes object detection as a method of crowd counting. It also includes regression-based methods and, of course, CNN's. The main challenge with CNN for crowd counting is to differentiate between the large-scale variations in the countable human heads. [@li2021approaches] discusses several categories of approaches for CNN-based models to solve the scale variation problems, one of which is multi-scale fusion. This approach is the category that this paper proposes for further research, as it shows promising results in the balance between performance and accuracy.
 
-For the reasons outlined here from @DBLP:journals/corr/OSheaN15 and @li2021approaches, this project will focus on the use of CNN based models for crowd counting.
+For the reasons outlined here from @DBLP:journals/corr/OSheaN15 and @li2021approaches, this project will focus on the use of CNN-based models for crowd counting.
 
 One of the useful datasets for crowd counting, "ShanghaiTech" comes from the paper @Zhang_2016_CVPR. In this paper there are defined two datasets, "part a" and "part b". For the purposes of the CSMS test data, "ShanghaiTech Part A" is a more representative dataset to use, since it contains more densely populated crowds from a birds eye view. The dataset is labeled with one dot representing roughly the middle of a person's head. This is the approach outlined in one of the founding papers of crowd counting: @NIPS2010_fe73f687. In @NIPS2010_fe73f687, it is explained how their approach to crowd counting, which has become the primary method in the field, is to create a density function $F$ as a function of the pixels in an image $I$. This density function is analoguous to the physical idea of density, however not a direct representation of the same concept, as physical density is based on physical area. Integrating $F$ over the entire image $I$ will return the number of people in $I$. [@NIPS2010_fe73f687] Each object in the image I should be represented by a normalized 2D Gaussian kernel with the mean at the person's head. 
 
@@ -352,16 +381,22 @@ Being citizens of and using the data of people from an EU country, we have to ab
 
 When reading through this project, one might assume that privacy around facial recognition would be an issue. However, as this is related to heatmaps, crowd counting and crowd density of people, not facial recognition, the identity of people in our footage is not a major concern and thus was not featured in our risk management section. The CSMS anonymises the output data and does not track individuals through time, which could be a privacy concern.\
 
-### UCloud data policy
+### Selecting a cloud computing service
 
-As mentioned, data handling and data privacy are very important for this project. Due to this, we had to research the policies of UCloud regarding data handling before implementing our software on the platform. According to @UCloud_Security, UCloud is ISO 27001 certified. This means that the platform lives up to an international standard for information security management systems [@iso27001]. Furthermore, according to @UCloud_Security, UCloud is hosted locally on SDU and not by a 3rd party operator. Using this information, we were able to conclude that UCloud as a platform is safe to use for our project and regulated to relevant standards.
+Initially, the backend of this project was run on a paid but still limited version of google collab - a Jupyter Notebook collaboration space with access to cloud computing CPU and GPUs. However, it was decided to research possible alternatives for easier scalability and maintainability. When talking about renting cloud computing GPU, the main factor is cost, as with enough money you can rent almost unlimited cloud processing power. However, for our project the amount of processing power available was not the primary concern - data security was. This brought our attention away from international services like google cloud/vertex and Amazon AWS to a local service: UCloud. UCloud is a capable cloud computing service hosted locally on SDU. Through our supervisor, we took action and applied for resources for this project which were quickly granted. This allowed us to move our initial backend to UCloud, which was a major progression for the following reasons: 
+
+1. UCloud is "free" for students and approved projects. You apply for a set amount of currency to use on the platform.
+
+1. UCloud processing power is only limited by the amount of currency available to us on the platform, unlike google collab which was limited based on current global usage.
+
+As mentioned, data handling and data privacy are very important for this project. With this in mind, we decided to research the policies of UCloud regarding data handling before implementing our software on the platform. According to @UCloud_Security, UCloud is ISO 27001 certified. This means that the platform lives up to an international standard for information security management systems [@iso27001]. Furthermore, according to @UCloud_Security, UCloud is hosted locally on SDU and not by a 3rd party operator. Using this information, we can conclude that UCloud as a platform is safe to use for our project and regulated to relevant standards.
 
 ## Choosing a technology for Crowd Counting {#sec-model-selection}
 There are many open source implementations of crowd counting models, many of which can be seen in the [Awesome Crowd Counting](https://github.com/gjy3035/Awesome-Crowd-Counting) repository by @gjy3035_awesome_crowd_counting along with research papers and benchmarks. After careful consideration, the choice of using SASNet was based on four different factors:
 
 1. SASNets fits our need to solve the problem of scale variation in the video material. It was not possible to obtain video material from an approximate orthographic perspective. However, future endeavors for this project might include cameras like those from one of our collaborators [PhaseOne](https://www.phaseone.com/) who produces approximate orthographic perspectives using high pixel density cameras from high altitudes. SASNet, however, fulfills the requirement to produce relatively high accuracy prediction on an image with perspective for now.
 
-2. SASNet has some of the lowest absolute errors on the ShanghaiTech testing data, according to @gjy3035_awesome_crowd_counting which compares at least 45 different crowd counting models and methods. 
+2. SASNet has some of the lowest absolute errors on the ShanghaiTech testing data, according to @gjy3035_awesome_crowd_counting which compares at least 45 different crowd-counting models and methods. 
 
 3. SASNet is open source and licensed under the permissive Apache 2.0 license, which allows us to use it legally and for free in our project. SASNet also publishes the pretrained model weights (trained on ShanghaiTech A and B), which means we can save many compute- and time resources instead of training the model ourselves. 
 
@@ -374,9 +409,9 @@ There are many open source implementations of crowd counting models, many of whi
 
 @fig-activity-diagram illustrates the flow of the program through an activity diagram. The diagram was created to obtain a deeper understanding of the general flow and processes the program goes through during its runtime. The diagram is split into 2 "swimlanes", one lane for our CSMS system and one lane for the implementation of the SASNet model. In broad terms, this can also be specified as a CPU and a GPU lane where our CSMS system handles CPU processing and SASNet focuses on GPU processing.
 
-As depicted in the diagram, section of the activities are divided into partitions to visualise a rough partioning into classes and for better readability throughout the diagram. The input is specified as the path to the pretrained model and the path to the video for it to run on.
+As depicted in the diagram, sections of the activities are divided into partitions to visualize a rough partitioning into classes and for better readability throughout the diagram. The input is specified as the path to the pre-trained model and the path to the video for it to run on.
 
-Below is a short runthrough of the different partitions. A more indepth description can be found in the implemetation section
+Below is a short run-through of the different partitions. 
 
 1. System initialization and input validation.
 
@@ -384,7 +419,7 @@ The CSMS is initialized and the inputs for the model and video path are validate
 
 2. SASNet model setup and construction.
 
-The SASNet model is loaded together with VGG16 model which it is based on. This sets the foundation for subsequent image processing.
+The SASNet model is loaded together with the VGG16 model which it is based on. This sets the foundation for subsequent image processing.
 
 3. Pre-processing of input data.
 
@@ -392,21 +427,21 @@ Pre-processing involves creating a dataset from the video in pyTorch and in turn
 
 4. Image processing loop.
 
-The images in the dataloader are iterated through and forwarded to the SASNet model until the dataloader is empty. Each image is processed through the different layers to prepare them for post-processing.
+The images in the dataloader are iterated through and forwarded to the SASNet model until the dataloader is empty. Each image is processed through the different layers to prepare them for post-processing
 
 5. Post-processing and result generation.
 
-Following the image processing, the CSMS takes over again. Here density information is computed, perspective warping is applied to in turn generate the correct heatmap for further analysis.
+Following the image processing, the CSMS takes over again. Here density information is computed, and perspective warping is applied to in turn generate the correct heatmap for further analysis.
 
 6. Output generation and reporting.
 
-All of the outputted data is saved to a file that can be used in the frontend before the program terminates.
+All of the outputted data is saved to a file that can be used in the frontend to form a timelapse and a report, summarizing the observations.
 
 ## Design considerations regarding user experience {#sec-ux}
 
 For many purposes a video with a heatmap could be sufficient. However, in order to make it possible to satisfy requirements such as functional requirement 2 and 8 in @tbl-functional-reqs as well as non-functional requirement 2 in @tbl-nonfunctional-reqs, it was decided to have a user interface. Ideally, by using a frontend with an API integration to the backend. Alternatively, a frontend where one may upload the data output from the backend themselves, in order to analyse the data further, described as a "reporting tool" in functional requirement 8. The frontend should also have a way of changing the color scheme of the heatmap for users who have other color preferences or color blindness.
 
-It is also important to remember that the data produced by the backend is a means of achieving and solving the overall problem statement. Keeping the user in mind, they might experience information overload when looking at a large heatmap with many colors. That is why the backend is going to downsample the heatmap data to the ratio 1 pixel to 1 square meter. This can be upscaled in the frontend again to increase the image size, but keeping the ratio of each block on the image corresponding to one square meter. This makes it easier for the users to quickly correlate the information with their preexisting knowledge on service levels. Service levels are usually described in people per square meter. Limiting the heatmap color scale to cap out at >5 people per square meter as this is when the density could become worryisome. [@dahl2023crowd]
+It is also important to remember that the data produced by the backend is a means of achieving and solving the overall problem statement. Keeping the user in mind, they might experience information overload when looking at a large heatmap with many colors. That is why the backend is going to downsample the heatmap data to the ratio of 1 pixel to 1 square meter. This can be upscaled in the front again to improve the image quality and size, but keeping the ratio of each block on the image corresponding to one square meter. This makes it easier for the users to quickly correlate the information with their preexisting knowledge of service levels [@dahl2023crowd]. Service levels are usually described in people per square meter. Limiting the heatmap color scale to cap out at >5 people per square meter as this is when the density could become worrisome. 
 
 ## The Cyber-Physical System
 
@@ -593,7 +628,7 @@ Although a proper API between the frontend and backend was described in the comp
 
 For two main reasons, it is necessary to limit the compute resource usage:
 
-1. This project is using limited GPU and compute resources. Computer vision and CNN's can be very GPU intensive, so it is in the project's interest to limit the GPU memory consumption as this was found to be the largest resource bottle neck.
+1. This project is using limited GPU and compute resources provided by UCloud. Computer vision and CNN's can be very GPU intensive, so it is in the project's interest to limit the GPU memory consumption as this was found to be the largest resource bottle neck.
 
 2. For the CSMS to be scalable to (near) real-time evaluation performance, it makes sense to limit the use of computing power as much as possible.
 
@@ -626,7 +661,7 @@ Now, the same area is highlighted in the frontend to count the people using the 
 
 ![Small section of bar after concert - Model count](../images/count-comparison.png){#fig-count-comparison}
 
-By looking at the data in the infobox, we see that the model predicted the area to contain 119 people. Using this result, we can conclude that in areas where a human is able to somewhat accurately count a crowd, the model is able to do the same fulfilling functional requirement 1: "The system **must** be able to count the amount of people in the crowd with a precision required by the user base."
+While this test shows that the model is precise in optimal circumstances, there are of course limitations. The model can only count as well as a human would be able to. This means that under circumstances where lighting, stage artifacts (Confetti, fireworks etc.) or bad image quality is present, the model is unable to count precisely. More on this in @sec-discussion
 
 ## Runtime and GPU usage {#sec-runtime}
 
