@@ -183,7 +183,9 @@ Adopting the Waterfall method in this project provides a systematic and predicta
 
 ## Stakeholders
 
-"Event Safety A/S" is a key stakeholder in the project. The company and it's employees and volunteers specializes in crowd safety management at large-scale events like festivals, concerts, sporting events and more. Their collaboration includes sharing expertise in crowd safety, assisting in data collection through festival access, and offering feedback for user testing. Event Safety will also provide theoretical and practical insight into crowd safety and invite us to courses where we can learn. Event Safety has an interest in the project's outcome, as it directly aligns with their objective of improving event safety and using new technology to fulfill this need better. The project team is committed to fulfilling the project to Event Safety's needs by integrating their insights, adhering to the responsible use of the data collected on their festivals and ensuring the software system is properly aligned with their interests, practically applicable and effective in actual event scenarios. 
+"Event Safety A/S" is a key stakeholder in the project. The company, its employees and volunteers specialize in crowd safety management at large-scale events like festivals, concerts, sporting events and more. Their collaboration includes sharing expertise in crowd safety, assisting in data collection through festival access, and offering feedback for user testing. Event Safety will also provide theoretical and practical insight into crowd safety and invite us to courses where we can learn. Event Safety has an interest in the project's outcome, as it directly aligns with their objective of improving event safety and using new technology to fulfill this need better. The project team is committed to fulfilling the project to Event Safety's needs by integrating their insights, adhering to the responsible use of the data collected on their festivals and ensuring the software system is properly aligned with their interests, practically applicable and effective in actual event scenarios. 
+
+{{< pagebreak >}}
 
 # State of the art {#sec-softa}
 
@@ -203,8 +205,6 @@ Scale variation is one of the main challenges with crowd counting since perspect
 
 As can be seen from the diagram, SASNet uses the first 13 convolutional layers from VGG-16 [@simonyan2014very] in the encoder. SASNet then produces 5 feature levels with 5 levels of downsampling ($V_n$). It produces 5 levels of predictions ($P_n$). This is what is referred to as the "U-shaped backbone". These are then fed to a confidence branch and a density branch that produces a confidence map and density map for each of the 5 levels. The complete density map is a product of the sum of the individual density and confidence branches using a softmax function for the confidence.
 
-{{< pagebreak >}}
-
 ## Leading practical projects of the state-of-the-art
 
 While there are a few academic research projects on crowd counting, the practical implementations of this technology is hard to find. In practice, the leading method of crowd counting is a variation of using turnstiles and expertise in knowing what certain densities of people look like and multiplying it with the area of the space. [@dahl2023crowd], [@Still2014CrowdScience]
@@ -212,6 +212,9 @@ While there are a few academic research projects on crowd counting, the practica
 According to the best of our collaborators at Event Safety's knowledge, there have not been any real projects that aim to use technology for crowd counting and density estimations at festivals and concerts in Denmark or Europe. The only example they know of was a project at Roskilde Festival that tried to use cell data to generate a heatmap of crowd densitites and crowd size. This project was abandoned because of it's inaccuracy.
 
 Commercial applications for object detection based cameras are implemented at some places like airports, malls, sidewalks and supermarkets to manage queues, flows and count small numbers of people. This is products like [Hikvision](https://www.hikvision.com/en/solutions/solutions-by-function/people-counting/), [TeraBee](https://www.terabee.com/products/people-counting/), [Haltian](https://haltian.com/products/people-counting/), [FootfallCam](https://www.footfallcam.com/). We have not been able to find projects that use cameras to create a detailed heatmap of densities and total crowd counts in a large area, with high density and using existing surveillance camera infrastructure that do not necessarily have to be high resolution.
+
+## Related technologies
+A more advanced and evolved form of crowd counting is known as crowd localization. @DBLP:journals/corr/abs-2108-00584 Crowd localization provides more in-depth data for each instance in the crowd, meaning the position (and relative position) of individuals or groups in a crowd. This is useful for analyzing flow estimation or more precise crowd counting. Crowd localization is still a highly discussed and continuously researched topic. For these reasons, we found crowd-counting technologies more relevant to our project.
 
 # Analysis {#sec-analysis}
 
@@ -573,8 +576,6 @@ Finally, the corrected map is converted into a heatmap using the make_heatmap() 
 
 In CameraUtils we also find the add_graphics() method, simply adding a small graphic to the image with the predicted count if it is wanted to use the video without the frontend.
 
-**Måske billede af processen som billedet gennemgår her?**
-
 #### Implementing the functions to create heatmaps {#sec-correction}
 This section describes the implementation of functional requirement 4: 
 "*The system should be able to calculate the physical density of humans pr. area unit*"
@@ -868,6 +869,8 @@ It could be an interesting perspective to cooperate more cyber-physical or IoT a
 
 During our discussions with the drone company PhaseOne, they demonstrated some interesting technologies regarding drone and camera technology where this system could be applied. The company provides software and hardware for extremely high resolution imagery on drones. Using this technology it could be possible to cover a very large geographical area using only one or few drones from a high altitude, making it possible to cover multiple or spread out gatherings at once while requiring almost no setup time. Their technology can also allow for approximate orthographic projections, reducing or completely removing the need for perspective warp. This technology could be very useful for open air festivals with many stages at once, protests and urban gatherings that are often spread out and high density.
 
+Another interesting idea for further development of this project would be to advance the project from crowd counting to crowd localization. As described in @sec-softa, crowd localization is more a more advanced a still researched form of crowd counting. Advancing to an implementation of this would allow us to further increase the usability of the program by implementing accurate flow estimation and a more precise count. This would also open up the possibility of tracking individual groups of people, if you wanted to keep an eye on a certain section of the crowd. However, going this direction would also mean the need for higher security revolving data, as you would now be tracking the movement of parts of the crowd. 
+
 {{< pagebreak >}}
 
 # Appendices {.appendix #sec-appendices}
@@ -985,3 +988,16 @@ pip install -r requirements.txt
 1. In main.py: Add the Camera instance to the same or different Camera collections.
 
 1. Run main.py and download the output video from the specified OUTPUT_DIR. This can now be uploaded to the frontend if step 7 was followed. 
+
+## FRONTEND GUIDE (Non-technical users)
+Below is a user guide for the frontend and its functions\
+
+![Frontend user guide](../appendices/Frontend.png){#fig-frontend}
+
+1. Colorspace for the heatmap. This menu allows the user to select a specific colorspace for the heatmap. The colorspace "JET" is selected by default
+
+2. Upload video button allows the user to upload a video thats been processed by the backend
+
+3. When a video has been uploaded, the user can use their mouse to select a series of points to define an area for specific analysis - See @#fig-count-comparison. This button removes the polygon and allows the user to mark a new one. 
+
+4. When a video is uploaded, the user can use the progress-bar to move forwards or backwards in the video. 
