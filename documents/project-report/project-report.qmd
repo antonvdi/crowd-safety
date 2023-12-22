@@ -623,13 +623,68 @@ Perspective correction is done using the cv2 method which takes the extracted gr
 
 ![Depiction of transformation matrix and scale factor [From @cv2-warpperspective]](../images/perspec-trans-matrix.jpg){#fig-transformation-matrix}
 
-The scale factor will be mentioned later on in this section.
-
 After finding the transformation matrix, the operation is performed on the section of the image defined in local_coordinates, using the warpPerspective() method from cv2. The process can be seen in @fig-perspective-transformation.
 
-![Depiction of perspective correction from @cv2-warpperspective](../images/perspective-transformation-visual.jpg){#fig-perspective-transformation}
+![Depiction of perspective correction from @cv2-warpperspective](../images/perspective-transformation-visual.jpg){#fig-perspective-transformation} 
+
+The code snippet for perspective correction is also found below: 
+
+```python
+ def correct_perspective(self, matrix: np.ndarray, corner_matrix: np.ndarray) -> np.ndarray:
+  pt_A = corner_matrix[0]
+  pt_B = corner_matrix[1]
+  pt_C = corner_matrix[2]
+  pt_D = corner_matrix[3]
+
+  width_AD = np.sqrt(((pt_A[0] - pt_D[0]) ** 2) + 
+  ((pt_A[1] - pt_D[1]) ** 2))
+
+  width_BC = np.sqrt(((pt_B[0] - pt_C[0]) ** 2) + 
+  ((pt_B[1] - pt_C[1]) ** 2))
+
+  maxWidth = max(int(width_AD), int(width_BC))
+
+
+  height_AB = np.sqrt(((pt_A[0] - pt_B[0]) ** 2) + 
+  ((pt_A[1] - pt_B[1]) ** 2))
+
+  height_CD = np.sqrt(((pt_C[0] - pt_D[0]) ** 2) + 
+  ((pt_C[1] - pt_D[1]) ** 2))
+
+  maxHeight = max(int(height_AB), int(height_CD))
+
+  input_pts = np.float32([pt_A, pt_B, pt_C, pt_D])
+  output_pts = np.float32([[0, 0],
+                          [0, maxHeight - 1],
+                          [maxWidth - 1, maxHeight - 1],
+                          [maxWidth - 1, 0]])
+
+```
 
 When the perspective of the frame is corrected, the image is then downsampled to reduce information overload and increase the crowd overview by having each "pixel" of the frame correlate to 1 square meter in real life based on the global coordinates. After this, the image is then upsampled again so the data is still readable but not overwhelming. 
+
+The code for the downsample_image() method is seen below: 
+
+```python
+ def downsample_image(self, matrix: np.ndarray, scale_factor: int) -> np.ndarray:
+    # Calculate the dimensions of the downscaled array with padding
+  new_height = matrix.shape[0] // scale_factor + (matrix.shape[0] % scale_factor > 0)
+  new_width = matrix.shape[1] // scale_factor + (matrix.shape[1] % scale_factor > 0)
+
+  # Initialize the downscaled array with zeros
+  downscaled_array = np.zeros((new_height, new_width), dtype=matrix.dtype)
+
+  # Iterate through the downscaled array and calculate the sum of the pixels
+  for i in range(new_height):
+    for j in range(new_width):
+      row_start = i * scale_factor
+      row_end = min((i + 1) * scale_factor, matrix.shape[0])
+      col_start = j * scale_factor
+      col_end = min((j + 1) * scale_factor, matrix.shape[1])
+      downscaled_array[i, j] = np.sum(matrix[row_start:row_end, col_start:col_end])
+
+  return downscaled_array
+```
 
 This leaves us with the steps condensed into:
 
