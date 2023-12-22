@@ -493,28 +493,28 @@ In this section, we will refer back to @sec-functional-requirements to show impl
 ### Backend class structure {#sec-classes}
 Referring to @fig-class-backend, we see that the backend mainly consists of 5 classes:
 
-1. video_frame_dataset
-1. model_wrapper
+1. VideoFrameDataset
+1. ModelWrapper
 1. Camera
-1. camera_utls
-1. camera_collection
+1. CameraUtils
+1. CameraCollection
 
-The system is built on the OOP paradigm for easier scalability to additional cameras in the future. The 5 following subsections each describe the main responsibility of that class\
+The system is built on the OOP paradigm for easier scalability to additional cameras in the future. The responsibilities of the 5 main classes are described in the following:
 
-#### video_frame_dataset
-video_frame_data takes the video input and converts it to the type of Dataset. This allows us to segment the video based on a frame interval for easier manipulation later on. Here, the size of the video is also set to a specific resolution based on passed parameters and resized using the cv2.resize() function. The class returns the frames of the video in a Dataset.\
+* VideoFrameDataset
+VideoFrameDataset takes the video input and converts it to the type of Dataset. This allows us to segment the video based on a frame interval for easier manipulation later on. Here, the size of the video is also set to a specific resolution based on passed parameters and resized using the cv2.resize() function. The class returns the frames of the video in a Dataset.\
 
-#### model_wrapper
-model_wrapper loads the model from the SASNet repository into a Model object with relevant parameters. The class contains a get_model() method for fetching the model in the other classes.\
+* ModelWrapper
+ModelWrapper loads the model from the SASNet repository into a Model object with relevant parameters. The class contains a get_model() method for fetching the model in the other classes.\
 
-#### camera
-The camera class contains the main predict() method. This method is explained in @sec-crowdcount-implement. Beyond the predict() method, the class gets the Dataset from earlier and passes it to a Dataloader which the predict method fetches. When the predict() method has run, it returns a heatmap for processing in the frontend.\
+* Camera
+The Camera class contains the main predict() method. This method is explained in @sec-crowdcount-implement. Beyond the predict() method, the class gets the Dataset from earlier and passes it to a Dataloader which the predict method fetches. When the predict() method has run, it returns a heatmap for processing in the frontend.\
 
-#### camera_utils
-The camera_utils class is a large collection of methods used in the camera and camera_collection classes. These methods include, but are not limited to: correct_fisheye_distortion(), correct_perspective(), downsample_image(), upsample_image() & make_heatmap(). All of these methods are used in the predict() method in the camera class and aid in the manipulating the frames of the video for better and more accurate crowd counting.\
+* CameraUtils
+The CameraUtils class is a large collection of methods used in the Camera and CameraUtils classes. These methods include, but are not limited to: correct_fisheye_distortion(), correct_perspective(), downsample_image(), upsample_image() and make_heatmap(). All of these methods are used in the predict() method in the camera class and aid in the manipulating the frames of the video for better and more accurate crowd counting.\
 
-#### camera_collection
-As the main goal of this project is to help improve crowd safety management, the implementation of software that can handle multiple cameras at once is important. The camera_collection class does just that. The other main responsibility of this class is the conversion from frames in a Dataset back to a video timelapse. The class takes all of the frames and combines them to a video with a set amount of frames per second(FPS) and then saves the video to the .avi format.\
+* CameraCollection
+As the main goal of this project is to help improve crowd safety management, the implementation of software that can handle multiple cameras at once is important. The CameraCollection class does just that. The other main responsibility of this class is the conversion from frames in a Dataset back to a video timelapse. The class takes all of the frames and combines them to a video with a set amount of frames per second(FPS) and then saves the video to the .avi format.\
 
 
 ### Environment setup {#sec-environment}
@@ -543,7 +543,7 @@ The SASNet model is loaded using pre-trained weights and biases for the underlyi
 
 This section about the backend implementation will take a closer look at how functional requirements 1 and 4 were implemented.
 
-#### Implementing crowd counting{#sec-crowdcount-implement}
+#### Implementing crowd counting {#sec-crowdcount-implement}
 
 This section describes the implementation of functional requirement 1:
 "*The system must be able to count the amount of people in the crowd with a precision required by the user base.*"
@@ -671,7 +671,7 @@ with torch.no_grad():
 pred_map = pred_map.data.cpu().numpy()
 ```
 
-Here the image tensor is first sent to the NVIDIA GPU using img.cuda(). Gradient calculations are then disabled for the inference, and the model is set to eval mode. These two reduce the GPU memory usage. Finally, after the inference is run and the predicition_map is calculated, the tensor data is sent to the cpu and the tensor is converted to a numpy matrix (an image). This way limits the time that the tensor spends in the GPU greatly, as well as reducing the memory usage.
+Here the image tensor is first sent to the NVIDIA GPU using img.cuda(). Gradient calculations are then disabled for the inference, and the model is set to eval mode. These two reduce the GPU memory usage. Finally, after the inference is run and the predicition_map is calculated, the tensor data is sent to the CPU and the tensor is converted to a numpy matrix (an image). This way limits the time that the tensor spends in the GPU greatly, as well as reducing the memory usage.
 
 {{< pagebreak >}}
 
@@ -833,7 +833,11 @@ The system is not able to integrate with existing CCTV beyond the footage provid
 
 # Operation {#sec-operation}
 
+This section will describe the plan for achieving operation. Due to the seasonal nature of festivals, it has not been possible to test the system in operation at a real festival or concert, nor has it been possible to collect more or improved data. Thus the "operation and maintenance"-phase of the Waterfall model from @sommerville2011software has not been a priority in the project. The project's purpose was as a proof of concept from the beginning. However, the system has been designed with maintainability in mind
 
+The frontend and backend code bases are maintainable for a few reason. The Python code has been written using type hints. Even though typing is not supported by the Python runtime @PythonDocumentation, it is used by IDE's and linters to enforce good coding practice. The system is also written using an OOP paradigm which makes it easier to understand due to the abstraction of implementation. Writing the code in pair programming also helps maintainability as knowledge is shared and not isolated. When necessary, this knowledge has been documented in README files. 
+
+There are no developers in Event Safety. This means that there has not been any considerations for development handover or for second part developers to get involved in the process. For the product to get applied in their day to day work it would take building up a small catalogue of processed videos of different examples from different venues. The frontend could be handed over to the users. Users would be employees and volunteers at Event Safety, Smukfest and Grøn Koncert. This would provide significant value based on our focus group research. 
 
 {{< pagebreak >}}
 
