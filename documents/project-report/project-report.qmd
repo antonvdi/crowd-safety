@@ -110,6 +110,8 @@ This section describes the acronyms and definitions used in the report.
 ||
 | GUI      | Graphical User Interface.           |
 ||
+| LOS      | Fruin's Level of Service @fruin1971pedestrian.           |
+||
 : Table of acronyms and definitions used throughout the report. {#tbl-acronyms}
 
 {{< pagebreak >}}
@@ -213,7 +215,24 @@ As can be seen from the diagram, SASNet uses the first 13 convolutional layers f
 
 ## Leading practical projects of the state-of-the-art crowd management systems
 
-While there are some academic research projects on crowd counting, the practical implementations of this technology are hard to find. In practice, the leading method of crowd counting is a variation of using turnstiles and expertise in knowing what certain densities of people look like and multiplying it with the area of the space, also known as Jacob's method. [@dahl2023crowd], [@Still2014CrowdScience]
+While there are some academic research projects on crowd counting, the practical implementations of this technology are hard to find. In practice, the leading method of crowd counting is a variation of using turnstiles and expertise in knowing what certain densities of people look like and multiplying it with the area of the space, also known as Jacob's method. [@dahl2023crowd] [@Still2014CrowdScience] Fruin's Level of Service (LOS) is then applied to these densities. The LOS standard is a measure of how many square meters each person needs to feel comfortable when walking, climbing stairs or standing/queuing. The LOS standard is based on a series of qualitative and quantitative methods [@fruin1971pedestrian]. Fruin's LOS can be seen in @tbl-los.
+
+| LOS   | Density                     |
+|-------|-----------------------------|
+| LOS A | < 0.83 people per sq. meter |
+||
+| LOS B | < 1.07 people per sq. meter |
+||
+| LOS C | < 1.54 people per sq. meter |
+||
+| LOS D | < 3.58 people per sq. meter |
+||
+| LOS E | < 5.38 people per sq. meter |
+||
+| LOS F | > 5.38 people per sq. meter |
+: Table of Fruin's Level of Service (LOS). By @fruin1971pedestrian. Originally in square feet per person. Converted to densities (people per square meter) with the formula $density=(1/feet per person)*10.763915$ {#tbl-los}
+
+Depending on the type of festival Event Safety works with different acceptable LOS. At Grøn which is a more family-friendly festival with people sitting an acceptable service level might be LOS D close to the stage and LOS C farther from the stage. At Smukfest an acceptable LOS might be LOS D or near LOS E in some places. LOS F is usually never acceptable as this can quickly become a safety issue. [@dahl2023crowd]  
 
 According to the best of our collaborators at Event Safety's knowledge, there have not been any real projects that aim to use technology for crowd counting and density estimations at festivals and concerts in Denmark, nor any large-scale projects in Europe. The only example they know of was a project at Roskilde Festival that tried to use cell data to generate a heatmap of crowd densities and crowd size. This project was abandoned because of its inaccuracy.
 
@@ -942,15 +961,17 @@ A key part of our work was following GDPR, data privacy and ethical consideratio
 
 Creating a user-friendly interface was a non-functional requirement. We wanted the system to be easy to use for both technical and non-technical users. The interface we developed helped users easily understand complex data, like heat maps and crowd density figures. It was found from the focus group session that the heat map is very useful in improving crowd overview for security guards at post-event evaluations.
 
-We chose to use CNN-based methods for crowd counting to avoid more intrusive methods like tracking individual people. This decision was important to respect individual privacy and align with ethical standards in surveillance technology. The technology also proved to be useful when considering the needed computing power for the alternative.
+We chose to use regression-based methods for crowd counting to avoid more intrusive methods like tracking individual people. This decision was important to respect individual privacy and align with ethical standards in surveillance technology. The technology also proved to be useful when considering the needed computing power for the alternative.
 
-The project also expectedly faced challenges. Environmental factors like poor lighting and stage effects sometimes affected how accurately the system worked. These are common issues at festivals and make maintaining consistent performance difficult.
+The project also expectedly faced challenges. Physical environmental factors like poor lighting and stage effects sometimes affected how accurately the system worked. These are common issues at festivals and make maintaining consistent performance difficult.
 
-There were also technical challenges. The system did not fully develop some features that could be interesting for managing crowds, like detecting crowd movements and identifying potential choke points. However, during user testing and discussions, it was not features that were missing for achieving the overall goal. Integrating the system with existing CCTV systems was also a requirement that was not developed because it would not be able to be tested.
+There were also technical challenges. The system did not fully develop some features that could be interesting for managing crowds, like detecting crowd movements and identifying potential choke points. However, during user testing and discussions, it was not features that were missing for achieving the overall goal and proving the concept of the system. Integrating the system with existing CCTV systems was also a requirement that was not developed because it would not be able to be tested.
 
 Handling and processing a lot of high-resolution video data was challenging. We had to balance the need for powerful processing and storage with the requirement for real-time or near-real-time data processing. This was a tough task given the amount and type of data we were dealing with. The delay showed to be around 4-5 seconds for each frame which is a low enough delay for the use case.
 
-Overall, this project has successfully proved the usefulness of AI and computer vision techniques for crowd safety management to our company collaborators. We faced and overcame many challenges and complexities, creating a system that improves crowd safety at festivals. The experiences and knowledge gained from this project provide a solid base for future developments and improvements in crowd management and safety systems. These will be summarised in section @sec-perspective.
+Our focus group evaluation in @sec-focusgroup shows that experts on crowd safety find this system extremely useful as a tool in their work with crowd safety and crowd comfort, successfully proving this technology and system as a proof-of-concept.
+
+Overall, this project has successfully proved the usefulness of AI and computer vision techniques for crowd safety management to our company collaborators. We faced and overcame many challenges and complexities, creating a system that improves not only crowd safety but also crowd comfort at festivals. The experiences and knowledge gained from this project provide a solid base for future developments and improvements in crowd management and safety systems. These will be summarised in section @sec-perspective.
 
 {{< pagebreak >}}
 
