@@ -185,7 +185,7 @@ The project timeline is structured into phases, each aligning with the tradition
 
 1. Documentation and Reporting: Parallel to the other phases, the project report will be written continuously. This documentation will capture the development process, challenges, solutions, and overall learning from the project. The continuous nature of this task ensures that all aspects of the project are accurately and comprehensively recorded. 
 
-Adopting the Waterfall method in this project provides a systematic and predictable framework, crucial for managing the task of integrating computer vision into crowd safety management and being able to deliver a finished product. The structured phases of the Waterfall model align well with the project's timelines and resource allocation, ensuring a cohesive and efficient approach to achieving the project's objectives.
+Adopting the Waterfall method in this project provides a systematic and predictable framework, crucial for managing the task of integrating computer vision into crowd safety management and being able to deliver a finished proof-of-concept. The structured phases of the Waterfall model align well with the project's timelines and resource allocation, ensuring a cohesive and efficient approach to achieving the project's objectives.
 
 ## Stakeholders
 
@@ -556,7 +556,7 @@ This section describes the implementation of functional requirement 1:
 
 To count the people in a crowd, the SASNet crowd counting model mentioned in @sec-model-selection was implemented in the backend. This is done in the model_wrapper.py class. The model_wrapper class has a get_model() method that returns the model for use in the camera class.
 
-Before we can use the model on our data, it needs to be preprocessed. As the SASNet model is made for singular images, converting the input videos to an image based format is needed. This is done using the Python torch.utils.dataset class. This iterable dataset allows for loading a frame interval from a video into an array of images using cv2. Using cv2, we are also able to resize the video to a specified resolution for easier handling. Once a specified frame interval, resolution and other parameters for the video are defined, it is ready for processing and gets loaded by the camera class.
+Before we can use the model on our data, it needs to be preprocessed. As the SASNet model is made for singular images, converting the input videos to an image-based format is needed. This is done using the Python torch.utils.dataset class. This iterable dataset allows for loading a frame interval from a video into an array of images using cv2. Using cv2, we are also able to resize the video to a specified resolution for easier handling. Once a specified frame interval, resolution and other parameters for the video are defined, it is ready for processing and gets loaded by the camera class.
 
 ```python
 def predict(self) -> None:
@@ -604,7 +604,7 @@ After assigning the density maps several post-processing steps happen. First, th
 
 Secondly, the method checks if parameters for fisheye correction are passed. If true, the program applies fisheye correction from cv2 and continues, otherwise, this part is skipped.
 
-Third, the first color channel (grayscale) is extracted for futher processing. Following this, perspective correction and aggregate downsampling is performed. Upsampling using "nearest" interpolation is also applied if the upsampling factor is different from 1. For use with the frontend, the upsampling factor should be 1 as the upsampling should be done in the frontend. More on this in @sec-correction. It is important to note that crowd counting is done before perspective correction, as the model is unable to count accurately on the warped image.
+Third, the first color channel (grayscale) is extracted for further processing. Following this, perspective correction and aggregate downsampling are performed. Upsampling using "nearest" interpolation is also applied if the upsampling factor is different from 1. For use with the frontend, the upsampling factor should be 1 as the upsampling should be done in the frontend. More on this in @sec-correction. It is important to note that crowd counting is done before perspective correction, as the model is unable to count accurately on the warped image.
 
 Finally, the corrected map is converted into a heatmap using the make_heatmap() method from CameraUtils if a heatmap color scheme is provided. For use with the frontend this should not be provided as the heatmap will be applied in the frontend. The resulting image is returned to be written to a video file. 
 
@@ -696,7 +696,7 @@ This leaves us with the steps condensed into:
 
 1. Correct the perspective of the heatmap based on global coordinates. 
 1. Downsample the corrected greyscale heatmap to ensure that each pixel in a given frame corresponds to area units - square meters in this case.
-1. Upsample the downsampled image for better readability while still maintaining a linear relationship between pixels and area units. (Is only done if the frontend is not used)
+1. Upsample the downsampled image for better readability while still maintaining a linear relationship between pixels and area units. (This is only done if the frontend is not used)
 
 After the complete image processing and the steps above are complete, the greyscale heatmap is uploaded to the frontend. Here the pixel sum of the entire image is divided by the amount of pixels to find the density. This is due to the density of people being represented by pixel density as explained in @sec-design-crowdcounting.
 
@@ -704,25 +704,25 @@ After the complete image processing and the steps above are complete, the greysc
 
 ## Frontend
 
-To create a flexible user interface, the output data was stripped of all post-processing artifacts (heatmap, scale, count and other text) as this would now be calculated in the frontend. The frontend is created using [Qt for Python](https://wiki.qt.io/Qt_for_Python) to allow for cross platform compatability, to have access to video playback components and have access to the Python OpenCV module to allow for preprocessing of the video. There are 3 main widgets in the frontend. The main VideoPlayer widget which has the buttons to upload the video, clear mask and change heatmap colorscheme. The InfoWidget which displays textual data such as the count, count in selection, density, density in selection and time passed. The FloatingOverlay which is an overlay that follows the size and position of the VideoPlayer where the user can draw a polygon to define an area on the video that should be counted, as defined in functional requirement 2 in @tbl-functional-reqs. 
+To create a flexible user interface, the output data was stripped of all post-processing artifacts (heatmap, scale, count and other text) as this would now be calculated in the frontend. The frontend is created using [Qt for Python](https://wiki.qt.io/Qt_for_Python) to allow for cross-platform compatibility, to have access to video playback components and the Python OpenCV module to allow for preprocessing of the video. There are 3 main widgets in the frontend. The main VideoPlayer widget that has buttons to upload the video, clear mask and change heatmap color scheme. The InfoWidget that displays textual data such as the count, count in the selection, density, density in selection and time passed. The FloatingOverlay that is an overlay that follows the size and position of the VideoPlayer where the user can draw a polygon to define an area on the video that should be counted, as defined in functional requirement 2 in @tbl-functional-reqs. 
 
 ![Simplified class diagram depicting the structure of the frontend](../images/class-diagram-frontend.png){#fig-fcd}
 
-A simplified version of this structure can be seen in @fig-fcd and the full diagram with all methods and attributes can be seen in the appendix. The VideoPlayer calls a preprocess function which adds the selected heatmap and upscales the downsampled video before sending it to the QVideoWidget. A density scale is also created after the video has been uploaded. All of this is done using OpenCV. This is done in accordance with functional requirement 3 in @tbl-functional-reqs.
+A simplified version of this structure can be seen in @fig-fcd and the full diagram with all methods and attributes can be seen in the appendix. The VideoPlayer calls a preprocess function that adds the selected heatmap and upscales the downsampled video before sending it to the QVideoWidget. A density scale is also created after the video has been uploaded. All of this is done using OpenCV. This is done in accordance with functional requirement 3 in @tbl-functional-reqs.
 
 ## Integeration
 
-Although a proper API between the frontend and backend was described in the component diagram, @fig-component-diagram, it has not been a priority of the project and thus not developed. Further development could allow for direct upload to the backend processing unit from the frontend. Instead as of right now, all video content must be uploaded to UCloud in order to processed which then produces an output video file in the .avi file format that can be read and processed properly by the frontend. Pairing this file with a metadata file containing the input parameters to the backend such as frame sampling interval could also be useful so these parameters become dynamic in the frontend. The metadata file could also contain total counts and average densities over time, so these expensive operations do not have to be unnecessarily recalculated in the frontend.
+Although a proper API between the frontend and backend was described in the component diagram, @fig-component-diagram, it has not been a priority of the project and has thus not been developed. Further development could allow for direct upload to the backend processing unit from the frontend. Instead as of right now, all video content must be uploaded to UCloud for processing which then produces an output video file in the .avi file format that can be read and processed properly by the frontend. Pairing this file with a metadata file containing the input parameters to the backend such as frame sampling interval could also be useful so these parameters become dynamic in the frontend. The metadata file could also contain total counts and average densities over time, so these expensive operations do not have to be unnecessarily recalculated in the frontend.
 
 ## Optimisation and Performance
 
 For two main reasons, it is necessary to limit the compute resource usage:
 
-1. This project is using limited GPU and compute resources provided by UCloud. Computer vision and CNN's can be very GPU intensive, so it is in the project's interest to limit the GPU memory consumption as this was found to be the largest resource bottle neck.
+1. This project is using limited GPU and compute resources provided by UCloud. Computer vision and CNN's can be very GPU intensive, so it is in the project's interest to limit the GPU memory consumption as this was found to be the largest resource bottleneck.
 
 2. For the CSMS to be scalable to (near) real-time evaluation performance, it makes sense to limit the use of computing power as much as possible.
 
-According to @pytorch, [disabling gradient calculation](https://pytorch.org/docs/stable/generated/torch.no_grad.html) is useful for lowering memory usage when using a model for inference. This fits the use case and greatly reduced the memory usage. This was done in the following way:
+According to @pytorch, [disabling gradient calculation](https://pytorch.org/docs/stable/generated/torch.no_grad.html) is useful for lowering memory usage when using a model for inference. This fits the use case and greatly reduces memory usage. This was done in the following way:
 
 ```python
 img = img.cuda()
@@ -732,7 +732,7 @@ with torch.no_grad():
 pred_map = pred_map.data.cpu().numpy()
 ```
 
-Here the image tensor is first sent to the NVIDIA GPU using img.cuda(). Gradient calculations are then disabled for the inference, and the model is set to eval mode. These two reduce the GPU memory usage. Finally, after the inference is run and the predicition_map is calculated, the tensor data is sent to the CPU and the tensor is converted to a numpy matrix (an image). This way limits the time that the tensor spends in the GPU greatly, as well as reducing the memory usage.
+Here the image tensor is first sent to the NVIDIA GPU using img.cuda(). Gradient calculations are then disabled for the inference, and the model is set to eval mode. These two reduce the GPU memory usage. Finally, after the inference is run and the predicition_map is calculated, the tensor data is sent to the CPU and the tensor is converted to a NumPy matrix (an image). This way limits the time that the tensor spends in the GPU greatly, as well as reducing memory usage.
 
 {{< pagebreak >}}
 
@@ -755,14 +755,14 @@ While this test shows that the model is precise in optimal circumstances, there 
 
 ## Runtime and GPU usage {#sec-runtime}
 
-While GPU usage is something already discussed in implementation, runtime and the optimisation of this is still crucial to test. While we originally wanted this project to be able to run in real-time, we quickly realised that this was close to impossible with our current setup and implementation. When running the model on a video, we originally ran it on a 3-minute clip with an image every 30 frames being processed. This resulted in a 180 frame video and a runtime of the program of around 15 minutes. In the future, if we want to run this live, additional resources or optimisation is required. Alternatively the frame sampling interval could be adjusted to match the speed of the inference process, which would result in a very low frame rate, but likely still useful. More about this in @sec-perspective.
+While GPU usage is something already discussed in implementation, runtime and the optimisation of this are still crucial to test. While we originally wanted this project to be able to run in real-time, we quickly realised that this was close to impossible with our current setup and implementation. When running the model on a video, we originally ran it on a 3-minute clip with an image every 30 frames being processed. This resulted in a 180-frame video and a runtime of the program of around 15 minutes. In the future, if we want to run this live, additional resources or optimisation is required. Alternatively, the frame sampling interval could be adjusted to match the speed of the inference process, which would result in a very low frame rate, but likely still useful. More about this in @sec-perspective.
 
 ## Event Safety presentation
 
 Based on the analysis, design and development of the crowd management system we were invited to present our project to more people from Event Safety. Research was conducted into how a proper focus group is structured and managed properly, to give the best possible feedback and evaluation on the project.
 
 ### Focus group {#sec-focusgroup}
-A focus group's purpose is described as: "As a summative evaluation, focus groups can be used to assess the acceptance of a new campaign or gauge customer satisfaction levels" [@designers_research_manual]. This fits the need and possibilities for this evaluation. Based on research from this book we arrived at the following conclusion for our focus group:
+A focus group's purpose is described as: "As a summative evaluation, focus groups can be used to assess the acceptance of a new campaign or gauge customer satisfaction levels" [@designers_research_manual]. This fits the needs and possibilities for this evaluation. Based on research from this book we arrived at the following conclusion for our focus group:
 
 - A group of 6-9 people is the preferred group size
 - A group of similarly experienced people is needed to encourage a proper discussion
@@ -770,7 +770,7 @@ A focus group's purpose is described as: "As a summative evaluation, focus group
 
 For the presentation, a group of 8 employees from Event Safety attended the presentation with questions and feedback for us along the way. The employees all had major experience with crowd management and event planning. Most of them had heard of our project beforehand but had no further technical insight. The presentation consisted of a short introduction to the background, context and process, a live demonstration of the CSMS containing real examples of situations and concerts they know about, followed by a questionnaire that gives quantitative and qualitative data on the evaluation.
 
-The focus group session started with an exercise, asking them to estimate the amount of people in a large crowd section. They were only given the meta information such as the time of day, place and size of the area. This was intended to help us validate the idea. Their range estimates varied from 2.000 to 12.000 in a section with 6.000 crowd members. This is often the current process when making density and crowd count estimates, although sometimes helped in real life by other data such as turnstile counts and tickets sold. This validates the system because of the large uncertainty in their estimates. Safety guards could be working against each others interests if one believe there are 2.000 people in an area, while another believe there are 12.000 people.
+The focus group session started with an exercise, asking them to estimate the amount of people in a large crowd section. They were only given the meta information such as the time of day, place and size of the area. This was intended to help us validate the idea. Their range estimates varied from 2.000 to 12.000 in a section with 6.000 crowd members. This is often the current process when making density and crowd count estimates, although sometimes helped in real life by other data such as turnstile counts and tickets sold. This validates the system because of the large uncertainty in their estimates. Safety guards could be working against each other's interests if one believes there are 2.000 people in an area, while another believes there are 12.000 people.
 
 ### Focus Group Questionaire {#sec-questionnaire}
 
@@ -779,7 +779,7 @@ Following the focus group, a questionnaire is conducted to gain further insight.
 The questionnaire was conducted using Mentimeter and consisted of scales, open-ended questions and rankings. This section will highlight some of the answers the attendees provided. All the questions and their results (in Danish) can be found in @sec-appendices.\
 
 **1: To which degree can you see the usefulness in this system for live events and for post-event evaluations?**\
-In question 1 the particpants are asked to verify the need for the product and the system as a whole. They are asked what they think the usefulness of the system is as a whole for post event evaluations (4,6 / 5) and as a live system (4,4 / 5). This verifies that there is a need for the product, and that it has been a correct prioritisation to focus on a post event evaluation tool while still having a use case in making the process live in the future. 
+In question 1 the participants are asked to verify the need for the product and the system as a whole. They are asked what they think the usefulness of the system is as a whole for post-event evaluations (4,6 / 5) and as a live system (4,4 / 5). This verifies that there is a need for the product and that it has been a correct prioritisation to focus on a post-event evaluation tool while still having a use case in making the process live in the future. 
 
 **2: Non-functional system properties**\
 
@@ -818,7 +818,7 @@ Statement 1 shows a score of 2,2, meaning an uncertainty of around 22% would be 
 
 Statement 2 shows a score of 3,7, meaning an uncertainty of around 37% would still be useful. This further ties into the comment made to question 2, that the precision of the counts is not as important as the visualised density maps - though these do rely on each other.
 
-It is also important to note that the required uncertainty percentages varies depending on the total size of the crowd. 
+It is also important to note that the required uncertainty percentages vary depending on the total size of the crowd. 
 
 ## Evaluation of functional requirements {#sec-eval_functional_requirements}
 
