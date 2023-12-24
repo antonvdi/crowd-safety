@@ -242,6 +242,8 @@ Commercial applications for object-detection-based cameras are implemented at so
 
 A more advanced and evolved form of crowd counting is known as crowd localisation. @DBLP:journals/corr/abs-2108-00584 Crowd localisation provides more in-depth data for each instance in the crowd, meaning the position (and relative position) of individuals or groups in a crowd. This is useful for analysing flow estimation or more precise crowd counting. Crowd localisation is still a highly discussed and continuously researched topic. For these reasons, we found crowd-counting technologies more relevant to our project.
 
+{{< pagebreak >}}
+
 # Analysis {#sec-analysis}
 
 This section will describe the analysis of the problem statement and define the outline of the system and functional- and non-functional system requirements.
@@ -297,8 +299,6 @@ This section describes the functional requirements for the proposed system along
 | 12  | W        | The system **will not** be able to use data gathered elsewhere at a concert such as alcohol sales, average crowd age, sound, artists, etc. to give a more precise crowd profile and thus risk factor |
 : Table of functional requirements {#tbl-functional-reqs}
 
-{{< pagebreak >}}
-
 ## Non-functional requirements {#sec-non-functional-requirements}
 
 This section describes the non-functional requirements for the proposed system along with their "MoSCoW" prioritisation ("must have", "should have", "could have", "will not have"). These are shown in table @tbl-nonfunctional-reqs.
@@ -321,9 +321,6 @@ This section describes the non-functional requirements for the proposed system a
 : Table of non-functional requirements {#tbl-nonfunctional-reqs}
 
 
-{{< pagebreak >}}
-
-
 ## Risk analysis {#sec-risks}
 More often than not a project will encounter problems that can hinder the progress or outcome. By being well prepared we are able to mitigate some of these risks. @tbl-risks describes some of the risks we might encounter in this project.
 
@@ -340,7 +337,6 @@ More often than not a project will encounter problems that can hinder the progre
 | R05 	| Company collaboration ends 	| Project 	| If Event Safety or the group decides to end the collaboration around the project early.  	| Making sure that we listen to and adapt to feedback from Event Safety to keep our good relationship with them.	|
 : Table of risks and their impact {#tbl-risks}
 
-{{< pagebreak >}}
 
 ## Risk assessment{#sec-riskass}
 
@@ -993,21 +989,28 @@ Another interesting idea for further development of this project would be to adv
 
 {{< pagebreak >}}
 
-# Appendices {.appendix #sec-appendices}
+# References {.unnumbered}
 
-## Technical specifications for camera
+::: {#refs}
+:::
+
+{{< pagebreak >}}
+
+# Appendix {#sec-appendices .appendix}
+
+## Technical specifications for camera {.unnumbered}
 
 ![Technical specification document for cameras](../appendices/teknisk-specifikation.png){#fig-camera-specs}
 
 {{< pagebreak >}}
 
-## Full class diagram for frontend
+## Full class diagram for frontend {.unnumbered}
 
-![Class diagram for frontend](../images/class-diagram-frontend-full.png){#fig-frontend-class-diagram-full}
+![Class diagram for frontend](../images/class-diagram-frontend-full.png){#fig-frontend-class-diagram-full height=90%}
 
 {{< pagebreak >}}
 
-## Timeline
+## Timeline {.unnumbered}
 
 | **Date** 	| **Activity** 	|
 |---	|---	|
@@ -1034,13 +1037,13 @@ Another interesting idea for further development of this project would be to adv
 
 {{< pagebreak >}}
 
-## Mentimeter presentation result
+## Mentimeter presentation result {.unnumbered}
 
 ![Mentimeter presentation result](../appendices/MentimeterPresentation.pdf){#fig-presentation-results}
 
 {{< pagebreak >}}
 
-## Backend initialisation script
+## Backend initialisation script {.unnumbered}
 ```bash
 
 #!/bin/bash
@@ -1071,7 +1074,7 @@ pip install -r requirements.txt
 
 ```
 
-## CROWD COUNTING DOCUMENTATION (technical users)
+## Crowd Counting Documentation (technical users) {.unnumbered}
 
 ### System requirements
 
@@ -1109,7 +1112,7 @@ pip install -r requirements.txt
 
 1. Run main.py and download the output video from the specified OUTPUT_DIR. This can now be uploaded to the frontend if step 7 was followed. 
 
-## FRONTEND GUIDE (Non-technical users)
+## Frontend Guide (Non-technical users) {.unnumbered}
 Below is a user guide for the frontend and its functions\
 
 ![Frontend user guide](../appendices/Frontend.png){#fig-frontend}
