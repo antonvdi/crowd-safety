@@ -124,24 +124,24 @@ This section is going to give an introduction to the domain, reasoning and conte
 
 The 30 ECTS project has been written as the final project for the Bachelor of Engineering in Software Technology at the University of Southern Denmark, Technical Faculty. 
 
-A special thanks to our collaborators on this project for making this project possible.
+A special thanks to our collaborators on this project for making this project possible.\
 
-Sune Lundø and Mikkel Kjærgaard for excellent guidance on the project. The expertise has been well-informed and useful throughout the whole semester and helped us navigate the final project.
+Sune Lundø and Mikkel Kjærgaard for excellent guidance on the project. The expertise has been well-informed and useful throughout the whole semester and helped us navigate the final project.\
 
-Event Safety, Sofie Dahl and Christian Sejlund for their time, expertise and knowledge during all phases of the project as well as taking time to teach us about the theory and practice of crowd safety. We would also like to give a big thanks to the rest of Event Safety, Smukfest and Muskelsvindfonden employees for all the feedback we have received.
+Event Safety, Sofie Dahl and Christian Sejlund for their time, expertise and knowledge during all phases of the project as well as taking time to teach us about the theory and practice of crowd safety. We would also like to give a big thanks to the rest of Event Safety, Smukfest and Muskelsvindfonden employees for all the feedback we have received.\
 
-Smukfest and Muskelsvindfonden for inviting us and allowing us to collect data necessary for our project during their festivals and concerts.
+Smukfest and Muskelsvindfonden for inviting us and allowing us to collect data necessary for our project during their festivals and concerts.\
 
-Certified drone pilot Mathias Engmark for helping us collect excellent aerial videos during Grøn Koncert.
+Certified drone pilot Mathias Engmark for helping us collect excellent aerial videos during Grøn Koncert.\
 
-PhaseOne for giving expert feedback on creating useful products that use drone footage. 
+PhaseOne for giving expert feedback on creating useful products that use drone footage. \
 
-SDU and TEK for access to camera resources and cloud computing resources.
+SDU and TEK for access to camera resources and cloud computing resources.\
 
 
 ## Context
 
-![Fatalities in crowds graph [Figure from @FELICIANI2023106174]](../images/fatalities.jpg){#fig-fatalities} 
+![Fatalities in crowds graph [Figure from @FELICIANI2023106174]](../images/fatalities.jpg){#fig-fatalities}\
 
 As seen from @fig-fatalities accidents, fatalities and injuries at festivals and concerts worldwide are on the rise, with just below 5.000 worldwide deaths in the decade of 2010-2019. The increasing trend can be attributed to several causes, according to @inproceedings: First of all, an increase in the popularity of outdoor music festivals resulting in more and larger festivals with large crowds. Also, high-risk behavior among crowd attendants and the performing artist’s music, behavior, and stage show affects the crowd's safety. Cultural influence has also played a large part in the safety of outdoor musical events. This can be behavior such as crowd surfing, moshing, stage diving and the like. 
 
@@ -197,7 +197,7 @@ Adopting the Waterfall method in this project provides a systematic and predicta
 
 # State-of-the-art {#sec-softa}
 
-This section will describe the state-of-the-art technologies from academic literature regarding computer vision and crowd counting that will be used in this project.
+This chapter will describe the state-of-the-art technologies from academic literature regarding computer vision and crowd counting that will be used in this project.
 
 ## Convolutional Neural Network (CNN) for Computer Vision
 
@@ -246,7 +246,7 @@ A more advanced and evolved form of crowd counting is known as crowd localisatio
 
 # Analysis {#sec-analysis}
 
-This section will describe the analysis of the problem statement and define the outline of the system and functional- and non-functional system requirements.
+This chapter will describe the analysis of the problem statement and define the outline of the system and functional- and non-functional system requirements.
 
 ## System specification
 
@@ -320,6 +320,7 @@ This section describes the non-functional requirements for the proposed system a
 | 7   | C        | The system **could** integrate with existing CCTV software systems at venues |
 : Table of non-functional requirements {#tbl-nonfunctional-reqs}
 
+{{< pagebreak >}}
 
 ## Risk analysis {#sec-risks}
 More often than not a project will encounter problems that can hinder the progress or outcome. By being well prepared we are able to mitigate some of these risks. @tbl-risks describes some of the risks we might encounter in this project.
@@ -337,6 +338,7 @@ More often than not a project will encounter problems that can hinder the progre
 | R05 	| Company collaboration ends 	| Project 	| If Event Safety or the group decides to end the collaboration around the project early.  	| Making sure that we listen to and adapt to feedback from Event Safety to keep our good relationship with them.	|
 : Table of risks and their impact {#tbl-risks}
 
+{{< pagebreak >}}
 
 ## Risk assessment{#sec-riskass}
 
@@ -481,7 +483,7 @@ It is necessary to implement an IoT framework to implement non-functional requir
 
 # Implementation {#sec-implementation}
 
-This section is going to describe the implementation of as many designed elements as possible within the timeframe, following the prioritisation in @sec-analysis and the design choices made in @sec-design. 
+This chapter is going to describe the implementation of as many designed elements as possible within the timeframe, following the prioritisation in @sec-analysis and the design choices made in @sec-design. 
 
 ## Data Collection and Preparation
 
@@ -523,18 +525,23 @@ Referring to @fig-class-backend, we see that the backend mainly consists of 5 cl
 The system is built on the OOP paradigm for easier scalability to additional cameras in the future. The responsibilities of the 5 main classes are described in the following:
 
 * VideoFrameDataset
+
 VideoFrameDataset takes the video input and converts it to the type of Dataset. This allows us to segment the video based on a frame interval for easier manipulation later on. Here, the size of the video is also set to a specific resolution based on passed parameters and resized using the cv2.resize() function. The class returns the frames of the video in a Dataset.\
 
 * ModelWrapper
+
 ModelWrapper loads the model from the SASNet repository into a Model object with relevant parameters. The class contains a get_model() method for fetching the model in the other classes.\
 
 * Camera
+
 The Camera class contains the main predict() method. This method is explained in @sec-crowdcount-implement. Beyond the predict() method, the class gets the Dataset from earlier and passes it to a Dataloader which the predict method fetches. When the predict() method has run, it returns a heatmap for processing in the frontend.\
 
 * CameraUtils
+
 The CameraUtils class is a large collection of methods used in the Camera and CameraUtils classes. These methods include, but are not limited to: correct_fisheye_distortion(), correct_perspective(), downsample_image(), upsample_image() and make_heatmap(). All of these methods are used in the predict() method in the camera class and aid in manipulating the frames of the video for better and more accurate crowd counting.\
 
 * CameraCollection
+
 As the main goal of this project is to help improve crowd safety management, the implementation of software that can handle multiple cameras at once is important. The CameraCollection class does just that. The other main responsibility of this class is the conversion from frames in a Dataset back to a video timelapse. The class takes all of the frames and combines them into a video with a set amount of frames per second(FPS) and then saves the video to the .avi format.\
 
 
@@ -642,11 +649,7 @@ The local coordinates are taken from the frame of the video, depicting the area 
 
 Perspective correction is done using the cv2 method which takes the extracted grayscale map from earlier and the local coordinates from the frame. First, the transformation matrix M is calculated using the original input coordinates and the desired output coordinates. See @fig-transformation-matrix. 
 
-![Depiction of transformation matrix and scale factor [From @cv2-warpperspective]](../images/perspec-trans-matrix.jpg){#fig-transformation-matrix}
-
 After finding the transformation matrix, the operation is performed on the section of the image defined in local_coordinates, using the warpPerspective() method from cv2. The process can be seen in @fig-perspective-transformation.
-
-![Depiction of perspective correction from @cv2-warpperspective](../images/perspective-transformation-visual.jpg){#fig-perspective-transformation} 
 
 The code snippet for perspective correction is also found below: 
 
@@ -715,6 +718,10 @@ This leaves us with the steps condensed into:
 
 After the complete image processing and the steps above are complete, the greyscale heatmap is uploaded to the frontend. Here the pixel sum of the entire image is divided by the amount of pixels to find the density. This is due to the density of people being represented by pixel density as explained in @sec-design-crowdcounting.
 
+![Depiction of transformation matrix and scale factor [From @cv2-warpperspective]](../images/perspec-trans-matrix.jpg){#fig-transformation-matrix}
+
+![Depiction of perspective correction from @cv2-warpperspective](../images/perspective-transformation-visual.jpg){#fig-perspective-transformation} 
+
 {{< pagebreak >}}
 
 ## Frontend
@@ -760,11 +767,11 @@ To test the accuracy of the model, a manual test was conducted on a small area o
 
 ![Small section of bar after concert - Manual count](../images/manual-count1.png){#fig-manual-count1}
 
+![Small section of bar after concert - Model count](../images/count-comparison.png){#fig-count-comparison}
+
 In the image seen in @fig-manual-count1, a section of the queue to a bar towards the end of a concert. A rough manual count of the visible people was conducted. This resulted in a count of around 120 people 
 
 Now, the same area is highlighted in the frontend to count the people using the model. This can be seen in @fig-count-comparison.
-
-![Small section of bar after concert - Model count](../images/count-comparison.png){#fig-count-comparison}
 
 While this test shows that the model is precise in optimal circumstances, there are of course limitations. The model can only count as well as a human would be able to. This means that under circumstances where lighting, stage artifacts (Confetti, fireworks etc.) or bad image quality is present, the model is unable to count precisely. More on this in @sec-discussion
 
