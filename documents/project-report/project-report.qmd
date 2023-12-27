@@ -157,7 +157,7 @@ Can computer vision software and AI techniques be leveraged to improve crowd ove
 
 ## Planning and method
 
-In the context of developing a software system for our final project, the Waterfall method is adopted as the project management approach. This decision is informed by the specific requirements of the project, including the size of the development group and the constrained timeframe. The Waterfall model, characterised by its linear, sequential and plan-driven approach, offers a structured framework that aligns well with the project’s objectives and constraints.
+In the context of developing a software system for our final project, the Waterfall method is adopted as the project management approach. This decision is informed by the specific requirements of the project, including the size of the development group and the constrained timeframe. The Waterfall model, characterized by its linear, sequential and plan-driven approach, offers a structured framework that aligns well with the project’s objectives and constraints.
 
 The Waterfall model follows the following approach [@sommerville2011software]:
 
@@ -177,9 +177,9 @@ The Waterfall method was chosen for its clear, manageable workflow suitable for 
 
 The project timeline is structured into phases, each aligning with the traditional stages of the Waterfall model as described above by @sommerville2011software. A description of the planning of the project timeline can be seen here as well as in @sec-appendices. The following also includes a description of the deliverables that are part of Sommerville's theory behind the Waterfall method. These will be toned down to reduce the documentation load and make up for the small group size.
 
-1. Preparation Phase (Pre-September): In this initial phase, the groundwork for the project is laid. This includes finalising the project description, establishing company collaborations, and collecting the necessary data. This phase is critical for ensuring that the project starts with a clear direction and the resources required for success.
+1. Preparation Phase (Pre-September): In this initial phase, the groundwork for the project is laid. This includes finalizing the project description, establishing company collaborations, and collecting the necessary data. This phase is critical for ensuring that the project starts with a clear direction and the resources required for success.
 
-1. Analysis and Design (September): The focus in September will be on analysing the collected data and designing the computer vision system. This stage involves understanding the requirements for crowd safety management and translating these into a viable software design. This phase delivers a requirement specification for the analysis and a software architecture design diagram for the design phase.
+1. Analysis and Design (September): The focus in September will be on analyzing the collected data and designing the computer vision system. This stage involves understanding the requirements for crowd safety management and translating these into a viable software design. This phase delivers a requirement specification for the analysis and a software architecture design diagram for the design phase.
 
 1. Implementation (October and November): During these months, the actual development of the software takes place. This phase involves coding the designed system, and ensuring that the software components are implemented correctly to achieve the desired functionality. This phase delivers an implemented system.
 
@@ -191,7 +191,7 @@ Adopting the Waterfall method in this project provides a systematic and predicta
 
 ## Stakeholders
 
-"Event Safety A/S" is a key stakeholder in the project. The company, its employees and its volunteers specialise in crowd safety management at large-scale events like festivals, concerts, sporting events and more. Their collaboration includes sharing expertise in crowd safety, assisting in data collection through festival access, and offering feedback for user testing. Event Safety will also provide theoretical and practical insight into crowd safety and invite us to courses where we can learn. Event Safety has an interest in the project's outcome, as it directly aligns with their objective of improving event safety and using new technology to fulfill this need better. The project team is committed to fulfilling the project to Event Safety's needs by integrating their insights, adhering to the responsible use of the data collected on their festivals and ensuring the software system is properly aligned with their interests, practically applicable and effective in actual event scenarios. 
+"Event Safety A/S" is a key stakeholder in the project. The company, its employees and its volunteers specialize in crowd safety management at large-scale events like festivals, concerts, sporting events and more. Their collaboration includes sharing expertise in crowd safety, assisting in data collection through festival access, and offering feedback for user testing. Event Safety will also provide theoretical and practical insight into crowd safety and invite us to courses where we can learn. Event Safety has an interest in the project's outcome, as it directly aligns with their objective of improving event safety and using new technology to fulfill this need better. The project team is committed to fulfilling the project to Event Safety's needs by integrating their insights, adhering to the responsible use of the data collected on their festivals and ensuring the software system is properly aligned with their interests, practically applicable and effective in actual event scenarios. 
 
 {{< pagebreak >}}
 
@@ -201,7 +201,7 @@ This chapter will describe the state-of-the-art technologies from academic liter
 
 ## Convolutional Neural Network (CNN) for Computer Vision
 
-Convolutional Neural Networks (CNN) are a type of Artificial Neural Network (ANN) that are used to "solve difficult image-driven pattern recognition tasks." [@DBLP:journals/corr/OSheaN15] ANN's use input in the form of a multi-dimensional vector, which will be distributed to several hidden layers. The hidden layers will be weighted by evaluating how a stochastic change within itself affects the final output (backpropagation). Deep learning is an ANN with multiple hidden layers. ANN's can be either supervised: Being trained on a set of labeled training data, or unsupervised: Having no labeled training data, but instead minimising the result of the cost function. According to @DBLP:journals/corr/OSheaN15 and @NIPS2010_fe73f687, supervised learning is usually necessary for image-focused pattern recognition tasks.
+Convolutional Neural Networks (CNN) are a type of Artificial Neural Network (ANN) that are used to "solve difficult image-driven pattern recognition tasks." [@DBLP:journals/corr/OSheaN15] ANN's use input in the form of a multi-dimensional vector, which will be distributed to several hidden layers. The hidden layers will be weighted by evaluating how a stochastic change within itself affects the final output (backpropagation). Deep learning is an ANN with multiple hidden layers. ANN's can be either supervised: Being trained on a set of labeled training data, or unsupervised: Having no labeled training data, but instead minimizing the result of the cost function. According to @DBLP:journals/corr/OSheaN15 and @NIPS2010_fe73f687, supervised learning is usually necessary for image-focused pattern recognition tasks.
 
 CNNs are similar to ANNs in almost every way, with the only difference being that CNNs allow encoding image-specific features such as edges, textures, color patterns and shape features. This reduces the complexity of a traditional ANN trained on image data, where a vector representation grows in size exponentially depending on the image size. Reducing the feature vector also reduces the risk of overfitting the model. This is done through the process of convolution. In the convolution layer, local regions of the image vector are scanned for image-relevant features. Usually, the features are run through a pooling layer, reducing its computational complexity by sampling and down-scaling the features. This feature map is then fed to a traditional ANN, with a given amount of hidden layers. 
 
@@ -240,7 +240,7 @@ Commercial applications for object-detection-based cameras are implemented at so
 
 ## Related technologies
 
-A more advanced and evolved form of crowd counting is known as crowd localisation. @DBLP:journals/corr/abs-2108-00584 Crowd localisation provides more in-depth data for each instance in the crowd, meaning the position (and relative position) of individuals or groups in a crowd. This is useful for analysing flow estimation or more precise crowd counting. Crowd localisation is still a highly discussed and continuously researched topic. For these reasons, we found crowd-counting technologies more relevant to our project.
+A more advanced and evolved form of crowd counting is known as crowd localization. @DBLP:journals/corr/abs-2108-00584 Crowd localization provides more in-depth data for each instance in the crowd, meaning the position (and relative position) of individuals or groups in a crowd. This is useful for analyzing flow estimation or more precise crowd counting. Crowd localization is still a highly discussed and continuously researched topic. For these reasons, we found crowd-counting technologies more relevant to our project.
 
 {{< pagebreak >}}
 
@@ -250,7 +250,7 @@ This chapter will describe the analysis of the problem statement and define the 
 
 ## System specification
 
-Using cameras mounted around a hotspot of a crowd or on a stationary drone, we aim to develop a platform where an AI model receives video footage from these cameras, uses the model to count the crowd, and helps safety experts recognise a dangerous situation. This could be one or more of the following [@inproceedings]: 
+Using cameras mounted around a hotspot of a crowd or on a stationary drone, we aim to develop a platform where an AI model receives video footage from these cameras, uses the model to count the crowd, and helps safety experts recognize a dangerous situation. This could be one or more of the following [@inproceedings]: 
 
 * Several people moving into the crowd from a specific direction create a dangerous pressure point
 * More than a specified amount of people in a marked area resulting in unsafe conditions (ie. >6 people per square meter)
@@ -270,7 +270,7 @@ An initial component diagram that maps this described system but is subject to c
 
 ## Functional Requirements {#sec-functional-requirements}
 
-This section describes the functional requirements for the proposed system along with their "MoSCoW" prioritisation ("must have", "should have", "could have", and "will not have"). These are shown in @tbl-functional-reqs.
+This section describes the functional requirements for the proposed system along with their "MoSCoW" prioritization ("must have", "should have", "could have", and "will not have"). These are shown in @tbl-functional-reqs.
 
 | **ID**   | **MoSCoW**   | **Requirement**  |
 | --- | -------------- | ----------------------------------------------------- |
@@ -301,7 +301,7 @@ This section describes the functional requirements for the proposed system along
 
 ## Non-functional requirements {#sec-non-functional-requirements}
 
-This section describes the non-functional requirements for the proposed system along with their "MoSCoW" prioritisation ("must have", "should have", "could have", "will not have"). These are shown in table @tbl-nonfunctional-reqs.
+This section describes the non-functional requirements for the proposed system along with their "MoSCoW" prioritization ("must have", "should have", "could have", "will not have"). These are shown in table @tbl-nonfunctional-reqs.
 
 | **ID**   | **MoSCoW**   | **Requirement**  |
 | --- | -------------- | ----------------------------------------------------- |
@@ -323,7 +323,7 @@ This section describes the non-functional requirements for the proposed system a
 {{< pagebreak >}}
 
 ## Risk analysis {#sec-risks}
-More often than not a project will encounter problems that can hinder the progress or outcome. By being well prepared we are able to mitigate some of these risks. @tbl-risks describes some of the risks we might encounter in this project.
+More often than not a project will encounter problems that can hinder the progress or outcome. By being well prepared we can help mitigate some of these risks. @tbl-risks describes some of the risks we might encounter in this project.
 
 | **ID** 	| **Name** 	| **Affects** 	| **Description** 	| **Mitigation** 	|
 |---	|---	|---	|---	|---	|
@@ -358,7 +358,7 @@ The probability and severity are given each given a score between 1 and 5. 1 bei
 |   	|   	|   	|   	|                           	|
 | R03 	| 1 	| 1 	| 1 	| Given the nature of previous work in semester projects and friendship this is highly unlikely. 	|
 |   	|   	|   	|   	|                           	|
-| R04 	| 4 	| 2 	| 8 	| The severity depends on how bad the data is and how well we are able to adapt to it. 	|
+| R04 	| 4 	| 2 	| 8 	| The severity depends on how bad the data is and how well we can adapt to it. 	|
 |   	|   	|   	|   	|                           	|
 | R05 	| 1 	| 5 	| 5 	| Severity would depend on when in the process Event Safety would cancel our collaboration.  	|
 : Table of risk assessment {#tbl-risk-assesment}
@@ -397,7 +397,7 @@ For these reasons, crowd counting is a method that can be used for many domains 
 
 For the reasons outlined here from @DBLP:journals/corr/OSheaN15 and @li2021approaches, this project will focus on the use of CNN and regression-based models for crowd counting.
 
-One of the useful datasets for crowd counting, "ShanghaiTech" comes from the paper @Zhang_2016_CVPR. In this paper, there are defined two datasets, "part a" and "part b". For the CSMS data, "ShanghaiTech Part A" is a more representative dataset to use, since it contains more densely populated crowds from a bird's eye view. The dataset is labeled with one dot representing roughly the middle of a person's head. This is the approach outlined in one of the founding papers of crowd counting: @NIPS2010_fe73f687. In @NIPS2010_fe73f687, it is explained how their approach to crowd counting, which has become the primary method in the field, is to create a density function $F$ as a function of the pixels in an image $I$. This density function is analogous to the physical idea of density, however not a direct representation of the same concept, as physical density is based on physical area. Integrating $F$ over the entire image $I$ will return the number of people in $I$. [@NIPS2010_fe73f687] Each object in the image I should be represented by a normalised 2D Gaussian kernel with the mean at the person's head. 
+One of the useful datasets for crowd counting, "ShanghaiTech" comes from the paper @Zhang_2016_CVPR. In this paper, there are defined two datasets, "part a" and "part b". For the CSMS data, "ShanghaiTech Part A" is a more representative dataset to use, since it contains more densely populated crowds from a bird's eye view. The dataset is labeled with one dot representing roughly the middle of a person's head. This is the approach outlined in one of the founding papers of crowd counting: @NIPS2010_fe73f687. In @NIPS2010_fe73f687, it is explained how their approach to crowd counting, which has become the primary method in the field, is to create a density function $F$ as a function of the pixels in an image $I$. This density function is analogous to the physical idea of density, however not a direct representation of the same concept, as physical density is based on physical area. Integrating $F$ over the entire image $I$ will return the number of people in $I$. [@NIPS2010_fe73f687] Each object in the image I should be represented by a normalized 2D Gaussian kernel with the mean at the person's head. 
 
 One disadvantage of this approach is that the kernel for objects close to the edge of the image will not be counted as a whole object when summed. It is not assumed that this will pose a significant source of error for the CSMS. The downside of using the crowd counting approach is that it will be difficult to track the movement of members of the crowd, rather than using a detection-based counting method. Regression-based crowd counting might also perform worse for very small crowds as it relies on overall patterns in crowds. Despite this, and because this can be seen as an advantage from a privacy point of view (see @sec-facial-recognition), the choice was made together with our collaborators to use the regression-based method.
 
@@ -407,7 +407,7 @@ Being citizens of and using the data of people from an EU country, we have to ab
 
 ### Facial recognition vs. Crowd Counting {#sec-facial-recognition}
 
-When reading through this project, one might assume that privacy around facial recognition would be an issue. However, as this is related to heatmaps, crowd counting and crowd density of people, not facial recognition, the identity of people in our footage is not a major concern and thus was not featured in our risk management section. The CSMS anonymises the output data and does not track individuals through time, which could be a privacy concern.\
+When reading through this project, one might assume that privacy around facial recognition would be an issue. However, as this is related to heatmaps, crowd counting and crowd density of people, not facial recognition, the identity of people in our footage is not a major concern and thus was not featured in our risk management section. The CSMS anonymizes the output data and does not track individuals through time, which could be a privacy concern.\
 
 ### Selecting a cloud computing service
 
@@ -420,7 +420,7 @@ Initially, the backend of this project was run on a paid but still resource-limi
 As mentioned, data handling and data privacy are very important for this project. With this in mind, we decided to research the policies of UCloud regarding data handling before implementing our software on the platform. According to @UCloud_Security, UCloud is ISO 27001 certified. This means that the platform lives up to an international standard for information security management systems [@iso27001]. Furthermore, according to @UCloud_Security, UCloud is hosted locally on SDU and not by a 3rd party operator. Using this information, we can conclude that UCloud as a platform is safe to use for our project and regulated to relevant standards.
 
 ## Choosing a technology for Crowd Counting {#sec-model-selection}
-There are many open-source implementations of crowd counting models, many of which can be seen in the [Awesome Crowd Counting](https://github.com/gjy3035/Awesome-Crowd-Counting) repository by @gjy3035_awesome_crowd_counting along with research papers and benchmarks. After careful consideration, the choice of using SASNet was based on four different factors:
+There are many open-source implementations of crowd-counting models, many of which can be seen in the [Awesome Crowd Counting](https://github.com/gjy3035/Awesome-Crowd-Counting) repository by @gjy3035_awesome_crowd_counting along with research papers and benchmarks. After careful consideration, the choice of using SASNet was based on four different factors:
 
 1. SASNets fits our need to solve the problem of scale variation in the video material. It was not possible to obtain video material from an approximate orthographic perspective. However, future endeavors for this project might include cameras like those from one of our collaborators [PhaseOne](https://www.phaseone.com/) who produces approximate orthographic perspectives using high pixel density cameras from high altitudes. SASNet, however, fulfills the requirement to produce relatively high accuracy prediction on an image with perspective for now.
 
@@ -436,13 +436,13 @@ There are many open-source implementations of crowd counting models, many of whi
 
 @fig-activity-diagram illustrates the flow of the program through an activity diagram. The diagram was created to obtain a deeper understanding of the general flow and processes the program goes through during its runtime. The diagram is split into 2 "swimlanes", one lane for our CSMS system and one lane for the implementation of the SASNet model. In broad terms, this can also be specified as a CPU and a GPU lane where our CSMS system handles CPU processing and SASNet focuses on GPU processing.
 
-As depicted in the diagram, sections of the activities are divided into partitions to visualise a rough partitioning into classes and for better readability throughout the diagram. The input is specified as the path to the pre-trained model and the path to the video for it to run on.
+As depicted in the diagram, sections of the activities are divided into partitions to visualize a rough partitioning into classes and for better readability throughout the diagram. The input is specified as the path to the pre-trained model and the path to the video for it to run on.
 
 Below is a short run-through of the different partitions. 
 
-1. System initialisation and input validation.
+1. System initialization and input validation.
 
-The CSMS is initialised and the inputs for the model and video path are validated
+The CSMS is initialized and the inputs for the model and video path are validated
 
 2. SASNet model setup and construction.
 
@@ -466,24 +466,24 @@ All of the outputted data is saved to a file that can be used in the frontend to
 
 ## Design considerations regarding user experience {#sec-ux}
 
-For many purposes, a video with a heatmap could be sufficient. However, to make it possible to satisfy requirements such as functional requirements 2 and 8 in @tbl-functional-reqs as well as non-functional requirement 2 in @tbl-nonfunctional-reqs, it was decided to have a user interface. Ideally, by using a frontend with an API integration to the backend. Alternatively, a frontend where one may upload the data output from the backend themselves, to analyse the data further, described as a "reporting tool" in functional requirement 8. The frontend should also have a way of changing the color scheme of the heatmap for users who have other color preferences or color blindness.
+For many purposes, a video with a heatmap could be sufficient. However, to make it possible to satisfy requirements such as functional requirements 2 and 8 in @tbl-functional-reqs as well as non-functional requirement 2 in @tbl-nonfunctional-reqs, it was decided to have a user interface. Ideally, by using a frontend with an API integration to the backend. Alternatively, a frontend where one may upload the data output from the backend themselves, to analyze the data further, is described as a "reporting tool" in functional requirement 8. The frontend should also have a way of changing the color scheme of the heatmap for users who have other color preferences or color blindness.
 
 It is also important to remember that the data produced by the backend is a means of achieving and solving the overall problem statement. Keeping the user in mind, they might experience information overload when looking at a large heatmap with many colors. That is why the backend is going to downsample the heatmap data to the ratio of 1 pixel to 1 square meter. This can be upscaled in the front again to improve the image quality and size, but keeping the ratio of each block on the image corresponding to one square meter. This makes it easier for the users to quickly correlate the information with their preexisting knowledge of service levels [@dahl2023crowd]. Service levels are usually described in people per square meter. Limiting the heatmap color scale to cap out at >5 people per square meter as this is when the density could become worrisome. 
 
 ## The Cyber-Physical System
 
-Our system could in a cyber-physical aspect integrate the automated sensors (cameras) within a closed network IoT framework to monitor the crowd density. The sensors collect data in real-time, which is then processed and analysed centrally. 
+Our system could in a cyber-physical aspect integrate the automated sensors (cameras) within a closed network IoT framework to monitor the crowd density. The sensors collect data in real-time, which is then processed and analyzed centrally. 
 
-Despite the automated data collection, decision-making remains a human-driven process, with safety experts interpreting the sensor outputs. The interface for this system is user-friendly described in @sec-ux, and could offer real-time visualisations of crowd dynamics. Future enhancements may explore more automated decision-making capabilities. See @sec-perspective.
+Despite the automated data collection, decision-making remains a human-driven process, with safety experts interpreting the sensor outputs. The interface for this system is user-friendly described in @sec-ux, and could offer real-time visualizations of crowd dynamics. Future enhancements may explore more automated decision-making capabilities. See @sec-perspective.
 
-It is necessary to implement an IoT framework to implement non-functional requirements 6 and 7 in @sec-non-functional-requirements. It would also be necessary in order to implement functional requirement 12 in @sec-functional-requirements. However, this requirement is not part of the project scope as it is a "will not" in the MoSCoW prioritisation.
+It is necessary to implement an IoT framework to implement non-functional requirements 6 and 7 in @sec-non-functional-requirements. It would also be necessary in order to implement functional requirement 12 in @sec-functional-requirements. However, this requirement is not part of the project scope as it is a "will not" in the MoSCoW prioritization.
 
 
 {{< pagebreak >}}
 
 # Implementation {#sec-implementation}
 
-This chapter is going to describe the implementation of as many designed elements as possible within the timeframe, following the prioritisation in @sec-analysis and the design choices made in @sec-design. 
+This chapter is going to describe the implementation of as many designed elements as possible within the timeframe, following the prioritization in @sec-analysis and the design choices made in @sec-design. 
 
 ## Data Collection and Preparation
 
@@ -499,7 +499,7 @@ To implement this project it was necessary to gather useful evaluation data. For
 
 1. Security camera footage from "Smukfest" at various heights from bars and paths
 
-What turned out to be most useful was option number 2 and option number 4. Having a perspective from a higher altitude means that more people are clearly visible and also minimises distortion when warping for perspective correction. Having an even higher resolution from a higher altitude could also increase the accuracy of the predictions. The resolution of the drone footage was 1080p. Having a higher resolution could limit the video compression artifacts. The camera options were discussed with our secondary partner PhaseOne. They have experience with ultra-high-resolution top-down drone footage. This could be an option for future endeavors, which will be discussed in @sec-perspective of this report.
+What turned out to be most useful was option number 2 and option number 4. Having a perspective from a higher altitude means that more people are clearly visible and also minimizes distortion when warping for perspective correction. Having an even higher resolution from a higher altitude could also increase the accuracy of the predictions. The resolution of the drone footage was 1080p. Having a higher resolution could limit the video compression artifacts. The camera options were discussed with our secondary partner PhaseOne. They have experience with ultra-high-resolution top-down drone footage. This could be an option for future endeavors, which will be discussed in @sec-perspective of this report.
 
 While we, with the help of a certified drone pilot, collected the footage from "Grøn" ourselves, the security footage from "Smukfest" was collected by Event Safety. For this, we created a technical specification with our requirements for the footage at the time. This can be read in @sec-appendices. 
 
@@ -547,7 +547,7 @@ As the main goal of this project is to help improve crowd safety management, the
 
 ### Environment setup {#sec-environment}
 
-Setting up an environment for machine learning in Python is not trivial. It is a requirement to have access to a NVIDIA GPU to take advantage of the CUDA toolkit in PyTorch. This opens up GPU acceleration which enables a performance boost rather than running the CNN models on the CPU. Furthermore, the SASNet open-source project was built for Python 3.6.8 and PyTorch >= 1.5.0 [@sasnet]. All of this has to taken into account when setting up the environment. We created a bash script which can be seen in @sec-appendices with the following responsibilities to initiate the environment:
+Setting up an environment for machine learning in Python is not trivial. It is a requirement to have access to a NVIDIA GPU to take advantage of the CUDA toolkit in PyTorch. This opens up GPU acceleration which enables a performance boost rather than running the CNN models on the CPU. Furthermore, the SASNet open-source project was built for Python 3.6.8 and PyTorch >= 1.5.0 [@sasnet]. All of this has to be taken into account when setting up the environment. We created a bash script which can be seen in @sec-appendices with the following responsibilities to initiate the environment:
 
 * Initiating and cloning Git submodules
 
@@ -561,7 +561,7 @@ Setting up an environment for machine learning in Python is not trivial. It is a
 
 ### UCloud service
 
-SDU provides a cloud computing service for faculty members through [eScience](https://escience.sdu.dk/index.php/national-hpc-systems/). Our supervisor applied through this site for a cloud computing resource with 50 GPU hours. The project was granted 100 GB storage and the "u1-gpu @ DeiC Interactive HPC (SDU)" server. In UCloud we used the application "Coder CUDA" to run the project. The bash script from @sec-environment is run to initialise the environment.
+SDU provides a cloud computing service for faculty members through [eScience](https://escience.sdu.dk/index.php/national-hpc-systems/). Our supervisor applied through this site for a cloud computing resource with 50 GPU hours. The project was granted 100 GB storage and the "u1-gpu @ DeiC Interactive HPC (SDU)" server. In UCloud we used the application "Coder CUDA" to run the project. The bash script from @sec-environment is run to initialize the environment.
 
 ### SASNet Model Adaptation
 
@@ -645,7 +645,7 @@ local_coords = [(797, 293), (287, 653), (1761, 1040), (1734, 411)]
 global_coords = [(0, 0), (0, 80), (100, 80), (100, 0)]
 ```
 
-The local coordinates are taken from the frame of the video, depicting the area we want to analyse and correct. The global coordinates are the real-world distances between points, taken from various land surveys of the different festivals provided by our partner at Event Safety. Using these coordinates as measurements we can correct the perspective of each frame for accurate density heatmaps based on physical distances.
+The local coordinates are taken from the frame of the video, depicting the area we want to analyze and correct. The global coordinates are the real-world distances between points, taken from various land surveys of the different festivals provided by our partner at Event Safety. Using these coordinates as measurements we can correct the perspective of each frame for accurate density heatmaps based on physical distances.
 
 Perspective correction is done using the cv2 method which takes the extracted grayscale map from earlier and the local coordinates from the frame. First, the transformation matrix M is calculated using the original input coordinates and the desired output coordinates. See @fig-transformation-matrix. 
 
@@ -726,7 +726,7 @@ After the complete image processing and the steps above are complete, the greysc
 
 ## Frontend
 
-To create a flexible user interface, the output data was stripped of all post-processing artifacts (heatmap, scale, count and other text) as this would now be calculated in the frontend. The frontend is created using [Qt for Python](https://wiki.qt.io/Qt_for_Python) to allow for cross-platform compatibility, to have access to video playback components and the Python OpenCV module to allow for preprocessing of the video. There are 3 main widgets in the frontend. The main VideoPlayer widget that has buttons to upload the video, clear mask and change heatmap color scheme. The InfoWidget that displays textual data such as the count, count in the selection, density, density in selection and time passed. The FloatingOverlay that is an overlay that follows the size and position of the VideoPlayer where the user can draw a polygon to define an area on the video that should be counted, as defined in functional requirement 2 in @tbl-functional-reqs. 
+To create a flexible user interface, the output data was stripped of all post-processing artifacts (heatmap, scale, count and other text) as this would now be calculated in the frontend. The frontend is created using [Qt for Python](https://wiki.qt.io/Qt_for_Python) to allow for cross-platform compatibility, to have access to video playback components and the Python OpenCV module to allow for preprocessing of the video. There are 3 main widgets in the frontend. The main VideoPlayer widget has buttons to upload the video, clear mask and change the heatmap color scheme. The InfoWidget displays textual data such as the count, count in the selection, density, density in selection and time passed. The FloatingOverlay is an overlay that follows the size and position of the VideoPlayer where the user can draw a polygon to define an area on the video that should be counted, as defined in functional requirement 2 in @tbl-functional-reqs. 
 
 ![Simplified class diagram depicting the structure of the frontend](../images/class-diagram-frontend.png){#fig-fcd}
 
@@ -777,7 +777,7 @@ While this test shows that the model is precise in optimal circumstances, there 
 
 ## Runtime and GPU usage {#sec-runtime}
 
-While GPU usage is something already discussed in implementation, runtime and the optimisation of this are still crucial to test. While we originally wanted this project to be able to run in real-time, we quickly realised that this was close to impossible with our current setup and implementation. When running the model on a video, we originally ran it on a 3-minute clip with an image every 30 frames being processed. This resulted in a 180-frame video and a runtime of the program of around 15 minutes. In the future, if we want to run this live, additional resources or optimisation is required. Alternatively, the frame sampling interval could be adjusted to match the speed of the inference process, which would result in a very low frame rate, but likely still useful. More about this in @sec-perspective.
+While GPU usage is something already discussed in implementation, runtime and the optimization of this are still crucial to test. While we originally wanted this project to be able to run in real-time, we quickly realized that this was close to impossible with our current setup and implementation. When running the model on a video, we originally ran it on a 3-minute clip with an image every 30 frames being processed. This resulted in a 180-frame video and a runtime of the program of around 15 minutes. In the future, if we want to run this live, additional resources or optimization is required. Alternatively, the frame sampling interval could be adjusted to match the speed of the inference process, which would result in a very low frame rate, but likely still useful. More about this in @sec-perspective.
 
 ## Event Safety presentation
 
@@ -801,7 +801,7 @@ Following the focus group, a questionnaire is conducted to gain further insight.
 The questionnaire was conducted using Mentimeter and consisted of scales, open-ended questions and rankings. This section will highlight some of the answers the attendees provided. All the questions and their results (in Danish) can be found in @sec-appendices.\
 
 **1: To which degree can you see the usefulness in this system for live events and for post-event evaluations?**\
-In question 1 the participants are asked to verify the need for the product and the system as a whole. They are asked what they think the usefulness of the system is as a whole for post-event evaluations (4,6 / 5) and as a live system (4,4 / 5). This verifies that there is a need for the product and that it has been a correct prioritisation to focus on a post-event evaluation tool while still having a use case in making the process live in the future. 
+In question 1 the participants are asked to verify the need for the product and the system as a whole. They are asked what they think the usefulness of the system is as a whole for post-event evaluations (4,6 / 5) and as a live system (4,4 / 5). This verifies that there is a need for the product and that it has been a correct prioritization to focus on a post-event evaluation tool while still having a use case in making the process live in the future. 
 
 **2: Non-functional system properties**\
 
@@ -814,7 +814,7 @@ The 3 statements were as follows:
 
 1. I find the usability of the platform adequately simple.
 
-2. The data the program visualises is easy to read and understand.
+2. The data the program visualizes is easy to read and understand.
 
 3. The data the program provides is credible compared to my own observations.
 
@@ -838,7 +838,7 @@ Question 3 had the attendees evaluate 2 statements from 0 to 100% based on their
 
 Statement 1 shows a score of 2,2, meaning an uncertainty of around 22% would be ideal for the crowd-counting values provided by the program.  This is useful to evaluate functional requirement 1.
 
-Statement 2 shows a score of 3,7, meaning an uncertainty of around 37% would still be useful. This further ties into the comment made to question 2, that the precision of the counts is not as important as the visualised density maps - though these do rely on each other.
+Statement 2 shows a score of 3,7, meaning an uncertainty of around 37% would still be useful. This further ties into the comment made to question 2, that the precision of the counts is not as important as the visualized density maps - though these do rely on each other.
 
 It is also important to note that the required uncertainty percentages vary depending on the total size of the crowd. 
 
@@ -856,7 +856,7 @@ When the processed video is uploaded to our frontend, the user can select a poly
 
 3. The system **must** be able to create a heatmap of the crowd density.
 
-The system creates a heatmap of the analysed video to visualise crowd density. The user can select the color scheme of the heatmap themselves before uploading a video. 
+The system creates a heatmap of the analyzed video to visualize crowd density. The user can select the color scheme of the heatmap themselves before uploading a video. 
 
 4. The system **should** be able to calculate the physical density of humans per area unit.
 
@@ -891,7 +891,7 @@ The system can generate a delayed video user interface based on the input. It is
 Likewise, we can say the following about our non-functional requirements
 
 1. The system **must** protect the privacy of personal data.\
-The system only handles sensitive when analysing the surveillance footage. The only way the data is ever close to online is when it is processed on UCloud. However, as the only online part of the process is the usage of UCloud GPUs, the data is never compromised.
+The system only handles sensitive when analyzing the surveillance footage. The only way the data is ever close to online is when it is processed on UCloud. However, as the only online part of the process is the usage of UCloud GPUs, the data is never compromised.
 
 2. The system **should** have a user-friendly interface that is easy to manage for both technical and non-technical users.\
 The system has a user-friendly interface that is easy to manage for both technical and non-technical users. This is based on the answers provided in @sec-focusgroup. With an average score of 3,9, there is still room for improvement. 
@@ -918,7 +918,7 @@ The system is not able to integrate with existing CCTV beyond the footage provid
 
 This section will describe the plan for operation. Due to the seasonal nature of festivals, it has not been possible to test the system in operation at a real festival or concert, nor has it been possible to collect more or improved data. Thus the "operation and maintenance"-phase of the Waterfall model from @sommerville2011software has not been a priority in the project. The project's purpose was as a proof of concept from the beginning. However, the system has been designed with maintainability in mind
 
-The frontend and backend code bases are maintainable for a few reasons. The Python code has been written using type hints. Even though typing is not supported by the Python runtime @PythonDocumentation, it is used by IDE's and linters to enforce good coding practice. The system is also written using an OOP paradigm which makes it easier to understand due to the abstraction of implementation. Writing the code in pair programming also helps maintainability as knowledge is shared and not isolated. When necessary, this knowledge has been documented in README files. 
+The frontend and backend code bases are maintainable for a few reasons. The Python code has been written using type hints. Even though typing is not supported by the Python runtime @PythonDocumentation, it is used by IDEs and linters to enforce good coding practices. The system is also written using an OOP paradigm which makes it easier to understand due to the abstraction of implementation. Writing the code in pair programming also helps maintainability as knowledge is shared and not isolated. When necessary, this knowledge has been documented in README files. 
 
 There are no developers in Event Safety. This means that there have not been any considerations for development handover or for second part developers to get involved in the process. For the product to get applied in their day-to-day work it would take building up a small catalogue of processed videos of different examples from different venues. The frontend could be handed over to the users. Users would be employees and volunteers at Event Safety, Smukfest and Grøn Koncert. This would provide significant value based on our focus group research. 
 
@@ -926,9 +926,9 @@ There are no developers in Event Safety. This means that there have not been any
 
 # Discussion {#sec-discussion}
 
-This section will discuss our results including the accuracy of the CSMS and qualitative user feedback from our partners. It will describe how this system could affect the crowd safety management flow. It will also discuss the current system's shortcomings and what can be done in the future to prevent this. Then it will discuss how this system is an improvement from the status quo. It will discuss the privacy and ethical concerns that might be with a system that deals with personal data. Finally, it will also evaluate the process of developing this system and on the choice of technologies.
+This section will discuss our results including the accuracy of the CSMS and qualitative user feedback from our partners. It will describe how this system could affect the crowd safety management flow. It will also discuss the current system's shortcomings and what can be done in the future to prevent this. Then it will discuss how this system is an improvement from the status quo. It will discuss the privacy and ethical concerns that might be with a system that deals with personal data. Finally, it will also evaluate the process of developing this system and the choice of technologies.
 
-To evaluate the accuracy of the developed system we first look at the quantitative benchmark of SASNet. Here it was stated that SASNet performs better or on par with several other state-of-the-art crowd counting models. On the ShanghaiTech part A specifically, which the model weights used in the CSMS are trained on, SASNet performs with a mean average error of 53.59 [@sasnet]. According to @modolo2021understanding, the Shanghai Tect Part A has an average of 500 people in each image, meaning the average error percentage is 10.6% on this dataset. This is the dataset that most closely matches our spread and density distributions in the collected data. When doing our testing as described in @sec-accuracy we achieve a similar, good accuracy. The required accuracy according to our user research in @sec-focusgroup is that an accuracy of less than 10-20% is ideal, but 20-40% might still be useful. This is well within the bounds of the accuracy of the CSMS.
+To evaluate the accuracy of the developed system we first look at the quantitative benchmark of SASNet. Here it was stated that SASNet performs better or on par with several other state-of-the-art crowd-counting models. On the ShanghaiTech part A specifically, which the model weights used in the CSMS are trained on, SASNet performs with a mean average error of 53.59 [@sasnet]. According to @modolo2021understanding, the Shanghai Tect Part A has an average of 500 people in each image, meaning the average error percentage is 10.6% on this dataset. This is the dataset that most closely matches our spread and density distributions in the collected data. When doing our testing as described in @sec-accuracy we achieve a similar, good accuracy. The required accuracy according to our user research in @sec-focusgroup is that an accuracy of less than 10-20% is ideal, but 20-40% might still be useful. This is well within the bounds of the accuracy of the CSMS.
 
 However, our accuracy is limited by the important factor that our system as a whole aims to calculate the actual crowd count of the physical space and not just the crowd count of the countable crowd members on the video footage. As an example, we would likely achieve a 0% error if the camera was low enough to only count a handful of members, but this is useless in regards to the overall problem statement of improving the crowd overview for security guards. It is uncertain how prevalent this type of uncertainty is in our data, as we do not have this real ground truth. The limiting factors for achieving this goal are: 
 
@@ -946,11 +946,11 @@ While the collected data for these purposes is a good starting point, it is impo
 
 Based on the section @sec-eval_functional_requirements the CSMS at this point fully satisfies all the "must have" functional requirements and 1 "should have" requirement (requirement 4). It also satisfies most of functional requirements 6 and 8, while functional requirements 5 and 7 are not directly implemented. The "could have" requirements 9 and 10 have not been implemented. In regards to our evaluation of the non-function requirements in @sec-eval_non_functional_requirements, the "must have" and "should have" requirements are fulfilled. The "could have" requirements are partly fulfilled. Particularly the "could have" requirement 6 regarding "interoperability between multiple cameras" was paid attention during the implementation as this was found to be important for the company. According to our focus group results in @sec-focusgroup, the good feedback, on the trustworthiness of the output data and the usefulness of the heatmap, validates the implementation of a large part of the functional and non-functional requirements. The qualitative feedback from the focus group also verifies the need for the problem statement and the usefulness of a system like this in general compared to the status quo, which is manual estimates of crowd count and densities. According to @sec-validation-verification The CSMS is both faster and more accurate than manual estimates.
 
-The project's collaborators did not have many ethical concerns when asked. However, it is still our responsibility as the experts, to have these considerations. That is why we researched the data policy of the cloud provider UCloud which satisfied the need for data privacy and responsible use. The ethical considerations were also one of the reasons why we decided to use the regression-based crowd counting method of SASnet rather than "crowd count by detection". The crowd count based methods remove the detection of individuals as each output pixel could be an aggregate of many Gaussian kernels, as described in @sec-design-crowdcounting. The extent of discriminatory biases in the dataset and algorithms such as racial, gender or handicap has not been tested. Using a crowd count algorithm should be less biased than the counting by detection algorithm, making it unlikely that it has a large impact on the final result. However, the choice of crowd counting method made the implementation of some functional requirements, in regards to tracking the movement of crowd members, more difficult to implement which resulted in them not being implemented. A workaround could be implemented while still using SASNet by looking at delta changes in densities over multiple time periods, but it is not trivial to infer the average paths of crowd members (functional requirement 5).
+The project's collaborators did not have many ethical concerns when asked. However, it is still our responsibility as the experts, to have these considerations. That is why we researched the data policy of the cloud provider UCloud which satisfied the need for data privacy and responsible use. The ethical considerations were also one of the reasons why we decided to use the regression-based crowd-counting method of SASnet rather than "crowd count by detection". The crowd-count-based methods remove the detection of individuals as each output pixel could be an aggregate of many Gaussian kernels, as described in @sec-design-crowdcounting. The extent of discriminatory biases in the dataset and algorithms such as racial, gender or handicap has not been tested. Using a crowd count algorithm should be less biased than the counting by detection algorithm, making it unlikely that it has a large impact on the final result. However, the choice of crowd counting method implemented some functional requirements, in regards to tracking the movement of crowd members, more difficult to implement which resulted in them not being implemented. A workaround could be implemented while still using SASNet by looking at delta changes in densities over multiple periods, but it is not trivial to infer the average paths of crowd members (functional requirement 5).
 
 Following these considerations and results, "crowd count by detection" and specifically SASnet's way of solving the scale variation has proved to be a reliable, accurate and fast way of crowd counting, while also reducing the potential ethical concerns of a system that creates data of tracked individuals.
 
-The planned timeline of the project was followed and did not prove to be too tight. The timeline could have been slightly improved by also having a way of gathering data after having learned the lessons of the implementation phase, but this was not possible due to the time of year. Some would perhaps argue that the fact that we were able to follow the planned timeline is a sign that more work could have been done, but that was not the case. The prioritisation of the requirements and planning of the phases resulted in a system that we were able to finish within the timeframe while still creating a product that was useful for our target group. The project was completed using a waterfall process rather than a Scrum process. This was done because the later stages in the design and implementation phase depend on the knowledge of the earlier stages. This choice has been a good process for the project since we ended up with a finished and working proof-of-concept product. A Scrum process could have resulted in difficulty in meeting deadlines because of the group size of 2. 
+The planned timeline of the project was followed and did not prove to be too tight. The timeline could have been slightly improved by also having a way of gathering data after having learned the lessons of the implementation phase, but this was not possible due to the time of year. Some would perhaps argue that the fact that we were able to follow the planned timeline is a sign that more work could have been done, but that was not the case. The prioritiation of the requirements and planning of the phases resulted in a system that we were able to finish within the timeframe while still creating a product that was useful for our target group. The project was completed using a waterfall process rather than a Scrum process. This was done because the later stages in the design and implementation phase depend on the knowledge of the earlier stages. This choice has been a good process for the project since we ended up with a finished and working proof-of-concept product. A Scrum process could have resulted in difficulty in meeting deadlines because of the group size of 2. 
 
 {{< pagebreak >}}
 
@@ -958,7 +958,7 @@ The planned timeline of the project was followed and did not prove to be too tig
 
 In conclusion of this project on the Crowd Safety Management System (CSMS) that uses SASNet for crowd counting and density estimation at festival events, we look back at what was achieved and the challenges faced. This is done with regards to the original problem statement from @sec-problem-statement that is: "Can computer vision software and AI techniques be leveraged to improve crowd overview for security guards, by receiving video feed from large crowds, and ultimately improve crowd safety?"
 
-The main success of the project was incorporating a crowd counting model, specifically SASNet, effectively for density estimation. This method was very accurate in many crowd situations, which was crucial for the system's usability at the festivals Grøn and Smukfest. We tested the system using data from different festivals and under different densities and circumstances and found success in most common scenarios.
+The main success of the project was incorporating a crowd-counting model, specifically SASNet, effectively for density estimation. This method was very accurate in many crowd situations, which was crucial for the system's usability at the festivals Grøn and Smukfest. We tested the system using data from different festivals and under different densities and circumstances and found success in most common scenarios.
 
 A key part of our work was following GDPR, data privacy and ethical considerations. This was important because we were dealing with sensitive video data. We used the crowd count method to keep individual identities private and instead used aggregate sums of people per square meter, showing our commitment to ethical data handling and maintaining the public image of the festivals to festival guests that they and their sensitive data are safe.
 
@@ -968,7 +968,7 @@ We chose to use regression-based methods for crowd counting to avoid more intrus
 
 The project also expectedly faced challenges. Physical environmental factors like poor lighting and stage effects sometimes affected how accurately the system worked. These are common issues at festivals and make maintaining consistent performance difficult.
 
-There were also technical challenges. The system did not fully develop some features that could be interesting for managing crowds, like detecting crowd movements and identifying potential choke points. However, during user testing and discussions, it was not features that were missing for achieving the overall goal and proving the concept of the system. Integrating the system with existing CCTV systems was also a requirement that was not developed because it would not be able to be tested.
+There were also technical challenges. The system did not fully develop some features that could be interesting for managing crowds, like detecting crowd movements and identifying potential choke points. However, during user testing and discussions, it was no features that were missing for achieving the overall goal and proving the concept of the system. Integrating the system with existing CCTV systems was also a requirement that was not developed because it would not be able to be tested.
 
 Handling and processing a lot of high-resolution video data was challenging. We had to balance the need for powerful processing and storage with the requirement for real-time or near-real-time data processing. This was a tough task given the amount and type of data we were dealing with. The delay showed to be around 4-5 seconds for each frame which is a low enough delay for the use case.
 
@@ -984,15 +984,15 @@ There are many opportunities for further development of this project in collabor
 
 The current implementation is mostly suitable for post-event evaluations. This was decided during the design phase, as this would produce a usable product that was possible to implement. It is, however, also a possibility to adjust the implementation to allow for a live feed of the heatmaps, with as little delay as 4-5 seconds on each frame with the current performance described in @sec-runtime. Seeing the heatmaps could open up completely new use cases for the users and possibly change the workflows of the crowd safety managers and security camera operators.  
 
-The system's use cases are not limited to festivals and concerts. This can of course be used by any authority or organisation in charge of large gatherings of people. This could be other users like police, defence authorities, emergency management agencies, transportation authorities, sports stadium managers, retail and shopping malls, theme park managers, for handling events like protests, public national celebrations (eg. sports celebrations, royal birthdays), sports events, special days resulting in high-density gatherings like Black Friday, New Years and Christmas. The only requirement is the ability to collect usable video input data from a high altitude viewpoint, and a group of people with the necessary knowledge of crowd safety willing to use the information provided by the CSMS in a meaningful way to make decisions.
+The system's use cases are not limited to festivals and concerts. This can of course be used by any authority or organisation in charge of large gatherings of people. This could be other users like police, defense authorities, emergency management agencies, transportation authorities, sports stadium managers, retail and shopping malls, and theme park managers, for handling events like protests, public national celebrations (eg. sports celebrations, royal birthdays), sports events, special days resulting in high-density gatherings like Black Friday, New Years and Christmas. The only requirement is the ability to collect usable video input data from a high altitude viewpoint, and a group of people with the necessary knowledge of crowd safety willing to use the information provided by the CSMS in a meaningful way to make decisions.
 
 During the design and implementation phase, a multi-camera setup was briefly investigated as a way of improving the output from venues with many smaller corridors and no possibility for aerial top-down views (such as Smukfest). While the collected data was not ideal for this idea, the current implementation is set up to allow for this, by defining multiple cameras and their physical bounds.
 
-It could be an interesting perspective to incorporate more cyber-physical or IoT aspects into this system. Currently, the system consists of a sensor system with video as input that helps crowd safety managers in their decision-making. The system could implement an automated control system for adjusting density imbalances by controlling entrance flow, affecting human behavior by pushing information through an app, stage LED screens or public address systems. The sensor system could also be improved by incorporating more data sources into the algorithms and predict the crowd behavior, so decisions could be made in due time. This could be done by implementing an IoT system with a network of sensor devices such as data from bar sales, turnstiles, crowd profiles, data from cellphones, etc. and integrating the data into an AI prediction algorithm. 
+It could be an interesting perspective to incorporate more cyber-physical or IoT aspects into this system. Currently, the system consists of a sensor system with video as input that helps crowd safety managers in their decision-making. The system could implement an automated control system for adjusting density imbalances by controlling entrance flow, affecting human behavior by pushing information through an app, stage LED screens or public address systems. The sensor system could also be improved by incorporating more data sources into the algorithms and predicting the crowd behavior, so decisions could be made in due time. This could be done by implementing an IoT system with a network of sensor devices such as data from bar sales, turnstiles, crowd profiles, data from cellphones, etc. and integrating the data into an AI prediction algorithm. 
 
 During our discussions with the drone company PhaseOne, they demonstrated some interesting technologies regarding drone and camera technology where this system could be applied. The company provides software and hardware for extremely high-resolution imagery on drones. Using this technology it could be possible to cover a very large geographical area using only one or few drones from a high altitude, making it possible to cover multiple or spread out gatherings at once while requiring almost no setup time. Their technology can also allow for approximate orthographic projections, reducing or completely removing the need for perspective warp. This technology could be very useful for open-air festivals with many stages at once, protests and urban gatherings that are often spread out and high density.
 
-Another interesting idea for further development of this project would be to advance the project from crowd counting to crowd localisation. As described in @sec-softa, crowd localisation is a more advanced, proposed form of crowd counting. Advancing to an implementation of this would allow us to further increase the usability of the program by implementing accurate flow estimation and a more precise count. This would also open up the possibility of tracking individual groups of people if users wanted to keep an eye on a certain section of the crowd. However, going in this direction would likely also require higher information security, as you would now be tracking the movement of parts of the crowd. 
+Another interesting idea for further development of this project would be to advance the project from crowd counting to crowd localization. As described in @sec-softa, crowd localization is a more advanced, proposed form of crowd counting. Advancing an implementation of this would allow us to further increase the usability of the program by implementing accurate flow estimation and a more precise count. This would also open up the possibility of tracking individual groups of people if users wanted to keep an eye on a certain section of the crowd. However, going in this direction would likely also require higher information security, as you would now be tracking the movement of parts of the crowd. 
 
 {{< pagebreak >}}
 
