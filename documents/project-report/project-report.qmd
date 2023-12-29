@@ -118,7 +118,7 @@ This section describes the acronyms and definitions used in the report.
 
 # Introduction
 
-This section is going to give an introduction to the domain, reasoning and context of the problem and an introduction to the project collaborators.
+This chapter is going to give an introduction to the domain, reasoning and context of the problem and an introduction to the project collaborators.
 
 ## Preface
 
@@ -916,7 +916,7 @@ The system is not able to integrate with existing CCTV beyond the footage provid
 
 # Operation {#sec-operation}
 
-This section will describe the plan for operation. Due to the seasonal nature of festivals, it has not been possible to test the system in operation at a real festival or concert, nor has it been possible to collect more or improved data. Thus the "operation and maintenance"-phase of the Waterfall model from @sommerville2011software has not been a priority in the project. The purpose of the project was as a proof-of-concept from the beginning. However, the system has been designed with maintainability in mind.
+This chapter will describe the plan for operation. Due to the seasonal nature of festivals, it has not been possible to test the system in operation at a real festival or concert, nor has it been possible to collect more or improved data. Thus the "operation and maintenance"-phase of the Waterfall model from @sommerville2011software has not been a priority in the project. The purpose of the project was as a proof-of-concept from the beginning. However, the system has been designed with maintainability in mind.
 
 The frontend and backend code bases are maintainable for a few reasons. The Python code has been written using type hints. Even though typing is not supported by the Python runtime @PythonDocumentation, it is used by IDEs and linters to enforce good coding practices. The system is also written using an OOP paradigm which makes it easier to understand due to the abstraction of implementation. Writing the code in pair programming also helps maintainability as knowledge is shared and not isolated. When necessary, this knowledge has been documented in README files. 
 
@@ -926,7 +926,7 @@ There are no developers in Event Safety. This means that there have not been con
 
 # Discussion {#sec-discussion}
 
-This section will discuss our results including the accuracy of the CSMS and qualitative user feedback from our partners. It will describe how this system could affect the crowd safety management flow. It will also discuss the current shortcomings of the system, and what can be done in the future to prevent these. Then, it will be discussed how this system is an improvement from the status quo. It will discuss the privacy and ethical concerns that may occur with a system that deals with personal data. Finally, it will also evaluate the process of developing this system and the choice of technologies.
+This chapter will discuss our results including the accuracy of the CSMS and qualitative user feedback from our partners. It will describe how this system could affect the crowd safety management flow. It will also discuss the current shortcomings of the system, and what can be done in the future to prevent these. Then, it will be discussed how this system is an improvement from the status quo. It will discuss the privacy and ethical concerns that may occur with a system that deals with personal data. Finally, it will also evaluate the process of developing this system and the choice of technologies.
 
 To evaluate the accuracy of the developed system, we initially looked at the quantitative benchmark of SASNet. Here, it was stated that SASNet performs better, or on par, with several other state-of-the-art crowd-counting models. On the ShanghaiTech part A specifically, which the model weights used in the CSMS are trained on, SASNet performs with a mean average error of 53.59 [@sasnet]. According to @modolo2021understanding, the Shanghai Tect Part A has an average of 500 people in each image, meaning the average error percentage is 10.6% on this dataset. This is the dataset that most closely matches our spread and density distributions in the collected data. When doing our testing as described in @sec-accuracy, we achieve a similar, good accuracy. The required accuracy according to our user research in @sec-focusgroup is, that an accuracy of less than 10-20% is ideal, but 20-40% may still be useful. This is well within the bounds of the accuracy of the CSMS.
 
