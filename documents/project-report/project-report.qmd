@@ -72,11 +72,11 @@ Chapter 7 - Validation and Verification, validates and verifies that the require
 
 Chapter 8 - Operation, describes the thoughts on the operation and maintenance aspects of the project. \ \
 
-Chapter 8 - Discussion, discusses and evaluates our results in relation to the problem statement. \ \
+Chapter 9 - Discussion, discusses and evaluates our results in relation to the problem statement. \ \
 
-Chapter 9 - Conclusion, concludes the project and our results in relation to our problem statement. \ \
+Chapter 10 - Conclusion, concludes the project and our results in relation to our problem statement. \ \
 
-Chapter 10 - Future perspectives, goes through which system features could be developed in the future, and how the project could be expanded and improved. 
+Chapter 11 - Future perspectives, goes through which system features could be developed in the future, and how the project could be expanded and improved. 
 
 {{< pagebreak >}}
 
