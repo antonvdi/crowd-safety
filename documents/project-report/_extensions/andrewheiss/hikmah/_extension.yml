@@ -6,6 +6,8 @@ contributes:
     common:
       date-format: medium
     pdf:
+      code-line-numbers: true
+
       # Template pieces
       template-partials:
         - "partials/title.tex"

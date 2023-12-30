@@ -68,7 +68,7 @@ Chapter 5 - Design, goes in-depth with the major design choices made for this sy
 
 Chapter 6 - Implementation, describes and explains the implementation and development of the system itself. \ \
 
-Chapter 7 - Validation and Verification, validates and verifies that the requirements previously set for this system are fulfilled. \ \
+Chapter 7 - Validation and verification, validates and verifies that the requirements previously set for this system are fulfilled. \ \
 
 Chapter 8 - Operation, describes the thoughts on the operation and maintenance aspects of the project. \ \
 
@@ -88,13 +88,13 @@ This section describes the acronyms and definitions used in the report.
 |--- |--- |
 | CSMS              | Crowd Safety Management System. |
 ||
-| Crowd Counting             | "[...] a privacy-preserving system for estimating the size of inhomogeneous crowds, [...] without using explicit object segmentation or tracking" [@chan2008] Different from "crowd counting by detection". |
+| Crowd counting             | "[...] a privacy-preserving system for estimating the size of inhomogeneous crowds, [...] without using explicit object segmentation or tracking" [@chan2008] Different from "crowd counting by detection". |
 ||
 | ANN               | Artificial Neural Network. |
 ||
 | CNN               | Convolutional Neural Network. |
 ||
-| Crowd Surges     | A dangerous crowd situation where your movement is controlled by the crowd and not your actions. |
+| Crowd surges     | A dangerous crowd situation where your movement is controlled by the crowd and not your actions. |
 ||
 | Mosh pit         | A crowd situation where people vacate an area in the crowd followed by violent or aggressive dancing. The sizes of Mosh pits vary greatly. |
 ||
@@ -141,7 +141,7 @@ SDU and TEK for access to camera resources and cloud computing resources.\
 
 ## Context
 
-![Fatalities in crowds graph [Figure from @FELICIANI2023106174]](../images/fatalities.jpg){#fig-fatalities}\
+![Fatalities in crowds graph [Figure from @FELICIANI2023106174]](../images/fatalities.jpg){#fig-fatalities}
 
 As seen from @fig-fatalities accidents, fatalities and injuries at festivals and concerts worldwide are increasing, with just below 5.000 worldwide casualties in the decade of 2010-2019. The increasing trend can be attributed to several causes, according to @inproceedings: First of all, an increase in the popularity of outdoor music festivals resulting in more and larger festivals with large crowds. Also, high-risk behavior among crowd attendants and the performing artist’s music, behavior, and stage show affects crowd safety. Cultural influence has also played a large part in the safety of outdoor musical events. This can be behavior such as crowd surfing, moshing, stage diving and the like. 
 
@@ -377,7 +377,7 @@ Crowd counting is a field of computer vision research that has developed quickly
 
 One of the original ideas for solving this problem was to use Meta's SAM model. During the preliminary research sessions, it was discovered that SAM was not adequate in counting people but better suited for object detection. The following citation from @ma2023sam highlights the problems well:
 
-"Although the Segment Anything model (SAM) has shown impressive performance in many scenarios, it currently lags behind state-of-the-art few-shot counting methods, especially for small and congested objects. We believe that this is due to two main reasons. Firstly, SAM tends to segment congested objects of the same category with a single mask. Secondly, SAM is trained with masks that lack semantic class annotations, which could hinder its ability to differentiate between different objects. Nevertheless, further exploration of adapting SAM to the object counting task is still worth studying." [@ma2023sam]
+"*Although the Segment Anything model (SAM) has shown impressive performance in many scenarios, it currently lags behind state-of-the-art few-shot counting methods, especially for small and congested objects. We believe that this is due to two main reasons. Firstly, SAM tends to segment congested objects of the same category with a single mask. Secondly, SAM is trained with masks that lack semantic class annotations, which could hinder its ability to differentiate between different objects. Nevertheless, further exploration of adapting SAM to the object counting task is still worth studying.*" [@ma2023sam]
 
 SAM and other object detection methods (sometimes described as "crowd counting by detection") are usually trained on one specific type of object by extracting certain visual features. The benefits of using crowd counting rather than object detection are: 
 
@@ -580,44 +580,45 @@ To count the people in a crowd, the SASNet crowd counting model mentioned in @se
 
 Before we can use the model on our data, it needs to be preprocessed. As the SASNet model is made for singular images, converting the input videos to an image-based format is needed. This is done using the Python torch.utils.dataset class. This iterable dataset allows for loading a frame interval from a video into an array of images using cv2. Using cv2, we are also able to resize the video to a specified resolution for easier handling. Once a specified frame interval, resolution and other parameters for the video are defined, it is ready for processing and gets loaded by the camera class.
 
-```python
+```{python}
+#| code-overflow: wrap
 def predict(self) -> None:
-torch.cuda.empty_cache()
-gc.collect()
+  torch.cuda.empty_cache()
+  gc.collect()
 
-dataloader = self.get_video_dataloader()
+  dataloader = self.get_video_dataloader()
 
-for img in dataloader:
-  img = img.cuda()
+  for img in dataloader:
+    img = img.cuda()
 
-  with torch.no_grad():
-    self.model.eval()
-    pred_map = self.model(img)
-  pred_map = pred_map.data.cpu().numpy()
+    with torch.no_grad():
+      self.model.eval()
+      pred_map = self.model(img)
+    pred_map = pred_map.data.cpu().numpy()
 
-  for i_img in range(pred_map.shape[0]):
-    pred_cnt = np.sum(pred_map[i_img]) / self.log_parameter
-    self.predicted_counts.append(pred_cnt)
+    for i_img in range(pred_map.shape[0]):
+      pred_cnt = np.sum(pred_map[i_img]) / self.log_parameter
+      self.predicted_counts.append(pred_cnt)
 
-    grayscale_map = pred_map[i_img][0] # Extract the first channel (grayscale) from the density map
+      grayscale_map = pred_map[i_img][0] # Extract the first channel (grayscale) from the density map
 
-    if self.distortion_parameters and len(self.distortion_parameters) > 0:
-      undistorted_map = self.camera_utils.correct_fisheye_distortion(grayscale_map, self.distortion_parameters[0])
-    else:
-      undistorted_map = grayscale_map
+      if self.distortion_parameters and len(self.distortion_parameters) > 0:
+        undistorted_map = self.camera_utils.correct_fisheye_distortion(grayscale_map, self.distortion_parameters[0])
+      else:
+        undistorted_map = grayscale_map
 
-    corrected_map = self.camera_utils.correct_perspective(undistorted_map, self.local_coordinates)
+      corrected_map = self.camera_utils.correct_perspective(undistorted_map, self.local_coordinates)
 
-    width_after = self.global_coordinates[3][0] - self.global_coordinates[0][0]
-    scale_factor = int(corrected_map.shape[1] / width_after)
+      width_after = self.global_coordinates[3][0] - self.global_coordinates[0][0]
+      scale_factor = int(corrected_map.shape[1] / width_after)
 
-    downsampled_map = self.camera_utils.downsample_image(corrected_map, scale_factor)
+      downsampled_map = self.camera_utils.downsample_image(corrected_map, scale_factor)
 
-    upsampled_map = self.camera_utils.upsample_image(downsampled_map)
+      upsampled_map = self.camera_utils.upsample_image(downsampled_map)
 
-    heatmap = self.camera_utils.make_heatmap(upsampled_map)
+      heatmap = self.camera_utils.make_heatmap(upsampled_map)
 
-    self.images.append(heatmap)
+      self.images.append(heatmap)
 ```
 
 After loading both the model and dataset, the Camera.predict() method seen above is called. The Predict method first clears the garbage collector and empties cached GPU memory. Each image in the dataset is then iterated over and assigned to PyTorch.Cuda, sending it to be processed by the GPU. The model now infers the image and the resulting density map is assigned to the pred_map variable. 
